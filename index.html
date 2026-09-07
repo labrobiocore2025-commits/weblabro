@@ -250,6 +250,75 @@ opacity:0.032}
   .social-row{gap:10px}
   .soc-btn{min-width:140px;padding:14px 20px;font-size:12px}
 }
+
+/* ─── CHECKOUT MODAL ─── */
+.mo{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .4s ease,background .4s ease,backdrop-filter .4s ease;background:transparent}
+.mo.open{opacity:1;pointer-events:all;background:rgba(0,0,0,.84);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.mo-card{background:#181510;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;position:relative;transform:translateY(32px) scale(.97);transition:transform .48s cubic-bezier(.25,.46,.45,.94);border:1px solid var(--border);scrollbar-width:thin;scrollbar-color:var(--olive) transparent}
+.mo.open .mo-card{transform:translateY(0) scale(1)}
+.mo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--olive),var(--gold),var(--orange));z-index:2}
+.mo-x{position:absolute;top:18px;right:18px;background:none;border:none;cursor:pointer;color:var(--text-muted);width:34px;height:34px;display:flex;align-items:center;justify-content:center;transition:color .3s;z-index:3}
+.mo-x:hover{color:var(--cream)}
+.mo-body{padding:52px 48px 44px}
+.mo-lbl{font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--olive-light);margin-bottom:8px}
+.mo-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--cream);margin-bottom:34px;line-height:1.1}
+
+/* product summary */
+.mo-prod{display:flex;align-items:center;gap:20px;padding:18px 20px;background:rgba(255,255,255,.03);border:1px solid var(--border);margin-bottom:28px}
+.mo-bottle{flex-shrink:0;width:44px;height:72px}
+.mo-prod-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--cream);line-height:1.15}
+.mo-prod-sub{font-size:11px;color:var(--text-muted);margin-top:4px;letter-spacing:.03em}
+.mo-qty-row{display:flex;align-items:center;gap:12px;margin-top:12px}
+.mo-qty-lbl{font-size:11px;color:var(--text-mid);letter-spacing:.05em}
+.mo-qty{display:flex;align-items:center;border:1px solid var(--border-olive)}
+.mo-qbtn{background:none;border:none;color:var(--cream);width:34px;height:34px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:background .2s;line-height:1}
+.mo-qbtn:hover{background:rgba(107,139,58,.15)}
+.mo-qnum{width:40px;text-align:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--cream)}
+
+/* fields */
+.mo-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mo-field{margin-bottom:18px}
+.mo-field-lbl{display:block;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mid);margin-bottom:7px}
+.mo-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--cream);padding:13px 16px;font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color .3s;-webkit-appearance:none;border-radius:0}
+.mo-input::placeholder{color:var(--text-muted);font-size:13px}
+.mo-input:focus{border-color:rgba(107,139,58,.55)}
+.mo-input.err{border-color:rgba(196,85,32,.7)!important}
+
+/* total */
+.mo-total{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:24px 0}
+.mo-total-lbl{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+.mo-total-val{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:600;color:var(--cream);line-height:1}
+.mo-total-cur{font-size:18px;font-weight:300;color:var(--text-mid);margin-right:4px}
+
+/* pay btn */
+.mono-pay{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;background:#0a0a0a;color:#fff;padding:18px;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;letter-spacing:.06em;border:none;cursor:pointer;transition:all .3s;border:1px solid rgba(255,215,0,.15)}
+.mono-pay:hover:not(:disabled){background:#111;transform:translateY(-1px);border-color:rgba(255,215,0,.35);box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.mono-pay:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.mono-logo-text{font-weight:800;color:#FFD700;font-size:16px;letter-spacing:-.02em}
+.mo-alt{display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--text-muted);text-decoration:none;letter-spacing:.04em;transition:color .3s}
+.mo-alt:hover{color:var(--cream)}
+
+/* states */
+.mo-state{display:none;text-align:center;padding:16px 0 8px}
+.mo-state.on{display:block}
+.mo-spinner{width:42px;height:42px;border:2px solid var(--border);border-top-color:var(--olive-light);border-radius:50%;margin:0 auto 22px;animation:mspin .85s linear infinite}
+@keyframes mspin{to{transform:rotate(360deg)}}
+.mo-state-h{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--cream);margin-bottom:10px}
+.mo-state-p{font-size:14px;color:var(--text-mid);line-height:1.7}
+.mo-reset{margin-top:24px;background:var(--olive);color:#fff;border:none;padding:13px 30px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;transition:background .3s}
+.mo-reset:hover{background:var(--olive-mid)}
+
+/* fallback order box */
+.mo-order-box{background:rgba(255,255,255,.04);border:1px solid var(--border-olive);padding:16px 20px;margin:20px 0;font-size:13px;color:var(--text-mid);line-height:1.8;text-align:left;white-space:pre-line}
+.mo-copy{margin-top:14px;background:transparent;color:var(--olive-light);border:1px solid var(--border-olive);padding:10px 22px;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:all .3s}
+.mo-copy:hover{background:rgba(74,108,42,.15)}
+
+@media(max-width:600px){
+  .mo-body{padding:40px 24px 36px}
+  .mo-row{grid-template-columns:1fr}
+  .mo-title{font-size:26px}
+  .mo-total-val{font-size:34px}
+}
 </style>
 </head>
 <body>
@@ -782,6 +851,103 @@ opacity:0.032}
   </div>
 </section>
 
+<!-- CHECKOUT MODAL -->
+<div class="mo" id="checkoutModal">
+  <div class="mo-card">
+    <button class="mo-x" id="moClose" aria-label="Закрити">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+    <div class="mo-body">
+      <div class="mo-lbl">LABRO BIOCORE</div>
+      <div class="mo-title">Оформлення<br>замовлення</div>
+
+      <!-- Product card -->
+      <div class="mo-prod">
+        <svg class="mo-bottle" viewBox="0 0 44 72" fill="none">
+          <rect x="7" y="16" width="30" height="52" rx="6" fill="#EEEBE6"/>
+          <rect x="11" y="10" width="22" height="10" rx="4" fill="#E2DDD8"/>
+          <rect x="7" y="26" width="30" height="34" rx="0" fill="#1E2D0E"/>
+          <rect x="7" y="50" width="30" height="18" rx="0" fill="#243015"/>
+          <rect x="11" y="30" width="22" height="5" rx="2" fill="rgba(255,255,255,.82)"/>
+          <rect x="13" y="38" width="16" height="3" rx="1.5" fill="rgba(255,255,255,.38)"/>
+          <rect x="13" y="54" width="18" height="3" rx="1.5" fill="rgba(255,255,255,.28)"/>
+          <rect x="4" y="62" width="36" height="6" rx="3" fill="rgba(0,0,0,.1)"/>
+        </svg>
+        <div>
+          <div class="mo-prod-name">Нейро-Баланс</div>
+          <div class="mo-prod-sub">Ashwaganda · L-Theanine · Rhodiola · 60 вег. кап.</div>
+          <div class="mo-qty-row">
+            <span class="mo-qty-lbl">Кількість:</span>
+            <div class="mo-qty">
+              <button class="mo-qbtn" id="moMinus">−</button>
+              <div class="mo-qnum" id="moQty">1</div>
+              <button class="mo-qbtn" id="moPlus">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div id="moForm">
+        <div class="mo-row">
+          <div class="mo-field">
+            <label class="mo-field-lbl">Ім'я та прізвище</label>
+            <input class="mo-input" id="moName" type="text" placeholder="Іван Петренко">
+          </div>
+          <div class="mo-field">
+            <label class="mo-field-lbl">Телефон</label>
+            <input class="mo-input" id="moPhone" type="tel" placeholder="+380 __ ___ ____">
+          </div>
+        </div>
+        <div class="mo-field">
+          <label class="mo-field-lbl">Місто та відділення Нової Пошти</label>
+          <input class="mo-input" id="moCity" type="text" placeholder="Харків, відд. №12">
+        </div>
+        <div class="mo-field">
+          <label class="mo-field-lbl">Коментар (необов'язково)</label>
+          <input class="mo-input" id="moComment" type="text" placeholder="Будь-яке уточнення...">
+        </div>
+        <div class="mo-total">
+          <div class="mo-total-lbl">До сплати</div>
+          <div class="mo-total-val"><span class="mo-total-cur">₴</span><span id="moTotal">599</span></div>
+        </div>
+        <button class="mono-pay" id="moPayBtn">
+          <span class="mono-logo-text">mono</span>
+          Сплатити через monobank
+        </button>
+        <a href="https://t.me/LaBroudi" target="_blank" class="mo-alt">або написати менеджеру → @LaBroudi</a>
+      </div>
+
+      <!-- Loading -->
+      <div class="mo-state" id="moLoading">
+        <div class="mo-spinner"></div>
+        <div class="mo-state-h">Обробляємо замовлення</div>
+        <p class="mo-state-p">Перенаправляємо на сторінку оплати monobank...</p>
+      </div>
+
+      <!-- Error / fallback -->
+      <div class="mo-state" id="moError">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" style="margin:0 auto 18px;display:block"><circle cx="26" cy="26" r="25" stroke="#C45520" stroke-width="1.2"/><path d="M26 16v14M26 35v2" stroke="#C45520" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="mo-state-h">Не вдалось підключитись до API</div>
+        <p class="mo-state-p">Оплата через браузер потребує бекенду.<br>Надішли замовлення менеджеру — він виставить рахунок вручну.</p>
+        <div class="mo-order-box" id="moOrderText"></div>
+        <button class="mo-copy" id="moCopyBtn">Скопіювати замовлення</button>
+        <br>
+        <a href="https://t.me/LaBroudi" target="_blank" style="display:inline-block;margin-top:16px;background:var(--orange);color:#fff;padding:14px 28px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;">Написати менеджеру →</a>
+        <br>
+        <button class="mo-reset" onclick="moReset()" style="margin-top:16px">← Назад до форми</button>
+      </div>
+
+      <!-- Success -->
+      <div class="mo-state" id="moSuccess">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" style="margin:0 auto 20px;display:block"><circle cx="32" cy="32" r="31" stroke="#6B8B3A" stroke-width="1.2"/><path d="M18 32l10 10 18-18" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="mo-state-h">Замовлення прийнято!</div>
+        <p class="mo-state-p">Дякуємо! Менеджер зв'яжеться з вами найближчим часом для підтвердження доставки.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-brand">LABRO <b>BIOCORE</b></div>
@@ -905,6 +1071,133 @@ document.querySelectorAll('.faq-q').forEach(q=>{
       ans.style.maxHeight=item.querySelector('.faq-ans-in').offsetHeight+'px';
     }
   });
+});
+
+// ═══════════════════════════════════
+//  MONOBANK CHECKOUT
+//  ⚠️  Token в продакшн — перенеси на бекенд (n8n / Vercel fn)
+//  API не підтримує CORS → при помилці fallback на Telegram
+// ═══════════════════════════════════
+const MONO_TOKEN = 'mx0LQO9iqlTboJexcYcplRw';
+const PRICE_UAH  = 599;   // ← змін тут
+const PRICE_KOP  = PRICE_UAH * 100;
+
+let moQty = 1;
+const moModal   = document.getElementById('checkoutModal');
+const moQtyEl   = document.getElementById('moQty');
+const moTotalEl = document.getElementById('moTotal');
+const moPayBtn  = document.getElementById('moPayBtn');
+
+function moOpen(){
+  moModal.classList.add('open');
+  document.body.style.overflow='hidden';
+  moReset();
+}
+function moClose(){
+  moModal.classList.remove('open');
+  document.body.style.overflow='';
+}
+function moState(s){
+  document.getElementById('moForm').style.display    = s==='form'    ? '' : 'none';
+  document.getElementById('moLoading').classList.toggle('on', s==='loading');
+  document.getElementById('moError').classList.toggle('on',   s==='error');
+  document.getElementById('moSuccess').classList.toggle('on', s==='success');
+}
+function moReset(){
+  moQty=1; moQtyEl.textContent=1; moTotalEl.textContent=PRICE_UAH;
+  ['moName','moPhone','moCity'].forEach(id=>document.getElementById(id).classList.remove('err'));
+  moPayBtn.disabled=false;
+  moState('form');
+}
+
+// open triggers
+document.querySelectorAll('.btn-cta,.order-main-btn,.nav-order').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    const h=btn.getAttribute('href')||'';
+    if(!h||h==='#order'||h==='#'){e.preventDefault();moOpen();}
+  });
+});
+document.getElementById('moClose').addEventListener('click',moClose);
+moModal.addEventListener('click',e=>{if(e.target===moModal)moClose();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')moClose();});
+
+// qty
+document.getElementById('moMinus').addEventListener('click',()=>{
+  moQty=Math.max(1,moQty-1);
+  moQtyEl.textContent=moQty;
+  moTotalEl.textContent=(PRICE_UAH*moQty).toLocaleString('uk-UA');
+});
+document.getElementById('moPlus').addEventListener('click',()=>{
+  moQty=Math.min(5,moQty+1);
+  moQtyEl.textContent=moQty;
+  moTotalEl.textContent=(PRICE_UAH*moQty).toLocaleString('uk-UA');
+});
+
+// copy order
+document.getElementById('moCopyBtn').addEventListener('click',()=>{
+  const txt=document.getElementById('moOrderText').textContent;
+  navigator.clipboard.writeText(txt).catch(()=>{});
+  document.getElementById('moCopyBtn').textContent='✓ Скопійовано';
+  setTimeout(()=>document.getElementById('moCopyBtn').textContent='Скопіювати замовлення',2000);
+});
+
+// pay
+moPayBtn.addEventListener('click', async ()=>{
+  const name    = document.getElementById('moName').value.trim();
+  const phone   = document.getElementById('moPhone').value.trim();
+  const city    = document.getElementById('moCity').value.trim();
+  const comment = document.getElementById('moComment').value.trim();
+
+  // validate
+  let ok=true;
+  [['moName',name],['moPhone',phone],['moCity',city]].forEach(([id,v])=>{
+    const el=document.getElementById(id);
+    if(!v){el.classList.add('err');ok=false;}
+    else el.classList.remove('err');
+  });
+  if(!ok)return;
+
+  moPayBtn.disabled=true;
+  moState('loading');
+
+  const orderInfo=`Нейро-Баланс × ${moQty} = ₴${PRICE_UAH*moQty}\nІм'я: ${name}\nТел: ${phone}\nДоставка: ${city}${comment?'\nКоментар: '+comment:''}`;
+
+  try{
+    const resp = await fetch('https://api.monobank.ua/api/merchant/invoice/create',{
+      method:'POST',
+      headers:{'X-Token':MONO_TOKEN,'Content-Type':'application/json'},
+      body:JSON.stringify({
+        amount: PRICE_KOP * moQty,
+        ccy: 980,
+        merchantPaymInfo:{
+          reference:`labro-${Date.now()}`,
+          destination:'Нейро-Баланс — LABRO BIOCORE',
+          comment: orderInfo,
+          basketOrder:[{
+            name:'Нейро-Баланс (60 вег. кап.)',
+            qty: moQty,
+            sum: PRICE_KOP,
+            total: PRICE_KOP * moQty,
+            unit:'шт.'
+          }]
+        },
+        redirectUrl: window.location.href,
+        validity: 3600,
+        paymentType:'debit'
+      })
+    });
+
+    const data = await resp.json();
+    if(data.pageUrl){
+      window.location.href = data.pageUrl;
+    } else {
+      throw new Error(data.errText||'Monobank: невідома помилка');
+    }
+  } catch(err){
+    // CORS / network error → fallback
+    document.getElementById('moOrderText').textContent = orderInfo;
+    moState('error');
+  }
 });
 
 // ═══════════════════════════════════
