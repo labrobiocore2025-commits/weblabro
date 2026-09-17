@@ -761,7 +761,8 @@ opacity:0.032}
       <a href="https://t.me/LaBroudi" target="_blank" class="order-main-btn">
         Замовити через Telegram →
       </a>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <button class="order-main-btn" onclick="moOpen()" style="margin-bottom:12px">КУПИТИ ЗАРАЗ — 1 ₴ (ТЕСТ)</button>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
 <a href="https://t.me/LaBroudi" target="_blank" class="order-alt-btn">Написати у Telegram</a>
 <a href="https://wa.me/380932808111" target="_blank" class="order-alt-btn">Написати у WhatsApp</a>
 <a href="viber://chat?number=380932808111" class="order-alt-btn">Написати у Viber</a>
@@ -1082,7 +1083,7 @@ document.querySelectorAll('.faq-q').forEach(q=>{
 //  API не підтримує CORS → при помилці fallback на Telegram
 // ═══════════════════════════════════
 const MONO_TOKEN = 'mx0LQO9iqlTboJexcYcplRw';
-const PRICE_UAH  = 599;   // ← змін тут
+const PRICE_UAH  = 1;   // ← змін тут
 const PRICE_KOP  = PRICE_UAH * 100;
 
 let moQty = 1;
