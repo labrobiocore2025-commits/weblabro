@@ -370,6 +370,9 @@ opacity:0.032}
 .mono-pay:hover:not(:disabled){background:#111;transform:translateY(-1px);border-color:rgba(255,215,0,.35);box-shadow:0 8px 32px rgba(0,0,0,.5)}
 .mono-pay:disabled{opacity:.55;cursor:not-allowed;transform:none}
 .mono-logo-text{font-weight:800;color:#FFD700;font-size:16px;letter-spacing:-.02em}
+.mo-cod{display:block;width:100%;margin-top:10px;background:var(--dark);color:var(--cream);padding:16px;font-family:'Inter',sans-serif;font-size:13px;font-weight:400;letter-spacing:.06em;text-align:center;border:1px solid var(--border-olive);cursor:pointer;transition:all .3s}
+.mo-cod:hover:not(:disabled){background:rgba(74,108,42,.12);border-color:rgba(107,139,58,.5)}
+.mo-cod:disabled{opacity:.55;cursor:not-allowed}
 .mo-alt{display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--text-muted);text-decoration:none;letter-spacing:.04em;transition:color .3s}
 .mo-alt:hover{color:var(--cream)}
 
@@ -989,6 +992,7 @@ opacity:0.032}
           <span class="mono-logo-text">mono</span>
           Сплатити через monobank
         </button>
+        <button type="button" class="mo-cod" id="moCodBtn">📬 Накладений платіж (оплата при отриманні)</button>
         <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="mo-alt">або написати менеджеру → @LaBroudi</a>
       </div>
 
@@ -996,13 +1000,13 @@ opacity:0.032}
       <div class="mo-state" id="moLoading">
         <div class="mo-spinner"></div>
         <div class="mo-state-h">Обробляємо замовлення</div>
-        <p class="mo-state-p">Перенаправляємо на сторінку оплати monobank...</p>
+        <p class="mo-state-p" id="moLoadingText">Перенаправляємо на сторінку оплати monobank...</p>
       </div>
 
       <!-- Error / fallback -->
       <div class="mo-state" id="moError">
         <svg width="52" height="52" viewBox="0 0 52 52" fill="none" class="mo-state-ico"><circle cx="26" cy="26" r="25" stroke="#C45520" stroke-width="1.2"/><path d="M26 16v14M26 35v2" stroke="#C45520" stroke-width="2" stroke-linecap="round"/></svg>
-        <div class="mo-state-h">Онлайн-оплата тимчасово недоступна</div>
+        <div class="mo-state-h" id="moErrorTitle">Онлайн-оплата тимчасово недоступна</div>
         <p class="mo-state-p">Надішли замовлення менеджеру — він виставить рахунок вручну.</p>
         <div class="mo-order-box" id="moOrderText"></div>
         <button type="button" class="mo-copy" id="moCopyBtn">Скопіювати замовлення</button>
@@ -1017,6 +1021,14 @@ opacity:0.032}
         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" class="mo-state-ico"><circle cx="32" cy="32" r="31" stroke="#6B8B3A" stroke-width="1.2"/><path d="M18 32l10 10 18-18" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div class="mo-state-h">Замовлення прийнято!</div>
         <p class="mo-state-p">Дякуємо! Менеджер зв'яжеться з вами найближчим часом для підтвердження доставки.</p>
+      </div>
+
+      <!-- Success: cash on delivery -->
+      <div class="mo-state" id="moCodSuccess">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" class="mo-state-ico"><circle cx="32" cy="32" r="31" stroke="#6B8B3A" stroke-width="1.2"/><path d="M18 32l10 10 18-18" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="mo-state-h">✅ Замовлення прийнято!</div>
+        <p class="mo-state-p">Менеджер зв'яжеться з Вами найближчим часом.<br>Оплата — при отриманні у відділенні.</p>
+        <button type="button" class="mo-reset" id="moCodClose">← Назад до меню</button>
       </div>
     </div>
   </div>
@@ -1164,6 +1176,7 @@ const moModal   = document.getElementById('checkoutModal');
 const moQtyEl   = document.getElementById('moQty');
 const moTotalEl = document.getElementById('moTotal');
 const moPayBtn  = document.getElementById('moPayBtn');
+const moCodBtn  = document.getElementById('moCodBtn');
 
 function moOpen(){
   moModal.classList.add('open');
@@ -1179,11 +1192,13 @@ function moState(s){
   document.getElementById('moLoading').classList.toggle('on', s==='loading');
   document.getElementById('moError').classList.toggle('on',   s==='error');
   document.getElementById('moSuccess').classList.toggle('on', s==='success');
+  document.getElementById('moCodSuccess').classList.toggle('on', s==='cod-success');
 }
 function moReset(){
   moQty=1; moQtyEl.textContent=1; moTotalEl.textContent=PRICE_UAH;
   ['moName','moPhone','moCity'].forEach(id=>document.getElementById(id).classList.remove('err'));
   moPayBtn.disabled=false;
+  moCodBtn.disabled=false;
   moState('form');
 }
 
@@ -1197,6 +1212,7 @@ document.querySelectorAll('.btn-cta,.order-main-btn,.nav-order').forEach(btn=>{
 document.getElementById('moClose').addEventListener('click',moClose);
   document.getElementById('moPhone').addEventListener('focus',function(){const v=this.value;this.value='';this.value=v;});
 document.getElementById('moResetBtn').addEventListener('click',moReset);
+document.getElementById('moCodClose').addEventListener('click',moClose);
 moModal.addEventListener('click',e=>{if(e.target===moModal)moClose();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')moClose();});
 
@@ -1221,47 +1237,74 @@ document.getElementById('moCopyBtn').addEventListener('click',()=>{
 });
 
 // pay
-moPayBtn.addEventListener('click', async ()=>{
-  const name    = document.getElementById('moName').value.trim();
-  const phone   = document.getElementById('moPhone').value.trim();
-  const city    = document.getElementById('moCity').value.trim();
-  const comment = document.getElementById('moComment').value.trim();
-
-  // validate
+// read + validate form (shared by both payment buttons); null if invalid
+function moReadForm(){
+  const f = {
+    name:    document.getElementById('moName').value.trim(),
+    phone:   document.getElementById('moPhone').value.trim(),
+    city:    document.getElementById('moCity').value.trim(),
+    comment: document.getElementById('moComment').value.trim(),
+    qty:     moQty
+  };
   let ok=true;
-  [['moName',name],['moPhone',phone],['moCity',city]].forEach(([id,v])=>{
+  [['moName',f.name],['moPhone',f.phone],['moCity',f.city]].forEach(([id,v])=>{
     const el=document.getElementById(id);
     if(!v){el.classList.add('err');ok=false;}
     else el.classList.remove('err');
   });
   // same rule as the backend: UA number, +380XXXXXXXXX / 0XXXXXXXXX
-  if(phone && !/^\+?3?8?0\d{9}$/.test(phone.replace(/[\s\-()]/g,''))){
+  if(f.phone && !/^\+?3?8?0\d{9}$/.test(f.phone.replace(/[\s\-()]/g,''))){
     document.getElementById('moPhone').classList.add('err'); ok=false;
   }
-  if(!ok)return;
+  return ok ? f : null;
+}
+function moOrderInfo(f, payLabel){
+  return `Нейро-Баланс × ${f.qty} = ₴${PRICE_UAH*f.qty}\nІм'я: ${f.name}\nТел: ${f.phone}\nДоставка: ${f.city}\nОплата: ${payLabel}${f.comment?'\nКоментар: '+f.comment:''}`;
+}
+function moFail(f, title, payLabel){
+  document.getElementById('moErrorTitle').textContent = title;
+  document.getElementById('moOrderText').textContent = moOrderInfo(f, payLabel);
+  moState('error');
+}
 
-  moPayBtn.disabled=true;
+// online: backend creates the monobank invoice and returns pageUrl
+moPayBtn.addEventListener('click', async ()=>{
+  const f = moReadForm(); if(!f) return;
+  moPayBtn.disabled = moCodBtn.disabled = true;
+  document.getElementById('moLoadingText').textContent = 'Перенаправляємо на сторінку оплати monobank...';
   moState('loading');
-
-  const orderInfo=`Нейро-Баланс × ${moQty} = ₴${PRICE_UAH*moQty}\nІм'я: ${name}\nТел: ${phone}\nДоставка: ${city}${comment?'\nКоментар: '+comment:''}`;
-
   try{
     const resp = await fetch(CHECKOUT_API,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name, phone, city, comment, qty: moQty})
+      body:JSON.stringify({...f, pay_type:'online'})
     });
-
     const data = await resp.json();
-    if(data.pageUrl){
-      window.location.href = data.pageUrl;
-    } else {
-      throw new Error(data.errText||'Monobank: невідома помилка');
-    }
+    if(!data.pageUrl) throw new Error(data.error||'payment_unavailable');
+    window.location.href = data.pageUrl;
   } catch(err){
-    // CORS / network error → fallback
-    document.getElementById('moOrderText').textContent = orderInfo;
-    moState('error');
+    moFail(f, 'Онлайн-оплата тимчасово недоступна', 'онлайн');
+  }
+});
+
+// cash on delivery: backend saves the order and the bot notifies admins
+// (bot token never leaves the server — do NOT call api.telegram.org from here)
+moCodBtn.addEventListener('click', async ()=>{
+  const f = moReadForm(); if(!f) return;
+  moPayBtn.disabled = moCodBtn.disabled = true;
+  document.getElementById('moLoadingText').textContent = 'Надсилаємо замовлення менеджеру...';
+  moState('loading');
+  try{
+    const resp = await fetch(CHECKOUT_API,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({...f, pay_type:'cod'})
+    });
+    const data = await resp.json();
+    if(!resp.ok || !data.ok) throw new Error(data.error||'order_failed');
+    moState('cod-success');
+  } catch(err){
+    moFail(f, 'Не вдалося надіслати замовлення', 'накладений платіж');
   }
 });
 
