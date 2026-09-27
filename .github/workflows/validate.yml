@@ -23,3 +23,6 @@ jobs:
           if grep -nE "X-Token|MONO_TOKEN\s*=" index.html; then
             echo "::error::Payment provider token found in client-side code"; exit 1
           fi
+          if grep -nE "[0-9]{8,10}:[A-Za-z0-9_-]{35}" index.html; then
+            echo "::error::Telegram bot token found in client-side code"; exit 1
+          fi
