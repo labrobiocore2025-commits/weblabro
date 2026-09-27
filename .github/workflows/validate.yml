@@ -1,0 +1,25 @@
+name: Validate HTML
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check HTML (rules in .htmlvalidate.json)
+        run: npx --yes html-validate@11 index.html
+      - name: No secrets in client code
+        run: |
+          if grep -nE "X-Token|MONO_TOKEN\s*=" index.html; then
+            echo "::error::Payment provider token found in client-side code"; exit 1
+          fi

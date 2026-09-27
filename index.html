@@ -4,6 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Нейро-Баланс — LABRO BIOCORE</title>
+<meta name="description" content="Нейро-Баланс — натуральний комплекс Ashwaganda, L-Theanine, Rhodiola для здоров'я нервової системи. Знижує стрес, покращує сон, підвищує концентрацію. 60 веганських капсул.">
+<meta name="keywords" content="нейро-баланс, ашваганда, l-theanine, rhodiola, стрес, безсоння, концентрація, добавка">
+<link rel="canonical" href="https://labrobiocore2025-commits.github.io/weblabro/">
+<meta property="og:title" content="Нейро-Баланс — LABRO BIOCORE">
+<meta property="og:description" content="Натуральний комплекс для нервової системи. Знижує стрес, покращує сон, підвищує концентрацію.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://labrobiocore2025-commits.github.io/weblabro/">
+<meta property="og:image" content="https://labrobiocore2025-commits.github.io/weblabro/favicon-512.png">
+<meta property="og:locale" content="uk_UA">
+<meta name="theme-color" content="#0A0907">
+<!-- Security. GitHub Pages cannot set response headers, so these are best-effort:
+     CSP and referrer work from <meta>; X-Content-Type-Options / Permissions-Policy are ignored in <meta>,
+     and X-Frame-Options / CSP frame-ancestors are header-only (Chrome logs an error for them in <meta>).
+     Enforcing those needs a proxy in front of Pages (e.g. Cloudflare). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://web-production-5e728.up.railway.app; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -183,6 +209,8 @@ opacity:0.032}
 .order-main-btn{display:block;width:100%;background:var(--orange);color:#fff;padding:19px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;text-align:center;text-decoration:none;border:none;cursor:pointer;margin-bottom:12px;transition:background .3s,transform .2s;animation:cta-pulse 3.5s ease-in-out infinite}
 .order-main-btn:hover{background:#D46825;transform:translateY(-1px);animation:none;box-shadow:0 8px 40px rgba(196,85,32,.4)}
 .order-alt-btn{display:block;width:100%;background:transparent;color:var(--cream);padding:15px;font-family:'Inter',sans-serif;font-size:12px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;text-align:center;text-decoration:none;border:1px solid var(--border-olive);cursor:pointer;transition:all .3s}
+.order-alt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.order-alt-grid .order-alt-btn{display:flex;align-items:center;justify-content:center;padding:14px 10px;line-height:1.35}
 .order-alt-btn:hover{background:rgba(74,108,42,.12);border-color:rgba(107,139,58,.4)}
 .pay-row{display:flex;align-items:center;gap:12px;margin-top:26px;flex-wrap:wrap}
 .pay-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
@@ -192,7 +220,8 @@ opacity:0.032}
 .contact{background:var(--dark);padding:110px 64px}
 .contact-head{text-align:center;margin-bottom:72px}
 .contact-phone{display:block;text-align:center;font-size:15px;color:var(--gold-light);text-decoration:none;margin-top:14px;letter-spacing:.04em;transition:opacity .3s}
-.contact-phone:hover{opacity:.7}
+.contact-phone a{color:inherit;text-decoration:none;transition:opacity .3s}
+.contact-phone a:hover{opacity:.7}
 .social-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .soc-btn{display:inline-flex;align-items:center;gap:12px;padding:17px 34px;text-decoration:none;font-size:13px;font-weight:500;letter-spacing:.05em;color:var(--cream);border:1px solid var(--border);transition:all .35s;min-width:170px}
 .soc-btn svg{flex-shrink:0;transition:transform .3s}
@@ -224,6 +253,17 @@ opacity:0.032}
 .footer-note{font-size:12px;color:var(--text-muted);text-align:center;line-height:1.7}
 .footer-tel{font-size:14px;color:var(--text-mid);text-decoration:none;letter-spacing:.04em;transition:color .3s}
 .footer-tel:hover{color:var(--cream)}
+.footer-dev{font-size:11px;color:var(--text-muted);letter-spacing:.08em;flex-basis:100%;text-align:center}
+.footer-dev a{color:var(--olive-light);text-decoration:none;transition:color .3s}
+.footer-dev a:hover{color:var(--cream)}
+
+/* ─── UTILITIES (moved from inline styles) ─── */
+.d1{transition-delay:.1s}.d12{transition-delay:.12s}.d15{transition-delay:.15s}
+.d2{transition-delay:.2s}.d24{transition-delay:.24s}.d3{transition-delay:.3s}
+.prob-head .sec-p{text-align:center}
+.bene-cta{margin-top:52px}
+.contact-head .sec-h i{font-style:italic;color:var(--gold-light)}
+.faq-head{text-align:center}
 
 /* ─── REVEAL ─── */
 .reveal{opacity:0;transform:translateY(32px);transition:opacity .75s ease,transform .75s ease}
@@ -249,6 +289,41 @@ opacity:0.032}
   .footer{flex-direction:column;text-align:center;padding:40px 28px}
   .social-row{gap:10px}
   .soc-btn{min-width:140px;padding:14px 20px;font-size:12px}
+  .contact,.faq{padding:90px 28px}
+  .how-connector{display:none}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:24px 20px;justify-items:start}
+  .stat-div{display:none}
+}
+@media(max-width:600px){
+  .nav,.nav.scrolled{padding-left:16px;padding-right:16px}
+  .nav-logo{gap:8px}
+  .nav-logo svg{width:28px;height:28px}
+  .nav-logotype{font-size:16px}
+  .nav-order{padding:10px 16px;font-size:11px;letter-spacing:.08em}
+  .hero{padding:100px 20px 56px}
+  .hero-title{font-size:clamp(34px,10vw,44px)}
+  .hero-sub{font-size:15px;margin-bottom:36px}
+  .hero-btns .btn-cta,.hero-btns .btn-ghost{width:100%;justify-content:center;padding:16px 20px}
+  .hero-visual{height:330px;margin-bottom:0}
+  .orb-wrap{width:270px;height:270px}
+  .ring-2{inset:26px}
+  .ring-3{inset:58px}
+  .orb-glow{inset:72px}
+  .orb-bottle{width:118px}
+  .ing-2{left:0}
+  .ing-3{right:0}
+  .stats{padding:22px 20px}
+  .stat{gap:12px}
+  .stat-num{font-size:32px;min-width:0}
+  .sec{padding:72px 20px}
+  .contact,.faq{padding:72px 20px}
+  .prob-card,.ing-card,.how-step{padding:40px 26px}
+  .order-card{padding:44px 22px}
+  .faq-q{padding:22px 0;font-size:15px}
+  .footer{padding:36px 20px}
+}
+@media(max-width:420px){
+  .order-alt-grid{grid-template-columns:1fr}
 }
 
 /* ─── CHECKOUT MODAL ─── */
@@ -305,7 +380,9 @@ opacity:0.032}
 @keyframes mspin{to{transform:rotate(360deg)}}
 .mo-state-h{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--cream);margin-bottom:10px}
 .mo-state-p{font-size:14px;color:var(--text-mid);line-height:1.7}
-.mo-reset{margin-top:24px;background:var(--olive);color:#fff;border:none;padding:13px 30px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;transition:background .3s}
+.mo-state-ico{margin:0 auto 18px;display:block}
+.mo-mgr-btn{display:inline-block;margin-top:16px;background:var(--orange);color:#fff;padding:14px 28px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-decoration:none}
+.mo-reset{margin-top:16px;background:var(--olive);color:#fff;border:none;padding:13px 30px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;transition:background .3s}
 .mo-reset:hover{background:var(--olive-mid)}
 
 /* fallback order box */
@@ -314,8 +391,14 @@ opacity:0.032}
 .mo-copy:hover{background:rgba(74,108,42,.15)}
 
 @media(max-width:600px){
-  .mo-body{padding:40px 24px 36px}
-  .mo-row{grid-template-columns:1fr}
+  .mo{padding:10px}
+  .mo-card{max-height:calc(100dvh - 20px)}
+  .mo-body{padding:40px 20px 32px}
+  .mo-row{grid-template-columns:1fr;gap:0}
+  .mo-input{font-size:16px}
+  .mo-x{width:44px;height:44px;top:10px;right:10px}
+  .mo-qbtn{width:42px;height:42px}
+  .mo-prod{padding:14px;gap:14px}
   .mo-title{font-size:26px}
   .mo-total-val{font-size:34px}
 }
@@ -471,7 +554,7 @@ opacity:0.032}
   <div class="prob-head reveal">
     <div class="sec-eye">Впізнаєш себе?</div>
     <h2 class="sec-h">Три сигнали виснаженої<br>нервової системи</h2>
-    <p class="sec-p" style="margin:0 auto;text-align:center">Стрес, безсоння, туман у голові — не норма. Це симптоми, і вони вирішуються.</p>
+    <p class="sec-p">Стрес, тривожність, безсоння, туман у голові — не норма. Це симптоми, і вони вирішуються.</p>
   </div>
   <div class="prob-grid">
     <!-- Card 1: Stress -->
@@ -494,7 +577,7 @@ opacity:0.032}
       <p class="prob-text">Постійна тривога, роздратованість, відчуття що ти "на межі". Кортизол не знижується, тіло не встигає відновлюватися між навантаженнями.</p>
     </div>
     <!-- Card 2: Sleep -->
-    <div class="prob-card" style="transition-delay:.12s">
+    <div class="prob-card d12">
       <div class="prob-icon-wrap">
         <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M36 10 Q48 20 46 36 Q44 52 28 54 Q20 44 22 28 Q24 12 36 10Z" stroke="#7D5228" stroke-width="1.5" fill="rgba(125,82,40,0.1)">
@@ -518,7 +601,7 @@ opacity:0.032}
       <p class="prob-text">Довго не можеш заснути, прокидаєшся вночі, а зранку — ніби й не спав. Циркадні ритми збиті, нейрони не відновлюються під час нічного відпочинку.</p>
     </div>
     <!-- Card 3: Focus -->
-    <div class="prob-card" style="transition-delay:.24s">
+    <div class="prob-card d24">
       <div class="prob-icon-wrap">
         <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="36" cy="36" rx="22" ry="20" stroke="rgba(58,82,32,0.4)" stroke-width="1.2"/>
@@ -567,11 +650,11 @@ opacity:0.032}
       </div>
       <div class="ing-label">Компонент 01</div>
       <div class="ing-name-big">Ashwaganda</div>
-      <p class="ing-desc">Адаптоген тисячолітньої аюрведи. Клінічно знижує кортизол на 27–30%, зменшує симптоми тривожності та відновлює стресостійкість організму без сонливості.</p>
+      <p class="ing-desc">Адаптоген тисячолітньої аюрведи. Клінічно знижує кортизол на 27–30% — а оскільки кортизол і тестостерон взаємообернені, це природно підвищує рівень тестостерону. Зменшує тривожність, відновлює стресостійкість без сонливості.</p>
       <span class="ing-badge">Адаптоген</span>
     </div>
     <!-- L-Theanine -->
-    <div class="ing-card" style="transition-delay:.15s">
+    <div class="ing-card d15">
       <div class="ing-icon-wrap">
         <svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M44 72 C32 60 20 46 24 32 C28 18 44 14 44 14 C44 14 60 18 64 32 C68 46 56 60 44 72Z" stroke="#3A5220" stroke-width="1.5" fill="rgba(58,82,32,0.06)"/>
@@ -590,7 +673,7 @@ opacity:0.032}
       <span class="ing-badge">Нейромодулятор</span>
     </div>
     <!-- Rhodiola -->
-    <div class="ing-card" style="transition-delay:.3s">
+    <div class="ing-card d3">
       <div class="ing-icon-wrap">
         <svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M16 62 L44 22 L72 62" stroke="#7D5228" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
@@ -617,7 +700,7 @@ opacity:0.032}
       <div class="sec-eye">Що ти отримуєш</div>
       <h2 class="sec-h">Комплексна дія<br>зсередини назовні</h2>
       <p class="sec-p">Нейро-Баланс не маскує симптоми — він відновлює систему на рівні гормонів, нейронів і клітинного метаболізму.</p>
-      <div style="margin-top:52px">
+      <div class="bene-cta">
         <a href="#order" class="btn-cta">Замовити курс</a>
       </div>
     </div>
@@ -635,7 +718,7 @@ opacity:0.032}
           <p class="bene-body">Ашваганда регулює вісь HPA, зменшуючи надмірне вироблення гормону стресу та відновлюючи природний гормональний ритм організму.</p>
         </div>
       </div>
-      <div class="bene-item" style="transition-delay:.1s">
+      <div class="bene-item d1">
         <svg class="bene-check" viewBox="0 0 34 34" fill="none">
           <circle cx="17" cy="17" r="16.5" stroke="rgba(74,108,42,0.25)" stroke-width=".8"/>
           <circle cx="17" cy="17" r="16.5" stroke="rgba(107,139,58,0.5)" stroke-width=".8" stroke-dasharray="2 3">
@@ -648,7 +731,7 @@ opacity:0.032}
           <p class="bene-body">L-Theanine підвищує рівень GABA та серотоніну, сприяючи природному розслабленню — глибший сон, без медикаментозної залежності.</p>
         </div>
       </div>
-      <div class="bene-item" style="transition-delay:.2s">
+      <div class="bene-item d2">
         <svg class="bene-check" viewBox="0 0 34 34" fill="none">
           <circle cx="17" cy="17" r="16.5" stroke="rgba(74,108,42,0.25)" stroke-width=".8"/>
           <circle cx="17" cy="17" r="16.5" stroke="rgba(107,139,58,0.5)" stroke-width=".8" stroke-dasharray="2 3">
@@ -661,7 +744,7 @@ opacity:0.032}
           <p class="bene-body">Rhodiola покращує оксигенацію мозку та підтримує нейротрансмітери, що відповідають за концентрацію, швидкість мислення та довгострокову пам'ять.</p>
         </div>
       </div>
-      <div class="bene-item" style="transition-delay:.3s">
+      <div class="bene-item d3">
         <svg class="bene-check" viewBox="0 0 34 34" fill="none">
           <circle cx="17" cy="17" r="16.5" stroke="rgba(74,108,42,0.25)" stroke-width=".8"/>
           <circle cx="17" cy="17" r="16.5" stroke="rgba(107,139,58,0.5)" stroke-width=".8" stroke-dasharray="2 3">
@@ -672,19 +755,6 @@ opacity:0.032}
         <div>
           <div class="bene-title">Стабільна енергія без стимуляторів</div>
           <p class="bene-body">На відміну від кофеїну — жодного збудження, жодного падіння. Адаптогени регулюють адреналові залози, даючи рівну енергію протягом дня.</p>
-        </div>
-      </div>
-      <div class="bene-item" style="transition-delay:.4s">
-        <svg class="bene-check" viewBox="0 0 34 34" fill="none">
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(74,108,42,0.25)" stroke-width=".8"/>
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(107,139,58,0.5)" stroke-width=".8" stroke-dasharray="2 3">
-            <animateTransform attributeName="transform" type="rotate" from="0 17 17" to="360 17 17" dur="18s" repeatCount="indefinite"/>
-          </circle>
-          <path d="M10 17 L14.5 21.5 L24 12" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <div class="bene-title">Захищає теломери. Сповільнює старіння.</div>
-          <p class="bene-body">Зниження хронічного стресу безпосередньо впливає на теломеразну активність та захист ДНК від передчасного руйнування — як показано у дослідженнях BDNF.</p>
         </div>
       </div>
     </div>
@@ -703,18 +773,18 @@ opacity:0.032}
       <div class="how-connector"></div>
       <div class="how-step-num">01</div>
       <div class="how-step-title">Прийом вранці</div>
-      <p class="how-step-body">2 капсули під час сніданку, запити водою. L-Theanine починає діяти протягом 30–60 хвилин — відчуваєш спокійний фокус вже в перший день.</p>
+      <p class="how-step-body">1-2 капсули з ранку під час їжі, запити водою. L-Theanine починає діяти за 30–60 хвилин — відчуваєш спокійний фокус вже в перший день.</p>
     </div>
-    <div class="how-step" style="transition-delay:.12s">
+    <div class="how-step d12">
       <div class="how-connector"></div>
       <div class="how-step-num">02</div>
       <div class="how-step-title">Системна дія</div>
       <p class="how-step-body">Ашваганда та Rhodiola накопичуються в організмі. Протягом 2–4 тижнів нормалізується рівень кортизолу, відновлюється глибокий сон та витривалість.</p>
     </div>
-    <div class="how-step" style="transition-delay:.24s">
+    <div class="how-step d24">
       <div class="how-step-num">03</div>
-      <div class="how-step-title">Повний курс 30 днів</div>
-      <p class="how-step-body">За місяць регулярного прийому нервова система відновлює природний ресурс. Можна повторювати курс після короткої перерви.</p>
+      <div class="how-step-title">Накопичувальний ефект</div>
+      <p class="how-step-body">Ашваганда та Rhodiola мають накопичувальний ефект — повна дія розгортається за 2–4 тижні. Можна приймати на постійній основі без прив'язки до курсу.</p>
     </div>
   </div>
 </section>
@@ -758,15 +828,15 @@ opacity:0.032}
         <div class="order-pvalue">Уточнюйте у менеджера</div>
         <div class="order-pnote">Актуальна ціна — в Telegram або Instagram</div>
       </div>
-      <a href="https://t.me/LaBroudi" target="_blank" class="order-main-btn">
+      <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="order-main-btn">
         Замовити через Telegram →
       </a>
-      <button class="order-main-btn" onclick="moOpen()" style="margin-bottom:12px">КУПИТИ ЗАРАЗ — 1 ₴ (ТЕСТ)</button>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-<a href="https://t.me/LaBroudi" target="_blank" class="order-alt-btn">Написати у Telegram</a>
-<a href="https://wa.me/380932808111" target="_blank" class="order-alt-btn">Написати у WhatsApp</a>
+      <button type="button" class="order-main-btn">КУПИТИ ЗАРАЗ</button>
+<div class="order-alt-grid">
+<a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="order-alt-btn">Написати у Telegram</a>
+<a href="https://wa.me/380932808111" target="_blank" rel="noopener" class="order-alt-btn">Написати у WhatsApp</a>
 <a href="viber://chat?number=380932808111" class="order-alt-btn">Написати у Viber</a>
-<a href="https://instagram.com/labro.biocore" target="_blank" class="order-alt-btn">Написати у Instagram</a>
+<a href="https://instagram.com/labro.biocore" target="_blank" rel="noopener" class="order-alt-btn">Написати у Instagram</a>
 </div>
       <div class="pay-row">
         <span class="pay-lbl">Оплата:</span>
@@ -782,11 +852,11 @@ opacity:0.032}
 <section class="contact" id="contact">
   <div class="contact-head reveal">
     <div class="sec-eye">Зв'язок</div>
-    <h2 class="sec-h">Залишились питання?<br><i style="font-style:italic;color:var(--gold-light)">Ми відповімо швидко</i></h2>
-    <a class="contact-phone" href="tel:+380932808111">+380 93 280 81 11 · Viber / WhatsApp</a>
+    <h2 class="sec-h">Залишились питання?<br><i>Ми відповімо швидко</i></h2>
+    <p class="contact-phone"><a href="tel:+380932808111">+380&nbsp;93&nbsp;280&nbsp;81&nbsp;11</a> · Viber / WhatsApp</p>
   </div>
   <div class="social-row">
-    <a href="https://wa.me/380932808111" target="_blank" class="soc-btn soc-wa">
+    <a href="https://wa.me/380932808111" target="_blank" rel="noopener" class="soc-btn soc-wa">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#25D366"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.121 1.535 5.849L.046 23.7a.5.5 0 00.61.638l5.985-1.571A11.957 11.957 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.016-1.374l-.36-.214-3.727.977.996-3.639-.235-.374A9.818 9.818 0 1112 21.818z" fill="#25D366"/></svg>
       WhatsApp
     </a>
@@ -794,15 +864,15 @@ opacity:0.032}
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#7E50C0"><path d="M12 0C6.074 0 2 3.897 2 8.689c0 2.816 1.418 5.354 3.818 7.047v3.764l3.496-1.72c.872.223 1.8.344 2.762.344 5.926 0 10-3.897 10-8.69C22 3.897 17.926 0 12 0zm1.028 11.683l-2.55-2.714-4.975 2.714 5.467-5.796 2.614 2.714 4.91-2.714-5.466 5.796z"/></svg>
       Viber
     </a>
-    <a href="https://t.me/LaBroudi" target="_blank" class="soc-btn soc-tg">
+    <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="soc-btn soc-tg">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#0088CC"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.02 9.52c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.883.701z"/></svg>
       Менеджер TG
     </a>
-    <a href="https://t.me/LaBroBioCore" target="_blank" class="soc-btn soc-tg">
+    <a href="https://t.me/LaBroBioCore" target="_blank" rel="noopener" class="soc-btn soc-tg">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#0088CC"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.02 9.52c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.883.701z"/></svg>
       TG Канал
     </a>
-    <a href="https://instagram.com/labro.biocore" target="_blank" class="soc-btn soc-ig">
+    <a href="https://instagram.com/labro.biocore" target="_blank" rel="noopener" class="soc-btn soc-ig">
       <svg width="20" height="20" viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#F9CE34"/><stop offset="50%" stop-color="#EE2A7B"/><stop offset="100%" stop-color="#6228D7"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="url(#ig)"/></svg>
       Instagram
     </a>
@@ -811,7 +881,7 @@ opacity:0.032}
 
 <!-- FAQ -->
 <section class="faq" id="faq">
-  <div class="reveal" style="text-align:center">
+  <div class="reveal faq-head">
     <div class="sec-eye">FAQ</div>
     <h2 class="sec-h">Часті запитання</h2>
   </div>
@@ -856,9 +926,9 @@ opacity:0.032}
 </section>
 
 <!-- CHECKOUT MODAL -->
-<div class="mo" id="checkoutModal">
+<div class="mo" id="checkoutModal" role="dialog" aria-modal="true" aria-label="Оформлення замовлення">
   <div class="mo-card">
-    <button class="mo-x" id="moClose" aria-label="Закрити">
+    <button type="button" class="mo-x" id="moClose" aria-label="Закрити">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
     </button>
     <div class="mo-body">
@@ -883,9 +953,9 @@ opacity:0.032}
           <div class="mo-qty-row">
             <span class="mo-qty-lbl">Кількість:</span>
             <div class="mo-qty">
-              <button class="mo-qbtn" id="moMinus">−</button>
+              <button type="button" class="mo-qbtn" id="moMinus" aria-label="Менше">−</button>
               <div class="mo-qnum" id="moQty">1</div>
-              <button class="mo-qbtn" id="moPlus">+</button>
+              <button type="button" class="mo-qbtn" id="moPlus" aria-label="Більше">+</button>
             </div>
           </div>
         </div>
@@ -895,31 +965,31 @@ opacity:0.032}
       <div id="moForm">
         <div class="mo-row">
           <div class="mo-field">
-            <label class="mo-field-lbl">Ім'я та прізвище</label>
-            <input class="mo-input" id="moName" type="text" placeholder="Іван Петренко">
+            <label class="mo-field-lbl" for="moName">Ім'я та прізвище</label>
+            <input class="mo-input" id="moName" type="text" autocomplete="name" maxlength="128" placeholder="Іван Петренко">
           </div>
           <div class="mo-field">
-            <label class="mo-field-lbl">Телефон</label>
-            <input class="mo-input" id="moPhone" type="tel" placeholder="+380 __ ___ ____">
+            <label class="mo-field-lbl" for="moPhone">Телефон</label>
+            <input class="mo-input" id="moPhone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="+380 __ ___ ____">
           </div>
         </div>
         <div class="mo-field">
-          <label class="mo-field-lbl">Місто та відділення Нової Пошти</label>
-          <input class="mo-input" id="moCity" type="text" placeholder="Харків, відд. №12">
+          <label class="mo-field-lbl" for="moCity">Місто та відділення Нової Пошти</label>
+          <input class="mo-input" id="moCity" type="text" maxlength="256" placeholder="Харків, відд. №12">
         </div>
         <div class="mo-field">
-          <label class="mo-field-lbl">Коментар (необов'язково)</label>
-          <input class="mo-input" id="moComment" type="text" placeholder="Будь-яке уточнення...">
+          <label class="mo-field-lbl" for="moComment">Коментар (необов'язково)</label>
+          <input class="mo-input" id="moComment" type="text" maxlength="300" placeholder="Будь-яке уточнення...">
         </div>
         <div class="mo-total">
           <div class="mo-total-lbl">До сплати</div>
           <div class="mo-total-val"><span class="mo-total-cur">₴</span><span id="moTotal">599</span></div>
         </div>
-        <button class="mono-pay" id="moPayBtn">
+        <button type="button" class="mono-pay" id="moPayBtn">
           <span class="mono-logo-text">mono</span>
           Сплатити через monobank
         </button>
-        <a href="https://t.me/LaBroudi" target="_blank" class="mo-alt">або написати менеджеру → @LaBroudi</a>
+        <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="mo-alt">або написати менеджеру → @LaBroudi</a>
       </div>
 
       <!-- Loading -->
@@ -931,20 +1001,20 @@ opacity:0.032}
 
       <!-- Error / fallback -->
       <div class="mo-state" id="moError">
-        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" style="margin:0 auto 18px;display:block"><circle cx="26" cy="26" r="25" stroke="#C45520" stroke-width="1.2"/><path d="M26 16v14M26 35v2" stroke="#C45520" stroke-width="2" stroke-linecap="round"/></svg>
-        <div class="mo-state-h">Не вдалось підключитись до API</div>
-        <p class="mo-state-p">Оплата через браузер потребує бекенду.<br>Надішли замовлення менеджеру — він виставить рахунок вручну.</p>
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" class="mo-state-ico"><circle cx="26" cy="26" r="25" stroke="#C45520" stroke-width="1.2"/><path d="M26 16v14M26 35v2" stroke="#C45520" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="mo-state-h">Онлайн-оплата тимчасово недоступна</div>
+        <p class="mo-state-p">Надішли замовлення менеджеру — він виставить рахунок вручну.</p>
         <div class="mo-order-box" id="moOrderText"></div>
-        <button class="mo-copy" id="moCopyBtn">Скопіювати замовлення</button>
+        <button type="button" class="mo-copy" id="moCopyBtn">Скопіювати замовлення</button>
         <br>
-        <a href="https://t.me/LaBroudi" target="_blank" style="display:inline-block;margin-top:16px;background:var(--orange);color:#fff;padding:14px 28px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;">Написати менеджеру →</a>
+        <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="mo-mgr-btn">Написати менеджеру →</a>
         <br>
-        <button class="mo-reset" onclick="moReset()" style="margin-top:16px">← Назад до форми</button>
+        <button type="button" class="mo-reset" id="moResetBtn">← Назад до форми</button>
       </div>
 
       <!-- Success -->
       <div class="mo-state" id="moSuccess">
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" style="margin:0 auto 20px;display:block"><circle cx="32" cy="32" r="31" stroke="#6B8B3A" stroke-width="1.2"/><path d="M18 32l10 10 18-18" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" class="mo-state-ico"><circle cx="32" cy="32" r="31" stroke="#6B8B3A" stroke-width="1.2"/><path d="M18 32l10 10 18-18" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div class="mo-state-h">Замовлення прийнято!</div>
         <p class="mo-state-p">Дякуємо! Менеджер зв'яжеться з вами найближчим часом для підтвердження доставки.</p>
       </div>
@@ -959,7 +1029,10 @@ opacity:0.032}
     © 2026 LABRO BIOCORE. Дієтична добавка.<br>
     Instagram: @labro.biocore · TG: @LaBroBioCore
   </div>
-  <a href="tel:+380932808111" class="footer-tel">+380 93 280 81 11</a>
+  <a href="tel:+380932808111" class="footer-tel">+380&nbsp;93&nbsp;280&nbsp;81&nbsp;11</a>
+  <div class="footer-dev">
+    Розроблено <a href="https://infiniteunion.com.ua" target="_blank" rel="noopener">INFINITE UNION</a>
+  </div>
 </footer>
 
 <script>
@@ -1079,12 +1152,12 @@ document.querySelectorAll('.faq-q').forEach(q=>{
 
 // ═══════════════════════════════════
 //  MONOBANK CHECKOUT
-//  ⚠️  Token в продакшн — перенеси на бекенд (n8n / Vercel fn)
-//  API не підтримує CORS → при помилці fallback на Telegram
+//  Рахунок створює бекенд (бот на Railway) — токен monobank ніколи не потрапляє в браузер.
+//  Сума рахується на сервері; PRICE_UAH тут лише для відображення.
+//  При помилці — fallback на менеджера в Telegram.
 // ═══════════════════════════════════
-const MONO_TOKEN = 'mx0LQO9iqlTboJexcYcplRw';
-const PRICE_UAH  = 1;   // ← змін тут
-const PRICE_KOP  = PRICE_UAH * 100;
+const CHECKOUT_API = 'https://web-production-5e728.up.railway.app/api/checkout';
+const PRICE_UAH  = 599;   // ← має збігатися з PRICE_KOP у боті
 
 let moQty = 1;
 const moModal   = document.getElementById('checkoutModal');
@@ -1122,6 +1195,7 @@ document.querySelectorAll('.btn-cta,.order-main-btn,.nav-order').forEach(btn=>{
   });
 });
 document.getElementById('moClose').addEventListener('click',moClose);
+document.getElementById('moResetBtn').addEventListener('click',moReset);
 moModal.addEventListener('click',e=>{if(e.target===moModal)moClose();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')moClose();});
 
@@ -1159,6 +1233,10 @@ moPayBtn.addEventListener('click', async ()=>{
     if(!v){el.classList.add('err');ok=false;}
     else el.classList.remove('err');
   });
+  // same rule as the backend: UA number, +380XXXXXXXXX / 0XXXXXXXXX
+  if(phone && !/^\+?3?8?0\d{9}$/.test(phone.replace(/[\s\-()]/g,''))){
+    document.getElementById('moPhone').classList.add('err'); ok=false;
+  }
   if(!ok)return;
 
   moPayBtn.disabled=true;
@@ -1167,28 +1245,10 @@ moPayBtn.addEventListener('click', async ()=>{
   const orderInfo=`Нейро-Баланс × ${moQty} = ₴${PRICE_UAH*moQty}\nІм'я: ${name}\nТел: ${phone}\nДоставка: ${city}${comment?'\nКоментар: '+comment:''}`;
 
   try{
-    const resp = await fetch('https://api.monobank.ua/api/merchant/invoice/create',{
+    const resp = await fetch(CHECKOUT_API,{
       method:'POST',
-      headers:{'X-Token':MONO_TOKEN,'Content-Type':'application/json'},
-      body:JSON.stringify({
-        amount: PRICE_KOP * moQty,
-        ccy: 980,
-        merchantPaymInfo:{
-          reference:`labro-${Date.now()}`,
-          destination:'Нейро-Баланс — LABRO BIOCORE',
-          comment: orderInfo,
-          basketOrder:[{
-            name:'Нейро-Баланс (60 вег. кап.)',
-            qty: moQty,
-            sum: PRICE_KOP,
-            total: PRICE_KOP * moQty,
-            unit:'шт.'
-          }]
-        },
-        redirectUrl: window.location.href,
-        validity: 3600,
-        paymentType:'debit'
-      })
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name, phone, city, comment, qty: moQty})
     });
 
     const data = await resp.json();
