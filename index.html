@@ -1195,6 +1195,7 @@ document.querySelectorAll('.btn-cta,.order-main-btn,.nav-order').forEach(btn=>{
   });
 });
 document.getElementById('moClose').addEventListener('click',moClose);
+  document.getElementById('moPhone').addEventListener('focus',function(){const v=this.value;this.value='';this.value=v;});
 document.getElementById('moResetBtn').addEventListener('click',moReset);
 moModal.addEventListener('click',e=>{if(e.target===moModal)moClose();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')moClose();});
