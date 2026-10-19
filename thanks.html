@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src https://web-production-5e728.up.railway.app; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="labro-api" content="https://web-production-5e728.up.railway.app">
+<meta name="theme-color" content="#0A0907">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="stylesheet" href="assets/style.css">
+<title>Статус замовлення — LABRO BIOCORE</title>
+<meta name="description" content="Статус оплати Вашого замовлення LABRO BIOCORE.">
+<meta name="robots" content="noindex">
+<script src="assets/thanks.js" defer></script>
+</head>
+<body>
+<nav class="nav page-nav" aria-label="Основна навігація">
+  <a href="./" class="nav-logo" aria-label="LABRO BIOCORE — на головну"><span class="nav-logotype">LABRO <b>BIOCORE</b></span></a>
+  <a href="./" class="nav-order">На головну</a>
+</nav>
+<main class="page" id="main">
+  <h1 class="page-h">Дякуємо за замовлення!</h1>
+  <div class="status-card" id="statusCard" role="status" aria-live="polite">
+    <div class="mo-spinner" id="statusSpinner" aria-hidden="true"></div>
+    <h2 class="mo-state-h" id="statusTitle">Перевіряємо статус оплати…</h2>
+    <p class="mo-state-p" id="statusText">Зачекайте кілька секунд — monobank підтверджує платіж.</p>
+    <div class="status-actions">
+      <a class="btn-cta" id="trackBtn" href="https://t.me/LaBroudi" target="_blank" rel="noopener">Відстежувати замовлення в Telegram</a>
+      <a class="mo-alt" href="https://t.me/LaBroudi" target="_blank" rel="noopener">Питання? Напишіть менеджеру → @LaBroudi</a>
+    </div>
+  </div>
+  <p class="mo-hint">У Telegram-боті поділіться номером телефону, вказаним у замовленні, — і отримуватимете сповіщення про оплату та доставку, а всі замовлення будуть у «Мої замовлення».</p>
+</main>
+<footer class="footer">
+  <div class="footer-brand">LABRO <b>BIOCORE</b></div>
+  <nav class="footer-links" aria-label="Документи"><a href="privacy.html">Політика конфіденційності</a></nav>
+</footer>
+</body>
+</html>
