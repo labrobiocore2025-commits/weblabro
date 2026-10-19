@@ -1,9 +1,10 @@
-name: Validate HTML
+name: Validate site
 
+# GitHub Pages serves this repo straight from main (Settings → Pages → Deploy from branch).
+# This check is required by branch protection, so nothing broken reaches main via a PR.
 on:
   push:
   pull_request:
-  workflow_call:
 
 permissions:
   contents: read
@@ -16,13 +17,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22  # html-validate 11 requires Node >= 22
-      - name: Check HTML (rules in .htmlvalidate.json)
-        run: npx --yes html-validate@11 index.html
+      - name: HTML (rules in .htmlvalidate.json)
+        run: npx --yes html-validate@11 *.html
+      - name: Strict CSP — no inline scripts, styles or handlers
+        run: |
+          if grep -nE "<script>|<script [^>]*>[^<]+</script>|<style|\son[a-z]+=\"|style=\"|'unsafe-inline'|'unsafe-eval'" *.html; then
+            echo "::error::Inline script/style/handler or unsafe CSP keyword found"; exit 1
+          fi
+      - name: Every page has the same CSP and API origin
+        run: |
+          api=$(grep -ho 'name="labro-api" content="[^"]*"' index.html | cut -d'"' -f4)
+          for f in *.html; do
+            grep -q "connect-src $api" "$f" || { echo "::error file=$f::CSP connect-src does not match labro-api ($api)"; exit 1; }
+          done
       - name: No secrets in client code
         run: |
-          if grep -nE "X-Token|MONO_TOKEN\s*=" index.html; then
-            echo "::error::Payment provider token found in client-side code"; exit 1
+          if grep -rnE "X-Token|MONO_TOKEN|[0-9]{8,10}:[A-Za-z0-9_-]{35}|ghp_[A-Za-z0-9]{30,}" --include=*.html --include=*.js .; then
+            echo "::error::Secret-looking value found in client-side code"; exit 1
           fi
-          if grep -nE "[0-9]{8,10}:[A-Za-z0-9_-]{35}" index.html; then
-            echo "::error::Telegram bot token found in client-side code"; exit 1
+      - name: Unfilled legal placeholders (warning)
+        run: |
+          if grep -n "data-todo" privacy.html; then
+            echo "::warning file=privacy.html::Owner details in the privacy policy are not filled in yet"
           fi
