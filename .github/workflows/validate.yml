@@ -24,12 +24,16 @@ jobs:
           if grep -nE "<script>|<script [^>]*>[^<]+</script>|<style|\son[a-z]+=\"|style=\"|'unsafe-inline'|'unsafe-eval'" *.html; then
             echo "::error::Inline script/style/handler or unsafe CSP keyword found"; exit 1
           fi
-      - name: Every page has the same CSP and API origin
+      - name: Pages that call the API allow exactly that origin in CSP
         run: |
-          api=$(grep -ho 'name="labro-api" content="[^"]*"' index.html | cut -d'"' -f4)
-          for f in *.html; do
-            grep -q "connect-src $api" "$f" || { echo "::error file=$f::CSP connect-src does not match labro-api ($api)"; exit 1; }
+          for f in $(grep -l 'name="labro-api"' *.html); do
+            api=$(grep -ho 'name="labro-api" content="[^"]*"' "$f" | cut -d'"' -f4)
+            grep -q "connect-src $api;" "$f" || { echo "::error file=$f::CSP connect-src does not match labro-api ($api)"; exit 1; }
           done
+      - name: Asset cache-busting versions are current
+        run: python3 tools/stamp-assets.py --check
+      - name: Custom domain file present
+        run: test "$(cat CNAME)" = "labrobiocore.com.ua"
       - name: No secrets in client code
         run: |
           if grep -rnE "X-Token|MONO_TOKEN|[0-9]{8,10}:[A-Za-z0-9_-]{35}|ghp_[A-Za-z0-9]{30,}" --include=*.html --include=*.js .; then
