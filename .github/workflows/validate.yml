@@ -30,6 +30,8 @@ jobs:
             api=$(grep -ho 'name="labro-api" content="[^"]*"' "$f" | cut -d'"' -f4)
             grep -q "connect-src $api;" "$f" || { echo "::error file=$f::CSP connect-src does not match labro-api ($api)"; exit 1; }
           done
+      - name: Asset cache-busting versions are current
+        run: python3 tools/stamp-assets.py --check
       - name: Custom domain file present
         run: test "$(cat CNAME)" = "labrobiocore.com.ua"
       - name: No secrets in client code
