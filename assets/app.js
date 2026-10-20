@@ -151,7 +151,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 // ═══════════════════════════════════
 //  PRICE — from the backend, so the page shows exactly what the invoice charges
 // ═══════════════════════════════════
-let priceKop = Number(document.body.dataset.priceKop) || 59900;
+let priceKop = Number(document.body.dataset.priceKop) || 99000;
 let maxQty = 5;
 const fmtUah = kop => (kop % 100 ? (kop / 100).toFixed(2).replace('.', ',') : String(kop / 100))
   .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
