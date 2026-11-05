@@ -28,8 +28,21 @@ jobs:
         run: |
           for f in $(grep -l 'name="labro-api"' *.html); do
             api=$(grep -ho 'name="labro-api" content="[^"]*"' "$f" | cut -d'"' -f4)
-            grep -q "connect-src $api;" "$f" || { echo "::error file=$f::CSP connect-src does not match labro-api ($api)"; exit 1; }
+            grep -qE "connect-src $api[ ;]" "$f" || { echo "::error file=$f::CSP connect-src does not match labro-api ($api)"; exit 1; }
           done
+      - name: Third-party scripts only from the exact Meta Pixel host, no wildcards
+        run: |
+          if grep -ohE "script-src [^;]*" *.html | grep -vxE "script-src 'self'( https://connect\.facebook\.net)?"; then
+            echo "::error::Unexpected script-src source"; exit 1
+          fi
+          if grep -nE 'Content-Security-Policy" content="[^"]*\*' *.html; then
+            echo "::error::Wildcard in CSP"; exit 1
+          fi
+      - name: Meta Pixel only through the consent-gated loader
+        run: |
+          if grep -rnE "fbevents\.js|facebook\.com/tr" --include=*.html --include=*.js . | grep -v "^./assets/js/meta-pixel.js:"; then
+            echo "::error::Meta Pixel loaded outside assets/js/meta-pixel.js (consent bypass)"; exit 1
+          fi
       - name: Asset cache-busting versions are current
         run: python3 tools/stamp-assets.py --check
       - name: Custom domain file present

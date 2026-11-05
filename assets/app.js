@@ -3,7 +3,7 @@
 // The backend base URL comes from <meta name="labro-api">; the monobank token never reaches the browser.
 
 const API = document.querySelector('meta[name="labro-api"]').content.replace(/\/$/, '');
-const CONSENT_VERSION = '1.0';
+const CONSENT_VERSION = '1.1';
 const MANAGER_TG = 'https://t.me/LaBroudi';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -170,6 +170,27 @@ fetch(`${API}/api/price`, { mode: 'cors' })
   .catch(() => renderPrice());
 
 // ═══════════════════════════════════
+//  META PIXEL EVENTS — no-ops without cookie consent (assets/js/meta-pixel.js). Never any personal data.
+// ═══════════════════════════════════
+const CONTENT_ID = 'neuro-balance';
+function px(event, qty, eventID) {
+  if (!window.LabroPixel) return false;
+  return window.LabroPixel.track(event, {
+    value: priceKop * qty / 100, currency: 'UAH', num_items: qty,
+    content_ids: [CONTENT_ID], content_type: 'product',
+  }, eventID);
+}
+(function () {
+  const card = document.querySelector('.order-card');
+  if (!card || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(entries => {
+    // keep watching until the event is really sent (consent may come after the card was first seen)
+    if (entries.some(e => e.isIntersecting) && px('ViewContent', 1)) io.disconnect();
+  }, { threshold: 0.5 });
+  io.observe(card);
+})();
+
+// ═══════════════════════════════════
 //  CHECKOUT MODAL
 // ═══════════════════════════════════
 const $ = id => document.getElementById(id);
@@ -203,6 +224,7 @@ function moOpen(trigger) {
   document.body.style.overflow = 'hidden';
   moReset();
   openedAt = Date.now();
+  px('InitiateCheckout', moQty);
   setTimeout(() => fields.name.focus(), 50);
 }
 function moClose() {
@@ -320,6 +342,9 @@ function readForm() {
     qty: moQty,
     consent: true,
     consent_version: CONSENT_VERSION,
+    // cookie-banner choice; with it the server can send the paid Purchase to Meta (Conversions API)
+    ads_consent: !!window.LabroPixel && window.LabroPixel.consent() === true,
+    ...(window.LabroPixel ? window.LabroPixel.browserIds() : {}),
     website: $('moWebsite').value,       // honeypot
     form_ms: Date.now() - openedAt,
   };
@@ -347,6 +372,7 @@ async function submit(payType) {
   const f = readForm();
   if (!f) return;
   setBusy(true);
+  if (payType === 'online') px('AddPaymentInfo', f.qty);
   $('moLoadingText').textContent = payType === 'online'
     ? 'Створюємо рахунок і перенаправляємо на сторінку оплати monobank…'
     : 'Надсилаємо замовлення менеджеру…';
@@ -369,6 +395,7 @@ async function submit(payType) {
     return;
   }
   if (payType === 'cod' && status === 200 && data.ok) {
+    if (data.ref) px('Lead', f.qty);   // the honeypot's fake success has no ref
     $('moCodTrack').href = data.ref ? `thanks.html?ref=${encodeURIComponent(data.ref)}` : MANAGER_TG;
     setBusy(false);
     moState('cod-success');

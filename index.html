@@ -17,7 +17,7 @@
 <!-- Security. GitHub Pages cannot set response headers, so CSP comes from <meta>.
      No inline scripts/styles/handlers: everything is under assets/. X-Frame-Options / frame-ancestors,
      X-Content-Type-Options and Permissions-Policy are header-only and need a proxy (e.g. Cloudflare) in front of Pages. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src https://api.labrobiocore.com.ua; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://connect.facebook.net; style-src 'self'; font-src 'self'; img-src 'self' data: https://www.facebook.com https://connect.facebook.net; connect-src https://api.labrobiocore.com.ua https://www.facebook.com https://connect.facebook.net; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="labro-api" content="https://api.labrobiocore.com.ua">
 <meta property="og:site_name" content="LABRO BIOCORE">
@@ -29,8 +29,9 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/cormorant-garamond-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=b38d48dc34">
-<script src="assets/app.js?v=2b4e2b7ca9" defer></script>
+<link rel="stylesheet" href="assets/style.css?v=b749c00574">
+<script src="assets/js/meta-pixel.js?v=923bee53b1" async></script>
+<script src="assets/app.js?v=f94215d582" defer></script>
 </head>
 <body data-price-kop="99000">
 <a class="skip-link" href="#main">Перейти до змісту</a>
@@ -663,6 +664,7 @@
   <a href="tel:+380932808111" class="footer-tel">+380&nbsp;93&nbsp;280&nbsp;81&nbsp;11</a>
   <nav class="footer-links" aria-label="Документи">
     <a href="privacy.html">Політика конфіденційності</a>
+    <button type="button" class="footer-cc" data-cookie-settings hidden>Налаштування cookie</button>
   </nav>
   <div class="footer-dev">
     Розроблено <a href="https://infiniteunion.com.ua" target="_blank" rel="noopener">INFINITE UNION</a>

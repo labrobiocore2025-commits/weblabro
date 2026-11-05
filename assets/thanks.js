@@ -1,7 +1,18 @@
 'use strict';
 // thanks.html?ref=<public_ref>: shows the real payment status from /api/order-status (no personal data).
 const API = document.querySelector('meta[name="labro-api"]').content.replace(/\/$/, '');
-const ref = new URLSearchParams(location.search).get('ref') || '';
+// The ref is the only credential for the order status: take it out of the address bar right away, so it
+// never reaches Meta (page URL), browser history sync or a shared screenshot. sessionStorage keeps it
+// for a reload of this tab.
+const ref = (function () {
+  const fromUrl = new URLSearchParams(location.search).get('ref');
+  try {
+    if (fromUrl) sessionStorage.setItem('labro_ref', fromUrl);
+    else return sessionStorage.getItem('labro_ref') || '';
+  } catch (_) { /* storage blocked: the ref still works for this page view */ }
+  if (location.search || location.hash) history.replaceState(null, '', location.pathname);
+  return fromUrl || '';
+})();
 const $ = id => document.getElementById(id);
 const POLL_MS = 3000;
 const MAX_POLLS = 20;
@@ -37,7 +48,26 @@ async function poll(n) {
   if (d.pay_type === 'cod') { show('cod', d.bot); return; }
   const key = VIEW[d.payment_status] ? d.payment_status : 'unpaid';
   show(key, d.bot);
+  if (key === 'paid' && d.purchase) trackPurchase(d.purchase);
   if (key === 'unpaid' && n < MAX_POLLS) setTimeout(() => poll(n + 1), POLL_MS);
   else if (key === 'unpaid') $('statusSpinner').hidden = true;
 }
+
+// Browser Purchase (needs cookie consent). The server sends the same event with the same event_id from the
+// monobank webhook (the source of truth); this guard only stops re-sending on reloads of this page.
+function trackPurchase(p) {
+  if (!window.LabroPixel || !/^[0-9a-f]{32}$/.test(p.event_id || '')) return;
+  const KEY = 'labro_px_purchases';
+  let done = [];
+  try { done = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (_) { done = []; }
+  if (!Array.isArray(done)) done = [];
+  if (done.includes(p.event_id)) return;
+  const sent = window.LabroPixel.track('Purchase', {
+    value: p.value, currency: p.currency, num_items: p.num_items,
+    content_ids: ['neuro-balance'], content_type: 'product',
+  }, p.event_id);
+  if (!sent) return;
+  try { localStorage.setItem(KEY, JSON.stringify(done.concat(p.event_id).slice(-20))); } catch (_) { /* ignore */ }
+}
+
 poll(0);
