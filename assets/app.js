@@ -3,7 +3,7 @@
 // The backend base URL comes from <meta name="labro-api">; the monobank token never reaches the browser.
 
 const API = document.querySelector('meta[name="labro-api"]').content.replace(/\/$/, '');
-const CONSENT_VERSION = '1.1';
+const CONSENT_VERSION = '1.2';
 const MANAGER_TG = 'https://t.me/LaBroudi';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -395,7 +395,8 @@ async function submit(payType) {
     return;
   }
   if (payType === 'cod' && status === 200 && data.ok) {
-    if (data.ref) px('Lead', f.qty);   // the honeypot's fake success has no ref
+    // a placed COD order is a Purchase; the server sends the same event (same event_id) via CAPI
+    if (data.ref && data.purchase && window.LabroPixel) window.LabroPixel.purchase(data.purchase);
     $('moCodTrack').href = data.ref ? `thanks.html?ref=${encodeURIComponent(data.ref)}` : MANAGER_TG;
     setBusy(false);
     moState('cod-success');

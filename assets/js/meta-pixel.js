@@ -7,7 +7,7 @@
 //   personal data. Only the explicit events below are sent, and none of them carries a name or phone.
 // * data-pixel="purchase" (thanks.html, order status): no banner, no PageView; fbevents.js is loaded only
 //   for the single Purchase, after thanks.js has removed the order ref from the URL.
-// Other scripts use window.LabroPixel: track(), consent(), browserIds().
+// Other scripts use window.LabroPixel: track(), purchase(), consent(), browserIds().
 (function () {
   const PIXEL_ID = '1426477409684561';
   const FBEVENTS = 'https://connect.facebook.net/en_US/fbevents.js';
@@ -76,6 +76,24 @@
       load();
       window.fbq('track', event, params || {}, eventID ? { eventID } : undefined);
       return true;
+    },
+    // Purchase with the server's event_id (dedup with CAPI); sent at most once per order in this browser,
+    // so reloading thanks.html or reopening the page never counts a second sale.
+    purchase(p) {
+      if (!p || !/^[0-9a-f]{32}$/.test(p.event_id || '')) return false;
+      const KEY = 'labro_px_purchases';
+      let done = [];
+      try { done = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (_) { done = []; }
+      if (!Array.isArray(done)) done = [];
+      if (done.includes(p.event_id)) return false;
+      const sent = this.track('Purchase', {
+        value: p.value, currency: p.currency, num_items: p.num_items, payment_type: p.payment_type,
+        content_ids: ['neuro-balance'], content_type: 'product',
+      }, p.event_id);
+      if (sent) {
+        try { localStorage.setItem(KEY, JSON.stringify(done.concat(p.event_id).slice(-20))); } catch (_) { /* ignore */ }
+      }
+      return sent;
     },
     // Browser ids for the server-side Conversions API (sent with the order only with consent)
     browserIds() {
