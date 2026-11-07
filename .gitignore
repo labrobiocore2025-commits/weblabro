@@ -1,0 +1,10 @@
+# Local secrets and notes — never commit (also in .git/info/exclude)
+env.
+env
+.env
+.env.*
+*.pem
+*.key
+labro-bot/
+LABRO_PROD_PLAN.md
+.DS_Store
