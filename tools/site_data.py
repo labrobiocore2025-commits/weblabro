@@ -245,7 +245,7 @@ def context(meta, base):
     if meta.get("post") is not None:
         p = POSTS[meta["post"]]
         ctx["post"] = {"title": p[1], "cat": p[2], "mins": p[3], "credit": p[6],
-                       "figure": picture(base, p[4] + "-wide", p[5], "ar-10", ["1200", "1800"], "(min-width:1200px) 1100px, 94vw",
+                       "figure": picture(base, p[4] + "-wide", p[5], "ar-10", ["800", "1200", "1800"], "(min-width:1200px) 1100px, 94vw",
                                          lazy=False, w=1800, h=900),
                        "related": "\n".join(
                            f'<a href="{base}blog/{q[0]}.html" class="ar-36"><span class="ar-37">{E(q[2])} · {E(q[3])}</span>'
