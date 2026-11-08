@@ -28,11 +28,15 @@ const VIEW = {
   offline:  ['Не вдалося перевірити статус', 'Перевірте з\'єднання та оновіть сторінку або напишіть менеджеру.'],
 };
 
+// card look: spinner while waiting, a check for a good outcome, "!" for the rest (failed/expired also offer a retry)
+const LOOK = { paid: 'ok', cod: 'ok', unpaid: 'pending', reversed: 'bad', unknown: 'bad', offline: 'bad', failed: 'retry', expired: 'retry' };
+
 function show(key, bot) {
   const [title, text] = VIEW[key];
   $('statusTitle').textContent = title;
   $('statusText').textContent = text;
   $('statusSpinner').hidden = key === 'unpaid' ? false : true;
+  $('statusCard').dataset.status = LOOK[key];
   if (bot && /^[A-Za-z0-9_]{5,32}$/.test(bot)) $('trackBtn').href = `https://t.me/${bot}?start=o_${ref}`;
 }
 

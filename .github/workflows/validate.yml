@@ -17,25 +17,28 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22  # html-validate 11 requires Node >= 22
+      - name: Pages are built from src/ (tools/build.py) and asset versions are current
+        run: python3 tools/build.py --check
       - name: HTML (rules in .htmlvalidate.json)
-        run: npx --yes html-validate@11 *.html
-      - name: Strict CSP — no inline scripts, styles or handlers
+        run: npx --yes html-validate@11 *.html blog/*.html
+      - name: Strict CSP — no inline scripts, styles or handlers (JSON-LD data blocks are not scripts)
         run: |
-          if grep -nE "<script>|<script [^>]*>[^<]+</script>|<style|\son[a-z]+=\"|style=\"|'unsafe-inline'|'unsafe-eval'" *.html; then
+          if grep -nE "<script>|<script [^>]*>[^<]+</script>|<style|\son[a-z]+=\"|style=\"|'unsafe-inline'|'unsafe-eval'" *.html blog/*.html \
+             | grep -v '<script type="application/ld+json">'; then
             echo "::error::Inline script/style/handler or unsafe CSP keyword found"; exit 1
           fi
       - name: Pages that call the API allow exactly that origin in CSP
         run: |
-          for f in $(grep -l 'name="labro-api"' *.html); do
+          for f in $(grep -l 'name="labro-api"' *.html blog/*.html); do
             api=$(grep -ho 'name="labro-api" content="[^"]*"' "$f" | cut -d'"' -f4)
             grep -qE "connect-src $api[ ;]" "$f" || { echo "::error file=$f::CSP connect-src does not match labro-api ($api)"; exit 1; }
           done
       - name: Third-party scripts only from the exact Meta Pixel host, no wildcards
         run: |
-          if grep -ohE "script-src [^;]*" *.html | grep -vxE "script-src 'self'( https://connect\.facebook\.net)?"; then
+          if grep -ohE "script-src [^;]*" *.html blog/*.html | grep -vxE "script-src 'self'( https://connect\.facebook\.net)?"; then
             echo "::error::Unexpected script-src source"; exit 1
           fi
-          if grep -nE 'Content-Security-Policy" content="[^"]*\*' *.html; then
+          if grep -nE 'Content-Security-Policy" content="[^"]*\*' *.html blog/*.html; then
             echo "::error::Wildcard in CSP"; exit 1
           fi
       - name: Meta Pixel only through the consent-gated loader
@@ -43,8 +46,6 @@ jobs:
           if grep -rnE "fbevents\.js|facebook\.com/tr" --include=*.html --include=*.js . | grep -v "^./assets/js/meta-pixel.js:"; then
             echo "::error::Meta Pixel loaded outside assets/js/meta-pixel.js (consent bypass)"; exit 1
           fi
-      - name: Asset cache-busting versions are current
-        run: python3 tools/stamp-assets.py --check
       - name: Custom domain file present
         run: test "$(cat CNAME)" = "labrobiocore.com.ua"
       - name: No secrets in client code
@@ -57,3 +58,7 @@ jobs:
           if grep -n "data-todo" privacy.html; then
             echo "::warning file=privacy.html::Owner details in the privacy policy are not filled in yet"
           fi
+      - name: Customer content placeholders still on pages (warning)
+        run: |
+          n=$(grep -o "data-ph" *.html blog/*.html | wc -l)
+          if [ "$n" -gt 0 ]; then echo "::warning::$n customer-content placeholders ([… — від замовника]) are still on the site"; fi
