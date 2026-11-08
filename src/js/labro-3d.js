@@ -161,14 +161,16 @@ const lerpC = (a, b, t) => a.clone().lerp(b, t);
 const ease = x => 1 - Math.pow(1 - x, 3);
 const back = x => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
 
-const PR_STEPS = [0.75, 1, 1.25, 1.5, 1.75, 2];
+const PR_STEPS = [1, 1.25, 1.5, 1.75, 2];           // never below 1: a sub-pixel canvas is the blur people notice first
 // seeded: the static poster (rendered from this scene) and the live jar start from the same frame
 let seed = 20261108;
 const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+// Only clearly weak hardware is tier 0. Safari reports hardwareConcurrency ≤ 4 on every iPhone/iPad (privacy clamp),
+// so a core count of 4 says nothing — the frame-time governor below adapts to the real device instead.
 export function detectTier() {
   const coarse = matchMedia('(pointer: coarse)').matches;
   const cores = navigator.hardwareConcurrency || 4, mem = navigator.deviceMemory || 4;
-  if (cores <= 4 || mem <= 2) return 0;
+  if (cores <= 2 || mem <= 2) return 0;
   return coarse ? 1 : 2;
 }
 function downscale(c, k) {
@@ -183,13 +185,14 @@ function downscale(c, k) {
 export async function createScene(labels) {
   seed = 20261108;
   const tier = detectTier();
-  const lw = tier === 2 ? 2560 : 1280;                 // phones/tablets: half-resolution labels (the jar is ≤ 420 px tall)
+  const dpr = window.devicePixelRatio || 1;
+  const lw = tier === 2 || (tier === 1 && dpr >= 2) ? 2560 : 1280;   // retina phones need the full label (≈ 1 texel per device px)
   const labelAImg = loadBitmap(labels(`label-current-${lw}.webp`));
   let labelBReq = null;                                 // the black pack label is fetched only when it is first shown
-  const cap = Math.min(window.devicePixelRatio || 1, [1, 1.5, 2][tier]);
+  const cap = Math.max(1, Math.min(dpr, [1.5, 2, 2][tier]));
   let prIdx = 0; PR_STEPS.forEach((p, i) => { if (p <= cap + 1e-3) prIdx = i; });
   const maxIdx = prIdx;
-  const renderer = new THREE.WebGLRenderer({ antialias: tier === 2, alpha: true, powerPreference: tier === 2 ? 'high-performance' : 'default', preserveDrawingBuffer: false, stencil: false });
+  const renderer = new THREE.WebGLRenderer({ antialias: tier > 0, alpha: true, powerPreference: tier === 2 ? 'high-performance' : 'default', preserveDrawingBuffer: false, stencil: false });
   renderer.setPixelRatio(PR_STEPS[prIdx]);
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -273,10 +276,15 @@ export async function createScene(labels) {
   const dustMat = new THREE.PointsMaterial({ size: 0.04, map: radialTex([[0, 'rgba(255,255,255,1)'], [1, 'rgba(255,255,255,0)']], 64), color: 0xb8f5cc, transparent: true, opacity: 0.6, depthWrite: false });
   const dust = new THREE.Points(dg, dustMat); dust.visible = tier > 0; scene.add(dust);
 
-  // ── adaptive quality governor: holds ≥55 fps by trading resolution → dust → capsules → clearcoat ──
+  // ── adaptive quality governor ──
+  // Holds the display's own frame rate by trading dust → half the capsules → clearcoat → resolution (never below 1).
+  // Every step is a probe: if it does not make frames faster (a 30 fps cap in iOS Low Power Mode, a busy main thread),
+  // it is undone and the governor stops — lowering quality that does not buy speed only makes the jar blurry.
   let W = 0, H = 0;
   const base = { body: bodyMat.clearcoat, caps: capsMat.clearcoat, label: labelAMat.clearcoat };
-  const gov = { acc: 0, n: 0, t: 0, start: -1, good: 0, level: 0, lastUp: -99, locked: false, fps: 0 };
+  const gov = { acc: 0, n: 0, t: 0, start: -1, good: 0, level: 0, locked: false, fps: 0, best: 1 / 60, probe: null, quiet: 0 };
+  const onScroll = () => { gov.quiet = performance.now() + 400; };   // scroll jank is not the scene's cost
+  addEventListener('scroll', onScroll, { passive: true });
   const setPr = i => { prIdx = i; renderer.setPixelRatio(PR_STEPS[i]); if (W) renderer.setSize(W, H, false); };
   const applyLevel = () => {
     dust.visible = tier > 0 && gov.level < 1;
@@ -285,21 +293,29 @@ export async function createScene(labels) {
     const cc = gov.level >= 3 ? 0 : 1;
     bodyMat.clearcoat = base.body * cc; capsMat.clearcoat = base.caps * cc; labelAMat.clearcoat = base.label * cc;
   };
+  const down = () => {                                   // one step cheaper; returns the undo, or null at the floor
+    if (gov.level < 3) { gov.level++; applyLevel(); return () => { gov.level--; applyLevel(); }; }
+    if (prIdx > 0) { const i = prIdx; setPr(i - 1); return () => setPr(i); }
+    return null;
+  };
   const govern = (dt, t) => {
     if (gov.start < 0) gov.start = t;
-    if (dt <= 0 || dt > 0.1 || t - gov.start < 2.5) return;
+    if (dt <= 0 || dt > 0.1 || t - gov.start < 2.5 || performance.now() < gov.quiet) { gov.acc = 0; gov.n = 0; return; }
     gov.acc += dt; gov.n++;
-    if (gov.n < 24) return;
+    if (gov.n < 30) return;
     const avg = gov.acc / gov.n; gov.acc = 0; gov.n = 0; gov.fps = Math.round(1 / avg);
-    if (t - gov.t < 1) return;
-    if (avg > 1 / 55) {
+    gov.best = Math.min(gov.best, avg);                   // the display's refresh interval (60, 90, 120 Hz …)
+    if (gov.probe) {                                      // did the last step help?
+      const p = gov.probe; gov.probe = null;
+      if (avg > p.avg * 0.92) { p.undo(); gov.locked = true; return; }
+    }
+    if (gov.locked || t - gov.t < 1) return;
+    if (avg > gov.best * 1.2) {                           // ≥ 20 % slower than the display can go
       gov.good = 0; gov.t = t;
-      if (t - gov.lastUp < 4) gov.locked = true;
-      if (prIdx > 0 && PR_STEPS[prIdx] > 1) setPr(prIdx - 1);
-      else if (gov.level < 3) { gov.level++; applyLevel(); }
-      else if (prIdx > 0) setPr(prIdx - 1);
-    } else if (avg < 1 / 58 && !gov.locked && (prIdx < maxIdx || gov.level > 0)) {
-      if (++gov.good >= 6) { gov.good = 0; gov.t = t; gov.lastUp = t; if (gov.level > 0) { gov.level--; applyLevel(); } else setPr(prIdx + 1); }
+      const undo = down();
+      if (undo) gov.probe = { avg, undo }; else gov.locked = true;
+    } else if (avg < gov.best * 1.06 && (prIdx < maxIdx || gov.level > 0)) {
+      if (++gov.good >= 6) { gov.good = 0; gov.t = t; if (prIdx < maxIdx) setPr(prIdx + 1); else { gov.level--; applyLevel(); } }
     } else gov.good = 0;
   };
 
@@ -368,6 +384,7 @@ export async function createScene(labels) {
     resize() { lastSig = ''; },
     // frees every GPU resource (geometries, materials, textures) — no leaks when the controller tears the scene down
     dispose() {
+      removeEventListener('scroll', onScroll);
       scene.traverse(o => {
         if (o.geometry) o.geometry.dispose();
         const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : [];
