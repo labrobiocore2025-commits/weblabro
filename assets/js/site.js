@@ -42,7 +42,8 @@
     a.finished.then(() => { [curA, curB].forEach(el => el.getAnimations().forEach(x => x.cancel())); done(); }, done);
   }
   if (curLabel) curLabel.textContent = navLabel || '';
-  const touch = innerWidth < 900 || !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // matchMedia, not innerWidth: reading innerWidth here forced a full layout inside this script before the first paint
+  const touch = matchMedia('(max-width: 899.98px)').matches || !matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (R || touch) { root.classList.add('is-ready'); }   // phones/tablets: page shown at once (curtain only on leaving)
   else if (navLabel !== null || !firstVisit) {
     if (curNum) curNum.textContent = '→';
@@ -212,7 +213,7 @@
     }
     prepared = true;
     if (wantReveals) { revealsStarted = false; startReveals(); }
-    scrollFx();
+    onScroll();
   }
   requestAnimationFrame(() => setTimeout(prepareReveals, 0));
 
@@ -229,7 +230,7 @@
     // infinite loops pause off-screen (no work for invisible marquees)
     const loopIo = new IntersectionObserver(es => es.forEach(en => en.target.getAnimations().forEach(a => (en.isIntersecting ? a.play() : a.pause()))));
     $$('[data-marquee],[data-rotate],[data-sweep]').forEach(el => loopIo.observe(el));
-    scrollFx();
+    onScroll();
   }
 
   // ═══ scroll-driven effects: one passive listener, work only in an animation frame ═══
@@ -242,37 +243,44 @@
   const header = document.querySelector('[data-header]');
   const barPage = !!document.querySelector('[data-bar]');
   let ticking = false;
+  // Runs only in an animation frame (onScroll), never straight from script or a click handler: all layout reads
+  // come first, then all writes — one layout per frame instead of a forced synchronous one.
   function scrollFx() {
     ticking = false;
     const vh = innerHeight, sy = scrollY;
+    const fillRects = fills.map(f => f.el.getBoundingClientRect());
+    const stackRects = R ? [] : stacks.map(cards => cards.map(c => c.getBoundingClientRect()));
+    const progRects = progs.map(el => el.parentElement.getBoundingClientRect());
+    const docH = readBar ? document.documentElement.scrollHeight - vh : 0;
+    const skipped = io ? pending.filter(el => !el.__done && el.getBoundingClientRect().bottom < 0) : [];
     if (PAGE === 'home') root.classList.toggle('is-solid', sy > 40 || root.classList.contains('menu-open'));
     if (barPage) root.classList.toggle('bar-on', sy > vh * 0.7 && !root.classList.contains('is-locked'));
-    fills.forEach(f => {
-      const r = f.el.getBoundingClientRect();
+    fills.forEach((f, k) => {
+      const r = fillRects[k];
       const p = R ? 1 : Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.25)));
       if (Math.abs(p - f.p) < 0.002) return; f.p = p;
       const lit = p * (f.ws.length + 3);
       f.ws.forEach((w, j) => { const o = (FILL_MIN + (1 - FILL_MIN) * Math.min(1, Math.max(0, lit - j))).toFixed(2); if (w.__o !== o) { w.__o = o; w.style.opacity = o; } });
     });
-    if (!R) stacks.forEach(cards => {
-      const rs = cards.map(c => c.getBoundingClientRect());
+    if (!R) stacks.forEach((cards, k) => {
+      const rs = stackRects[k];
       for (let i = 0; i < cards.length - 1; i++) {
         const p = Math.min(1, Math.max(0, (rs[i].bottom - rs[i + 1].top) / rs[i].height));
         cards[i].style.transform = 'scale(' + (1 - p * 0.07).toFixed(4) + ')';
         const dim = cards[i].querySelector('[data-dim]'); if (dim) dim.style.opacity = (p * 0.6).toFixed(3);
       }
     });
-    progs.forEach(el => { const r = el.parentElement.getBoundingClientRect(); el.style.transform = 'scaleY(' + Math.min(1, Math.max(0, (vh * 0.6 - r.top) / r.height)).toFixed(4) + ')'; });
-    if (readBar) { const docH = document.documentElement.scrollHeight - vh; readBar.style.transform = 'scaleX(' + (docH > 0 ? Math.min(1, sy / docH) : 0).toFixed(4) + ')'; }
+    progs.forEach((el, k) => { const r = progRects[k]; el.style.transform = 'scaleY(' + Math.min(1, Math.max(0, (vh * 0.6 - r.top) / r.height)).toFixed(4) + ')'; });
+    if (readBar) { readBar.style.transform = 'scaleX(' + (docH > 0 ? Math.min(1, sy / docH) : 0).toFixed(4) + ')'; }
     if (!R) pars.forEach(el => { el.style.translate = '0 ' + (sy * (+el.getAttribute('data-parallax'))).toFixed(1) + 'px'; });
     // reveal anything that was skipped by a fast scroll past it
-    if (io) pending.forEach(el => { if (!el.__done && el.getBoundingClientRect().bottom < 0) { io.unobserve(el); showNow(el); } });
+    skipped.forEach(el => { io.unobserve(el); showNow(el); });
   }
   const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(scrollFx); } };
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll, { passive: true });
   if (header && PAGE !== 'home') root.classList.add('is-solid');
-  scrollFx();
+  onScroll();
   // a page shown at once (phones, reduced motion, back/forward) starts its reveals now — after everything
   // scrollFx() uses is defined (startReveals calls it)
   if (root.classList.contains('is-ready')) startReveals();
@@ -332,7 +340,7 @@
       $$('[data-mi]', menu).forEach((c, i) => anim(c, [{ opacity: 0, translate: '0 40px' }, { opacity: 1, translate: '0 0' }], { duration: 800, delay: 200 + i * 55, easing: E, fill: 'backwards' }));
       const first = menu.querySelector('a'); if (first) first.focus({ preventScroll: true });
     }
-    scrollFx(); jarSignal();
+    onScroll(); jarSignal();
   }
   if (toggle) toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
   if (menu) menu.addEventListener('click', e => { if (e.target.closest('[data-checkout]')) setMenu(false); });

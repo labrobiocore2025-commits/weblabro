@@ -182,6 +182,9 @@ function downscale(c, k) {
 // Canvas is NOT attached here — the page moves scene.canvas into whichever [data-jar] anchor is on screen,
 // so the jar scrolls natively with its section and only that box is rendered.
 // labels: { size: url => url of the baked label image (current / new / new-emissive) at the given width }
+// set-up is split into tasks (≤ ~50 ms each on a mid phone) so a tap during the jar's start is answered at once
+const pause = () => new Promise(r => setTimeout(r, 0));
+
 export async function createScene(labels) {
   seed = 20261108;
   const tier = detectTier();
@@ -211,7 +214,9 @@ export async function createScene(labels) {
   const panel = (w, h, hex, k, x, y, z) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(k), side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
   panel(3, 7, '#ffffff', 6, -5, 1, 3); panel(2, 6, '#fff6e6', 3, 5, 0.5, 2); panel(8, 2.5, '#ffffff', 2.5, 0, 5.5, 0);
   panel(5, 5, '#5CE08C', 1.8, 2, -1, -5.5); panel(4, 4, '#E2B76A', 1.2, -4, -2, -4);
+  await pause();
   const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(env, 0.04).texture; pm.dispose();
+  await pause();
   scene.add(new THREE.AmbientLight(0xffffff, 0.15));
   const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-3, 4, 5); scene.add(key);
   const rimG = new THREE.PointLight(0x5CE08C, 22, 10, 2); scene.add(rimG);
@@ -234,6 +239,7 @@ export async function createScene(labels) {
   const blank = () => { const t = new THREE.Texture(); t.colorSpace = THREE.SRGBColorSpace; return t; };
   const labelGeo = r => new THREE.CylinderGeometry(r, r, 1.46, tier ? 160 : 96, 1, true, -Math.PI, Math.PI * 2);
   const labelAMat = new THREE.MeshPhysicalMaterial({ map: tex(await labelAImg), roughness: 0.4, clearcoat: tier ? 0.7 : 0, clearcoatRoughness: 0.22 });
+  await pause(); renderer.initTexture(labelAMat.map); await pause();   // the label upload to the GPU in a task of its own
   const labelA = new THREE.Mesh(labelGeo(0.66), labelAMat);
   const labelBMat = new THREE.MeshPhysicalMaterial({ map: blank(), emissiveMap: blank(), emissive: new THREE.Color('#ffffff'), emissiveIntensity: 0.9, roughness: 0.55, clearcoat: tier ? 0.25 : 0, transparent: true, opacity: 0 });
   let labelBReady = false;
@@ -321,6 +327,7 @@ export async function createScene(labels) {
 
   const st = { ry: 0, rz: 0, spill: 0, mix: 0, appear: 0, key: -1, drag: 0, spin: 0, spinT: 0, packT: -1 };
   let lastSig = '';
+  await pause();
   if (renderer.compileAsync) { try { await renderer.compileAsync(scene, camera); } catch (e) { /* first render compiles */ } }
   return {
     canvas: cv, tier,
