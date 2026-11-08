@@ -87,8 +87,9 @@ def faq_items(prefix="faq", h="h3"):
     out = []
     for i, (q, a) in enumerate(FAQ, 1):
         out.append(
-            f'<div class="s08-7" data-faq>'
-            f'<{h} class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="{prefix}-q{i}" aria-controls="{prefix}-a{i}">'
+            # the first answer is open in the HTML (as in the design) — opening it from JS after paint shifted the list (CLS)
+            f'<div class="s08-7{" is-open" if i == 1 else ""}" data-faq>'
+            f'<{h} class="faq-h"><button type="button" class="s08-8" aria-expanded="{"true" if i == 1 else "false"}" id="{prefix}-q{i}" aria-controls="{prefix}-a{i}">'
             f'<span class="s08-9">{i:02d}</span><span class="s08-10">{E(q)}</span><span class="s08-11">{PLUS}</span></button></{h}>'
             f'<section class="s08-12" id="{prefix}-a{i}" aria-labelledby="{prefix}-q{i}">'
             f'<div class="s08-13"><p class="s08-14">{E(a)}</p></div></section></div>')
