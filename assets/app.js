@@ -213,17 +213,54 @@ function localDigits(v) {
 }
 function formatPhone(local) {
   const g = [local.slice(0, 2), local.slice(2, 5), local.slice(5, 7), local.slice(7, 9), local.slice(9)].filter(Boolean);
-  return '+380' + (g.length ? ' ' + g.join(' ') : '');
+  return '+380 ' + g.join(' ');                        // never shorter than the "+380 " prefix
 }
-fields.phone.addEventListener('input', () => {
-  fields.phone.value = formatPhone(localDigits(fields.phone.value));
-  if (fields.phone.getAttribute('aria-invalid') === 'true') validate('phone');
+const PREFIX = 5;                                       // "+380 "
+const digitsOf = s => s.replace(/\D/g, '');
+function caretAfter(formatted, n) {                    // index in the formatted value after n local digits
+  let i = PREFIX;
+  while (n > 0 && i < formatted.length) { if (/\d/.test(formatted[i])) n--; i++; }
+  return i;
+}
+// The edit is applied to the local digits wherever the caret was: typing with the caret inside "+380" (a tap on the
+// start of the field, keys pressed before the caret moved on focus) used to mix the prefix digits into the number.
+let phonePrev = '';
+fields.phone.addEventListener('input', e => {
+  const el = fields.phone, v = el.value, prev = phonePrev;
+  let local, typedEnd;
+  if (!prev || v.startsWith('+380')) {
+    local = localDigits(v);
+    typedEnd = localDigits(v.slice(0, el.selectionStart ?? v.length)).length;
+    // Backspace / Delete that only removed a space: remove the digit next to it, as people expect
+    if (prev && e.inputType && e.inputType.startsWith('delete') && local === localDigits(prev)) {
+      const k = e.inputType === 'deleteContentBackward' ? typedEnd - 1 : typedEnd;
+      if (k >= 0 && k < local.length) { local = local.slice(0, k) + local.slice(k + 1); typedEnd = k; }
+    }
+  } else {
+    let a = 0; while (a < prev.length && a < v.length && prev[a] === v[a]) a++;
+    let b = 0; while (b < prev.length - a && b < v.length - a && prev[prev.length - 1 - b] === v[v.length - 1 - b]) b++;
+    const typed = digitsOf(v.slice(a, v.length - b));
+    const head = digitsOf(prev.slice(PREFIX, Math.max(PREFIX, a)));
+    const tail = digitsOf(prev.slice(Math.max(PREFIX, prev.length - b)));
+    local = head ? (head + typed + tail).slice(0, 12) : localDigits(typed + tail);
+    typedEnd = head ? head.length + typed.length : Math.max(0, local.length - tail.length);
+  }
+  el.value = phonePrev = formatPhone(local);
+  if (document.activeElement === el) { const c = caretAfter(el.value, typedEnd); el.setSelectionRange(c, c); }
+  if (el.getAttribute('aria-invalid') === 'true') validate('phone');
 });
+const caretOutOfPrefix = () => {
+  const el = fields.phone;
+  if (document.activeElement === el && el.selectionStart === el.selectionEnd && el.selectionStart < PREFIX) {
+    const n = el.value.length; el.setSelectionRange(n, n);
+  }
+};
 fields.phone.addEventListener('focus', () => {
-  if (!fields.phone.value) fields.phone.value = '+380 ';
-  const n = fields.phone.value.length;
-  requestAnimationFrame(() => fields.phone.setSelectionRange(n, n));
+  if (!fields.phone.value) fields.phone.value = phonePrev = '+380 ';
+  caretOutOfPrefix();
+  requestAnimationFrame(caretOutOfPrefix);              // iOS places the caret after the focus event
 });
+['click', 'keyup'].forEach(t => fields.phone.addEventListener(t, caretOutOfPrefix));
 fields.phone.addEventListener('keydown', e => {
   // never delete the +380 prefix
   if ((e.key === 'Backspace' && fields.phone.selectionStart <= 5 && fields.phone.selectionEnd <= 5)) e.preventDefault();
