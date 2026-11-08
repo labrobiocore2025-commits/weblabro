@@ -26,7 +26,7 @@ function renderPrice() {
   const v = fmtUah(priceKop);
   document.querySelectorAll('[data-price]').forEach(el => { if (el.textContent !== v + ' ₴') el.textContent = v + ' ₴'; el.classList.add('has-price'); });
   // bare numbers (the price odometer / badges): rewritten only if the price really differs from the page default
-  document.querySelectorAll('[data-price-short]').forEach(el => { if ((el.getAttribute('aria-label') || el.textContent).trim() !== v) { el.removeAttribute('aria-label'); el.textContent = v; } });
+  document.querySelectorAll('[data-price-short]').forEach(el => { const sr = el.querySelector('.sr-only'); if ((sr ? sr.textContent : el.textContent).trim() !== v) { el.classList.remove('odo'); el.textContent = v; } });
   window.LabroPrice = { kop: priceKop, maxQty };
   document.dispatchEvent(new Event('labro:price'));
   renderTotal();

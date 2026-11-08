@@ -15,6 +15,8 @@
 
 /* ── global (the export's <helmet><style>) ── */
 html,body{margin:0;background:#060A08;color:#EEF1EA;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:transparent}
+/* the export set the typeface on its root div; the header, menu, modal and curtains live outside .g-1 here */
+body{font-family:Geologica,system-ui,sans-serif}
 html{scroll-padding-top:84px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 *,*::before,*::after{box-sizing:border-box}
 a{color:#5CE08C;text-decoration:none}
@@ -77,6 +79,7 @@ img,svg{max-width:100%}
 .lg-4.prose>*{margin:0}
 .lg-4.prose>h2{margin-top:22px;font-size:22px}
 .lg-4.prose>h2:first-child{margin-top:0}
+.ar-11 a{text-decoration:underline;text-underline-offset:3px}
 .footer-cc{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
 
 .g-1{position:relative;min-height:100vh;font-family:Geologica,system-ui,sans-serif;color:#EEF1EA;overflow-x:clip}
@@ -731,8 +734,10 @@ img,svg{max-width:100%}
 .ft-53:not([aria-invalid="true"])+.mo-err-msg{display:none}
 
 /* page curtains: cover the page from the first paint until site.js lifts them (2.5 s CSS failsafe if it never runs;
-   without JS assets/noscript.css removes them) */
+   without JS assets/noscript.css removes them). Touch screens never start covered: first paint and LCP on phones
+   must not wait for an intro; the curtain only falls when leaving a page (site.js). */
 .ft-88,.ft-89{transform:translateY(0)}
+@media (max-width:899.98px),(hover:none),(pointer:coarse){.ft-88,.ft-89{transform:translateY(100%)}}
 .is-ready .ft-88,.is-ready .ft-89{transform:translateY(100%)}
 @keyframes curtain-failsafe{to{transform:translateY(-100%)}}
 html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving) .ft-89{animation:curtain-failsafe .8s 2.5s forwards}
@@ -790,3 +795,11 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
 #statusCard[data-status="retry"] .st-bad-actions{display:grid}
 #statusCard[data-status="bad"] #trackBtn,#statusCard[data-status="retry"] #trackBtn{display:none}
 .faq-h{margin:0;font:inherit;letter-spacing:inherit}
+
+/* touch targets ≥ 44 px on phones and tablets (desktop keeps the design's exact metrics) */
+@media (max-width:899.98px){
+  .ft-8,.ft-9,.ft-10{min-height:44px;display:inline-flex;align-items:center}
+  .pr-5,.ar-3{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
+  .ar-15{min-height:44px}
+  .skip-link{min-height:44px;display:inline-flex;align-items:center}
+}

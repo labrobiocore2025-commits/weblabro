@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- GitHub Pages cannot set response headers, so CSP comes from <meta>. No inline scripts/styles/handlers anywhere. -->
-<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; script-src &#x27;self&#x27; https://connect.facebook.net; style-src &#x27;self&#x27;; font-src &#x27;self&#x27;; img-src &#x27;self&#x27; data: https://www.facebook.com https://connect.facebook.net; connect-src https://api.labrobiocore.com.ua https://www.facebook.com https://connect.facebook.net; manifest-src &#x27;self&#x27;; form-action &#x27;none&#x27;; base-uri &#x27;none&#x27;; object-src &#x27;none&#x27;; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://connect.facebook.net; style-src 'self'; font-src 'self'; img-src 'self' data: https://www.facebook.com https://connect.facebook.net; connect-src https://api.labrobiocore.com.ua 'self' https://www.facebook.com https://connect.facebook.net; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="labro-api" content="https://api.labrobiocore.com.ua">
 <meta name="theme-color" content="#060A08">
@@ -25,19 +25,16 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/geologica-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=5e02832151">
+<link rel="stylesheet" href="/assets/site.css?v=bf701a1958">
 <noscript><link rel="stylesheet" href="/assets/noscript.css?v=58f5918c6a"></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://labrobiocore.com.ua/#org","name":"LABRO BIOCORE","url":"https://labrobiocore.com.ua/","logo":"https://labrobiocore.com.ua/favicon-512.png","telephone":"+380932808111","email":"labrobiocore2025@gmail.com","sameAs":["https://instagram.com/labro.biocore","https://t.me/LaBroBioCore"]},{"@type":"WebSite","@id":"https://labrobiocore.com.ua/#site","url":"https://labrobiocore.com.ua/","name":"LABRO BIOCORE","inLanguage":"uk","publisher":{"@id":"https://labrobiocore.com.ua/#org"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Головна","item":"https://labrobiocore.com.ua/"},{"@type":"ListItem","position":2,"name":"Блог","item":"https://labrobiocore.com.ua/blog.html"}]}]}</script>
 <script src="/assets/js/meta-pixel.js?v=afd3607348" async></script>
-<script src="/assets/js/site.js?v=eedb368cdb" defer></script>
-<script src="/assets/app.js?v=358b8817e5" defer></script>
+<script src="/assets/js/site.js?v=2fc3fdb108" defer></script>
+<script src="/assets/app.js?v=0ca330d5db" defer></script>
 </head>
 <body data-price-kop="99000" data-page="blog">
 <a class="skip-link" href="#main">Перейти до змісту</a>
-<div class="g-1">
-<div class="g-2"></div>
-<div class="g-3"></div>
-<div class="g-4">
+<!-- the fixed header sits outside .g-4 (z-index 2 stacking context) so its menu button stays above the open menu -->
 <header class="g-5" data-header>
   <div class="g-6">
     <a href="/" aria-label="LABRO BIOCORE — на головну" class="g-7">
@@ -61,6 +58,10 @@
   </div>
 </header>
 
+<div class="g-1">
+<div class="g-2"></div>
+<div class="g-3"></div>
+<div class="g-4">
 <main id="main">
 <section data-screen-label="Блог" class="bl-1">
   <h1 data-chars class="bl-2">Блог</h1>
@@ -73,12 +74,12 @@
 <button type="button" role="tab" class="pd-4" aria-selected="false" data-cat="Фокус">Фокус</button>
   </div>
   <div class="bl-4" data-cat-grid>
-<a href="/blog/ashwagandha.html" data-reveal data-cat="Інгредієнти" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/ashwagandha-480.avif 480w, /assets/img/blog/ashwagandha-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/ashwagandha-480.webp 480w, /assets/img/blog/ashwagandha-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/ashwagandha-900.jpg" srcset="/assets/img/blog/ashwagandha-480.jpg 480w, /assets/img/blog/ashwagandha-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Сушені корені ашваганди" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">01</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>6 хв</span></div><h3 class="s11-12">Ашваганда: що відомо про адаптоген з аюрведи</h3></div></a>
-<a href="/blog/l-theanine.html" data-reveal data-cat="Інгредієнти" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/green-tea-480.avif 480w, /assets/img/blog/green-tea-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/green-tea-480.webp 480w, /assets/img/blog/green-tea-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/green-tea-900.jpg" srcset="/assets/img/blog/green-tea-480.jpg 480w, /assets/img/blog/green-tea-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Чашка зеленого чаю з листям" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">02</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>5 хв</span></div><h3 class="s11-12">L-теанін і зелений чай: звідки береться спокійна зосередженість</h3></div></a>
-<a href="/blog/rhodiola-rosea.html" data-reveal data-cat="Інгредієнти" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/rhodiola-480.avif 480w, /assets/img/blog/rhodiola-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/rhodiola-480.webp 480w, /assets/img/blog/rhodiola-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/rhodiola-900.jpg" srcset="/assets/img/blog/rhodiola-480.jpg 480w, /assets/img/blog/rhodiola-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Суцвіття родіоли рожевої" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">03</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>5 хв</span></div><h3 class="s11-12">Родіола рожева: рослина арктичних гір у сучасних добавках</h3></div></a>
-<a href="/blog/evening-ritual.html" data-reveal data-cat="Сон" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/sleep-480.avif 480w, /assets/img/blog/sleep-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/sleep-480.webp 480w, /assets/img/blog/sleep-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/sleep-900.jpg" srcset="/assets/img/blog/sleep-480.jpg 480w, /assets/img/blog/sleep-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Жінка спокійно спить у затишній спальні" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Сон</span><span class="s11-9">04</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Сон</span><span>·</span><span>7 хв</span></div><h3 class="s11-12">Вечірній ритуал: звички, які допомагають підготуватися до сну</h3></div></a>
-<a href="/blog/overload-signals.html" data-reveal data-cat="Стрес" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/overload-480.avif 480w, /assets/img/blog/overload-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/overload-480.webp 480w, /assets/img/blog/overload-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/overload-900.jpg" srcset="/assets/img/blog/overload-480.jpg 480w, /assets/img/blog/overload-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Втомлена жінка за ноутбуком" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Стрес</span><span class="s11-9">05</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Стрес</span><span>·</span><span>6 хв</span></div><h3 class="s11-12">Як помітити перевантаження: сигнали, на які варто зважати</h3></div></a>
-<a href="/blog/focus-techniques.html" data-reveal data-cat="Фокус" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/focus-480.avif 480w, /assets/img/blog/focus-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/focus-480.webp 480w, /assets/img/blog/focus-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/focus-900.jpg" srcset="/assets/img/blog/focus-480.jpg 480w, /assets/img/blog/focus-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Зосереджена робота з нотатками" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Фокус</span><span class="s11-9">06</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Фокус</span><span>·</span><span>4 хв</span></div><h3 class="s11-12">Фокус протягом робочого дня: прості техніки</h3></div></a>
+<a href="/blog/ashwagandha.html" data-reveal data-cat="Інгредієнти" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/ashwagandha-480.avif 480w, /assets/img/blog/ashwagandha-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/ashwagandha-480.webp 480w, /assets/img/blog/ashwagandha-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/ashwagandha-900.jpg" srcset="/assets/img/blog/ashwagandha-480.jpg 480w, /assets/img/blog/ashwagandha-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Сушені корені ашваганди" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">01</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>6 хв</span></div><h2 class="s11-12">Ашваганда: що відомо про адаптоген з аюрведи</h2></div></a>
+<a href="/blog/l-theanine.html" data-reveal data-cat="Інгредієнти" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/green-tea-480.avif 480w, /assets/img/blog/green-tea-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/green-tea-480.webp 480w, /assets/img/blog/green-tea-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/green-tea-900.jpg" srcset="/assets/img/blog/green-tea-480.jpg 480w, /assets/img/blog/green-tea-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Чашка зеленого чаю з листям" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">02</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>5 хв</span></div><h2 class="s11-12">L-теанін і зелений чай: звідки береться спокійна зосередженість</h2></div></a>
+<a href="/blog/rhodiola-rosea.html" data-reveal data-cat="Інгредієнти" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/rhodiola-480.avif 480w, /assets/img/blog/rhodiola-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/rhodiola-480.webp 480w, /assets/img/blog/rhodiola-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/rhodiola-900.jpg" srcset="/assets/img/blog/rhodiola-480.jpg 480w, /assets/img/blog/rhodiola-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Суцвіття родіоли рожевої" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">03</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>5 хв</span></div><h2 class="s11-12">Родіола рожева: рослина арктичних гір у сучасних добавках</h2></div></a>
+<a href="/blog/evening-ritual.html" data-reveal data-cat="Сон" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/sleep-480.avif 480w, /assets/img/blog/sleep-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/sleep-480.webp 480w, /assets/img/blog/sleep-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/sleep-900.jpg" srcset="/assets/img/blog/sleep-480.jpg 480w, /assets/img/blog/sleep-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Жінка спокійно спить у затишній спальні" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Сон</span><span class="s11-9">04</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Сон</span><span>·</span><span>7 хв</span></div><h2 class="s11-12">Вечірній ритуал: звички, які допомагають підготуватися до сну</h2></div></a>
+<a href="/blog/overload-signals.html" data-reveal data-cat="Стрес" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/overload-480.avif 480w, /assets/img/blog/overload-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/overload-480.webp 480w, /assets/img/blog/overload-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/overload-900.jpg" srcset="/assets/img/blog/overload-480.jpg 480w, /assets/img/blog/overload-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Втомлена жінка за ноутбуком" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Стрес</span><span class="s11-9">05</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Стрес</span><span>·</span><span>6 хв</span></div><h2 class="s11-12">Як помітити перевантаження: сигнали, на які варто зважати</h2></div></a>
+<a href="/blog/focus-techniques.html" data-reveal data-cat="Фокус" class="bl-5"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/focus-480.avif 480w, /assets/img/blog/focus-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/focus-480.webp 480w, /assets/img/blog/focus-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/focus-900.jpg" srcset="/assets/img/blog/focus-480.jpg 480w, /assets/img/blog/focus-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Зосереджена робота з нотатками" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Фокус</span><span class="s11-9">06</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Фокус</span><span>·</span><span>4 хв</span></div><h2 class="s11-12">Фокус протягом робочого дня: прості техніки</h2></div></a>
   </div>
 </section>
 
@@ -128,7 +129,7 @@
 </div>
 
 </div>
-<div class="ft-31" id="site-menu" data-menu hidden>
+<aside class="ft-31" id="site-menu" data-menu aria-label="Меню" hidden>
   <nav aria-label="Меню">
 <a href="/" data-mi class="ft-32"><span>Головна</span><span class="ft-33">01</span></a>
 <a href="/product.html" data-mi class="ft-32"><span>Нейро-Баланс</span><span class="ft-33">02</span></a>
@@ -145,7 +146,7 @@
       <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="ft-37">Telegram</a>
     </div>
   </div>
-</div>
+</aside>
 
 <div id="checkoutModal" class="modal-root" inert>
   <div class="ft-38" data-mo-backdrop></div>
@@ -226,7 +227,7 @@
 
 <div aria-hidden="true" class="ft-88" data-cur-a></div>
 <div aria-hidden="true" class="ft-89" data-cur-b>
-  <div class="ft-90"><span class="ar-6"><img src="/assets/img/brand/labro-mark-68.png" alt="" width="17" height="28" class="ft-91">LABRO BIOCORE</span><span data-cur-num>0</span></div>
+  <div class="ft-90"><span class="ar-6"><picture><source type="image/avif" srcset="/assets/img/brand/labro-mark-68.avif"><source type="image/webp" srcset="/assets/img/brand/labro-mark-68.webp"><img src="/assets/img/brand/labro-mark-68.png" alt="" width="17" height="28" class="ft-91"></picture>LABRO BIOCORE</span><span data-cur-num>0</span></div>
   <div class="s08-3">
     <div class="ft-92"><div class="bl-7" data-cur-bar></div></div>
     <div class="ft-93" data-cur-label></div>

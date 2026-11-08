@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- GitHub Pages cannot set response headers, so CSP comes from <meta>. No inline scripts/styles/handlers anywhere. -->
-<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; script-src &#x27;self&#x27; https://connect.facebook.net; style-src &#x27;self&#x27;; font-src &#x27;self&#x27;; img-src &#x27;self&#x27; data: https://www.facebook.com https://connect.facebook.net; connect-src https://api.labrobiocore.com.ua https://www.facebook.com https://connect.facebook.net; manifest-src &#x27;self&#x27;; form-action &#x27;none&#x27;; base-uri &#x27;none&#x27;; object-src &#x27;none&#x27;; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://connect.facebook.net; style-src 'self'; font-src 'self'; img-src 'self' data: https://www.facebook.com https://connect.facebook.net; connect-src https://api.labrobiocore.com.ua 'self' https://www.facebook.com https://connect.facebook.net; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="labro-api" content="https://api.labrobiocore.com.ua">
 <meta name="theme-color" content="#060A08">
@@ -26,19 +26,16 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/geologica-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=5e02832151">
+<link rel="stylesheet" href="/assets/site.css?v=bf701a1958">
 <noscript><link rel="stylesheet" href="/assets/noscript.css?v=58f5918c6a"></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://labrobiocore.com.ua/#org","name":"LABRO BIOCORE","url":"https://labrobiocore.com.ua/","logo":"https://labrobiocore.com.ua/favicon-512.png","telephone":"+380932808111","email":"labrobiocore2025@gmail.com","sameAs":["https://instagram.com/labro.biocore","https://t.me/LaBroBioCore"]},{"@type":"WebSite","@id":"https://labrobiocore.com.ua/#site","url":"https://labrobiocore.com.ua/","name":"LABRO BIOCORE","inLanguage":"uk","publisher":{"@id":"https://labrobiocore.com.ua/#org"}},{"@type":"Product","@id":"https://labrobiocore.com.ua/product.html#product","name":"Нейро-Баланс","description":"Натуральний комплекс Ashwagandha, L-Theanine та Rhodiola Rosea. 60 веганських капсул без ГМО, глютену та лактози. Дієтична добавка. Не є лікарським засобом.","image":["https://labrobiocore.com.ua/assets/img/jar/product-d-1100.webp"],"brand":{"@type":"Brand","name":"LABRO BIOCORE"},"sku":"neuro-balance","offers":{"@type":"Offer","url":"https://labrobiocore.com.ua/product.html","price":"990","priceCurrency":"UAH","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition","seller":{"@id":"https://labrobiocore.com.ua/#org"}}}]}</script>
 <script src="/assets/js/meta-pixel.js?v=afd3607348" async></script>
-<script src="/assets/js/site.js?v=eedb368cdb" defer></script>
-<script src="/assets/app.js?v=358b8817e5" defer></script>
+<script src="/assets/js/site.js?v=2fc3fdb108" defer></script>
+<script src="/assets/app.js?v=0ca330d5db" defer></script>
 </head>
 <body data-price-kop="99000" data-page="home">
 <a class="skip-link" href="#main">Перейти до змісту</a>
-<div class="g-1">
-<div class="g-2"></div>
-<div class="g-3"></div>
-<div class="g-4">
+<!-- the fixed header sits outside .g-4 (z-index 2 stacking context) so its menu button stays above the open menu -->
 <header class="g-5" data-header>
   <div class="g-6">
     <a href="/" aria-label="LABRO BIOCORE — на головну" class="g-7">
@@ -62,11 +59,15 @@
   </div>
 </header>
 
+<div class="g-1">
+<div class="g-2"></div>
+<div class="g-3"></div>
+<div class="g-4">
 <main id="main">
 <section data-screen-label="01 Hero" class="s01-1">
   <div class="s01-2 m-only">
     <div aria-hidden="true" class="s01-3">LB</div>
-    <div data-jar data-ry="-0.1" data-s="0.7" class="s01-4"><picture class="jar-poster"><source type="image/avif" srcset="/assets/img/jar/hero-m-560.avif 560w, /assets/img/jar/hero-m-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/hero-m-1100.webp" srcset="/assets/img/jar/hero-m-560.webp 560w, /assets/img/jar/hero-m-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" fetchpriority="high"></picture></div>
+    <div data-jar data-ry="-0.1" data-s="0.7" class="s01-4"><picture class="jar-poster"><source media="(min-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/hero-m-560.avif 560w, /assets/img/jar/hero-m-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/hero-m-1100.webp" srcset="/assets/img/jar/hero-m-560.webp 560w, /assets/img/jar/hero-m-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" fetchpriority="high"></picture></div>
     <div data-rotate class="s01-5" aria-hidden="true">
       <svg viewBox="0 0 120 120" width="100%" height="100%"><defs><path id="hbm" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"></path></defs><text class="s01-6"><textPath href="#hbm">ВЕГАНСЬКІ КАПСУЛИ · КУРС 30 ДНІВ ·</textPath></text></svg>
       <span class="s01-7"><span class="s01-8"><span data-price-short>990</span>₴</span></span>
@@ -95,7 +96,7 @@
   </div>
   <div class="s01-28 d-only">
     <div aria-hidden="true" data-parallax="0.08" class="s01-29">LB</div>
-    <div data-jar data-ry="-0.15" data-s="0.58" class="s01-4"><picture class="jar-poster"><source type="image/avif" srcset="/assets/img/jar/hero-d-560.avif 560w, /assets/img/jar/hero-d-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/hero-d-1100.webp" srcset="/assets/img/jar/hero-d-560.webp 560w, /assets/img/jar/hero-d-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" fetchpriority="high"></picture></div>
+    <div data-jar data-ry="-0.15" data-s="0.58" class="s01-4"><picture class="jar-poster"><source media="(max-width: 899.98px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/hero-d-560.avif 560w, /assets/img/jar/hero-d-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/hero-d-1100.webp" srcset="/assets/img/jar/hero-d-560.webp 560w, /assets/img/jar/hero-d-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" fetchpriority="high"></picture></div>
     <div data-rotate class="s01-30" aria-hidden="true">
       <svg viewBox="0 0 120 120" width="100%" height="100%"><defs><path id="hbd" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"></path></defs><text class="s01-6"><textPath href="#hbd">ВЕГАНСЬКІ КАПСУЛИ · КУРС 30 ДНІВ ·</textPath></text></svg>
       <span class="s01-7"><span class="s01-31"><span data-price-short>990</span>₴</span></span>
@@ -222,7 +223,7 @@
 </fieldset>
 
       <div data-drag3d class="s04-10 m-only">
-        <div data-jar data-ry="0.2" data-s="0.7" class="s01-4"><picture class="jar-poster pack-current"><source type="image/avif" srcset="/assets/img/jar/pack-m-560.avif 560w, /assets/img/jar/pack-m-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-m-1100.webp" srcset="/assets/img/jar/pack-m-560.webp 560w, /assets/img/jar/pack-m-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture><picture class="jar-poster pack-new"><source type="image/avif" srcset="/assets/img/jar/pack-m-new-560.avif 560w, /assets/img/jar/pack-m-new-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-m-new-1100.webp" srcset="/assets/img/jar/pack-m-new-560.webp 560w, /assets/img/jar/pack-m-new-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture></div>
+        <div data-jar data-ry="0.2" data-s="0.7" class="s01-4"><picture class="jar-poster pack-current"><source media="(min-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/pack-m-560.avif 560w, /assets/img/jar/pack-m-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-m-1100.webp" srcset="/assets/img/jar/pack-m-560.webp 560w, /assets/img/jar/pack-m-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture><picture class="jar-poster pack-new"><source media="(min-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/pack-m-new-560.avif 560w, /assets/img/jar/pack-m-new-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-m-new-1100.webp" srcset="/assets/img/jar/pack-m-new-560.webp 560w, /assets/img/jar/pack-m-new-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture></div>
         <span class="s04-11" aria-hidden="true">← Потягніть, щоб обертати →</span>
       </div>
       <div data-reveal class="s04-12" aria-live="polite">
@@ -248,7 +249,7 @@
     </div>
     <div data-drag3d class="s04-24 d-only">
       <div aria-hidden="true" class="s04-25"></div>
-      <div data-jar data-ry="0.2" data-s="0.66" class="s01-4"><picture class="jar-poster pack-current"><source type="image/avif" srcset="/assets/img/jar/pack-d-560.avif 560w, /assets/img/jar/pack-d-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-d-1100.webp" srcset="/assets/img/jar/pack-d-560.webp 560w, /assets/img/jar/pack-d-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture><picture class="jar-poster pack-new"><source type="image/avif" srcset="/assets/img/jar/pack-d-new-560.avif 560w, /assets/img/jar/pack-d-new-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-d-new-1100.webp" srcset="/assets/img/jar/pack-d-new-560.webp 560w, /assets/img/jar/pack-d-new-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture></div>
+      <div data-jar data-ry="0.2" data-s="0.66" class="s01-4"><picture class="jar-poster pack-current"><source media="(max-width: 899.98px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/pack-d-560.avif 560w, /assets/img/jar/pack-d-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-d-1100.webp" srcset="/assets/img/jar/pack-d-560.webp 560w, /assets/img/jar/pack-d-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture><picture class="jar-poster pack-new"><source media="(max-width: 899.98px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/pack-d-new-560.avif 560w, /assets/img/jar/pack-d-new-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-d-new-1100.webp" srcset="/assets/img/jar/pack-d-new-560.webp 560w, /assets/img/jar/pack-d-new-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture></div>
       <span class="s04-26" aria-hidden="true">← Потягніть, щоб обертати →</span>
     </div>
   </div>
@@ -453,15 +454,15 @@
 </footer>
 
 </div>
-<div class="ft-26" data-bar>
+<aside class="ft-26" data-bar aria-label="Швидке замовлення">
   <div class="ft-27">
     <div class="ft-28"><span class="pr-10">Нейро-Баланс</span><span class="ft-29"><span data-price>990 ₴</span> · 60 капсул</span></div>
     <a href="/#order" data-checkout class="ft-30 as-btn">Замовити</a>
   </div>
-</div>
+</aside>
 
 </div>
-<div class="ft-31" id="site-menu" data-menu hidden>
+<aside class="ft-31" id="site-menu" data-menu aria-label="Меню" hidden>
   <nav aria-label="Меню">
 <a href="/" data-mi class="ft-32" aria-current="page"><span>Головна</span><span class="ft-33">01</span></a>
 <a href="/product.html" data-mi class="ft-32"><span>Нейро-Баланс</span><span class="ft-33">02</span></a>
@@ -478,7 +479,7 @@
       <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="ft-37">Telegram</a>
     </div>
   </div>
-</div>
+</aside>
 
 <div id="checkoutModal" class="modal-root" inert>
   <div class="ft-38" data-mo-backdrop></div>
@@ -559,7 +560,7 @@
 
 <div aria-hidden="true" class="ft-88" data-cur-a></div>
 <div aria-hidden="true" class="ft-89" data-cur-b>
-  <div class="ft-90"><span class="ar-6"><img src="/assets/img/brand/labro-mark-68.png" alt="" width="17" height="28" class="ft-91">LABRO BIOCORE</span><span data-cur-num>0</span></div>
+  <div class="ft-90"><span class="ar-6"><picture><source type="image/avif" srcset="/assets/img/brand/labro-mark-68.avif"><source type="image/webp" srcset="/assets/img/brand/labro-mark-68.webp"><img src="/assets/img/brand/labro-mark-68.png" alt="" width="17" height="28" class="ft-91"></picture>LABRO BIOCORE</span><span data-cur-num>0</span></div>
   <div class="s08-3">
     <div class="ft-92"><div class="bl-7" data-cur-bar></div></div>
     <div class="ft-93" data-cur-label></div>

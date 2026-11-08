@@ -42,7 +42,8 @@
     a.finished.then(() => { [curA, curB].forEach(el => el.getAnimations().forEach(x => x.cancel())); done(); }, done);
   }
   if (curLabel) curLabel.textContent = navLabel || '';
-  if (R) { root.classList.add('is-ready'); }
+  const touch = innerWidth < 900 || !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (R || touch) { root.classList.add('is-ready'); }   // phones/tablets: page shown at once (curtain only on leaving)
   else if (navLabel !== null || !firstVisit) {
     if (curNum) curNum.textContent = '→';
     if (curBar) curBar.style.transform = 'scaleX(1)';
@@ -114,8 +115,9 @@
   }
   function buildOdo(el) {
     if (el.__odo) return;
-    const txt = el.textContent.trim(); el.setAttribute('aria-label', txt); el.textContent = '';
+    const txt = el.textContent.trim(); el.textContent = '';
     el.classList.add('odo');
+    const sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = txt; el.appendChild(sr);
     el.__odo = [...txt].map(ch => {
       const col = document.createElement('span'); col.setAttribute('aria-hidden', 'true'); col.className = 'odo-col';
       el.appendChild(col);
@@ -203,9 +205,10 @@
     $$('[data-marquee],[data-rotate],[data-sweep]').forEach(el => loopIo.observe(el));
     scrollFx();
   }
-  if (root.classList.contains('is-ready')) startReveals();
 
   // ═══ scroll-driven effects: one passive listener, work only in an animation frame ═══
+  // words not yet "filled" stay readable: 0.45 keeps ≥ 3:1 contrast for this large text (the design used 0.14)
+  const FILL_MIN = 0.45;
   const fills = $$('[data-fill]').map(el => ({ el, ws: $$('.w', el), p: -1 }));
   const stacks = $$('[data-stack]').map(el => [...el.children]);
   const progs = $$('[data-progress]');
@@ -224,7 +227,7 @@
       const p = R ? 1 : Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.25)));
       if (Math.abs(p - f.p) < 0.002) return; f.p = p;
       const lit = p * (f.ws.length + 3);
-      f.ws.forEach((w, j) => { const o = (0.14 + 0.86 * Math.min(1, Math.max(0, lit - j))).toFixed(2); if (w.__o !== o) { w.__o = o; w.style.opacity = o; } });
+      f.ws.forEach((w, j) => { const o = (FILL_MIN + (1 - FILL_MIN) * Math.min(1, Math.max(0, lit - j))).toFixed(2); if (w.__o !== o) { w.__o = o; w.style.opacity = o; } });
     });
     if (!R) stacks.forEach(cards => {
       const rs = cards.map(c => c.getBoundingClientRect());
@@ -245,6 +248,9 @@
   addEventListener('resize', onScroll, { passive: true });
   if (header && PAGE !== 'home') root.classList.add('is-solid');
   scrollFx();
+  // a page shown at once (phones, reduced motion, back/forward) starts its reveals now — after everything
+  // scrollFx() uses is defined (startReveals calls it)
+  if (root.classList.contains('is-ready')) startReveals();
 
   // ═══ pointer: custom cursor, magnetic buttons, tilt cards (real mouse only) ═══
   if (FINE && !R) {
@@ -376,23 +382,21 @@
   });
 
   // ═══ 3D jar: after the page has loaded, only with motion allowed and a capable device ═══
-  // On phones and tablets it starts on the first touch/scroll (the static poster is shown until then),
-  // so it never competes with the first render or the main thread during load.
+  // It starts on the first interaction (the static poster is shown until then), so it never competes with the
+  // first render or the main thread during load.
   if (!R && document.querySelector('[data-jar]') && window.WebGLRenderingContext) {
     const conn = navigator.connection || {};
     const weak = conn.saveData || (navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency || 4) <= 2;
     if (!weak) {
       const go = () => {
-        ['pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(t => removeEventListener(t, go, { passive: true }));
+        ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(t => removeEventListener(t, go, { passive: true }));
         const base = document.querySelector('link[rel="stylesheet"]').getAttribute('href').replace(/assets\/site\.css.*$/, '');
         import(new URL(base + 'assets/js/jar3d.js', location.href).href)
           .then(m => m.start({ markUrl: new URL(base + 'assets/img/brand/labro-mark-texture.png', location.href).href }))
           .catch(() => { /* posters stay */ });
       };
-      const arm = () => {
-        if (FINE) { (window.requestIdleCallback || (f => setTimeout(f, 200)))(() => setTimeout(go, 600), { timeout: 2500 }); }
-        else ['pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(t => addEventListener(t, go, { passive: true, once: true }));
-      };
+      // first sign of a person (mouse move, touch, scroll, key): never during the initial load, never for a bot
+      const arm = () => ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(t => addEventListener(t, go, { passive: true, once: true }));
       if (document.readyState === 'complete') arm(); else addEventListener('load', arm, { once: true });
     }
   }

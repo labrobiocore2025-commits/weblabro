@@ -18,7 +18,7 @@ DISCLAIMER = "Дієтична добавка. Не є лікарським за
 
 CSP = ("default-src 'none'; script-src 'self' https://connect.facebook.net; style-src 'self'; font-src 'self'; "
        "img-src 'self' data: https://www.facebook.com https://connect.facebook.net; "
-       f"connect-src {API} https://www.facebook.com https://connect.facebook.net; manifest-src 'self'; "
+       f"connect-src {API} 'self' https://www.facebook.com https://connect.facebook.net; manifest-src 'self'; "
        "form-action 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests")
 
 # (question, answer) — production FAQ, word for word (incl. items still waiting for the customer's decision)
@@ -83,13 +83,13 @@ E = html.escape
 CUR = ' aria-current="page"'
 
 
-def faq_items(prefix="faq"):
+def faq_items(prefix="faq", h="h3"):
     out = []
     for i, (q, a) in enumerate(FAQ, 1):
         out.append(
             f'<div class="s08-7" data-faq>'
-            f'<h3 class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="{prefix}-q{i}" aria-controls="{prefix}-a{i}">'
-            f'<span class="s08-9">{i:02d}</span><span class="s08-10">{E(q)}</span><span class="s08-11">{PLUS}</span></button></h3>'
+            f'<{h} class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="{prefix}-q{i}" aria-controls="{prefix}-a{i}">'
+            f'<span class="s08-9">{i:02d}</span><span class="s08-10">{E(q)}</span><span class="s08-11">{PLUS}</span></button></{h}>'
             f'<section class="s08-12" id="{prefix}-a{i}" aria-labelledby="{prefix}-q{i}">'
             f'<div class="s08-13"><p class="s08-14">{E(a)}</p></div></section></div>')
     return "\n".join(out)
@@ -105,24 +105,30 @@ def picture(base, name, alt, cls, widths, sizes, lazy=True, w=900, h=563):
             f'width="{w}" height="{h}" decoding="async"{load} class="{cls}"></picture>')
 
 
-def post_card(base, i, post, cls="s11-4"):
+def post_card(base, i, post, cls="s11-4", h="h3"):
     slug, title, cat, mins, img, alt, _ = post
     return (f'<a href="{base}blog/{slug}.html" data-reveal data-cat="{E(cat)}" class="{cls}">'
             f'<div class="s11-5">{picture(base, img, alt, "s11-6", ["480", "900"], "(min-width:900px) 440px, 82vw")}'
             f'<div class="s11-7"></div><span class="s11-8">{E(cat)}</span><span class="s11-9">{i:02d}</span></div>'
             f'<div class="s11-10"><div class="s11-11"><span class="g-10">{E(cat)}</span><span>·</span><span>{E(mins)}</span></div>'
-            f'<h3 class="s11-12">{E(title)}</h3></div></a>')
+            f'<{h} class="s11-12">{E(title)}</{h}></div></a>')
 
 
-def jar(base, key, cls="s01-4", ry=0.0, s=0.62, rz=None, spill=False, eager=False):
+GIF1 = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+NOT_MOBILE, NOT_DESKTOP = "(min-width: 900px)", "(max-width: 899.98px)"
+
+
+def jar(base, key, cls="s01-4", ry=0.0, s=0.62, rz=None, spill=False, eager=False, only=None):
     """[data-jar] anchor with its static poster (same scene, pre-rendered: assets/img/jar/<key>-{560,1100}.*)."""
     attrs = f' data-ry="{ry}" data-s="{s}"' + (f' data-rz="{rz}"' if rz is not None else "") + (" data-spill" if spill else "")
     pack = key.startswith(("pack", "product"))
+    # the anchor is hidden at the other breakpoint: an empty 1×1 source there, so its poster is never downloaded
+    skip = f'<source media="{NOT_MOBILE if only == "m" else NOT_DESKTOP}" srcset="{GIF1}">' if only else ""
 
     def pic(k, extra_cls=""):
         src = lambda ext: f"{base}assets/img/jar/{k}-560.{ext} 560w, {base}assets/img/jar/{k}-1100.{ext} 1100w"  # noqa: E731
         load = ' fetchpriority="high"' if eager else ' loading="lazy"'
-        return (f'<picture class="jar-poster{extra_cls}"><source type="image/avif" srcset="{src("avif")}" sizes="(min-width:900px) 800px, 440px">'
+        return (f'<picture class="jar-poster{extra_cls}">{skip}<source type="image/avif" srcset="{src("avif")}" sizes="(min-width:900px) 800px, 440px">'
                 f'<img src="{base}assets/img/jar/{k}-1100.webp" srcset="{src("webp")}" sizes="(min-width:900px) 800px, 440px" '
                 f'alt="" width="1100" height="1100" decoding="async"{load}></picture>')
     posters = pic(key, " pack-current") + pic(key + "-new", " pack-new") if pack else pic(key)
@@ -214,9 +220,9 @@ def context(meta, base):
         "has_modal": meta.get("modal", True), "has_bar": meta.get("bar", False),
         "pixel_mode": meta.get("pixel", "full"),
         "html_class": "js-pending" + (" is-solid" if current != "home" else ""),
-        "faq_items": faq_items(), "faq_items_page": faq_items("faqp"),
+        "faq_items": faq_items(), "faq_items_page": faq_items("faqp", "h2"),
         "home_posts": "\n".join(post_card(base, i, p) for i, p in enumerate(POSTS[:3], 1)),
-        "all_posts": "\n".join(post_card(base, i, p, "bl-5") for i, p in enumerate(POSTS, 1)),
+        "all_posts": "\n".join(post_card(base, i, p, "bl-5", "h2") for i, p in enumerate(POSTS, 1)),
         "cat_tabs": "\n".join(f'<button type="button" role="tab" class="pd-4" aria-selected="{"true" if i == 0 else "false"}" '
                               f'data-cat="{E(c)}">{E(c)}</button>' for i, c in enumerate(CATS)),
         "nav_links": "\n".join(f'<a href="{rel(u)}" class="g-12"{CUR if k == current or (k == "blog" and current == "article") else ""}>{E(l)}</a>'
@@ -229,11 +235,11 @@ def context(meta, base):
         "robots_meta": "" if meta.get("robots", "index") == "index" else '<meta name="robots" content="noindex">',
     })
     ctx["jar"] = {
-        "hero_m": jar(base, "hero-m", ry=-0.1, s=0.7, eager=True), "hero_d": jar(base, "hero-d", ry=-0.15, s=0.58, eager=True),
-        "pack_m": jar(base, "pack-m", ry=0.2, s=0.7), "pack_d": jar(base, "pack-d", ry=0.2, s=0.66),
+        "hero_m": jar(base, "hero-m", ry=-0.1, s=0.7, eager=True, only="m"), "hero_d": jar(base, "hero-d", ry=-0.15, s=0.58, eager=True, only="d"),
+        "pack_m": jar(base, "pack-m", ry=0.2, s=0.7, only="m"), "pack_d": jar(base, "pack-d", ry=0.2, s=0.66, only="d"),
         "order": jar(base, "order", ry=-0.3, s=0.62),
-        "product_m": jar(base, "product-m", ry=0, s=0.72, eager=True), "product_d": jar(base, "product-d", ry=0, s=0.6, eager=True),
-        "thanks_m": jar(base, "thanks-m", ry=0, s=0.72, eager=True), "thanks_d": jar(base, "thanks-d", ry=-0.2, s=0.6, eager=True),
+        "product_m": jar(base, "product-m", ry=0, s=0.72, eager=True, only="m"), "product_d": jar(base, "product-d", ry=0, s=0.6, eager=True, only="d"),
+        "thanks_m": jar(base, "thanks-m", ry=0, s=0.72, eager=True, only="m"), "thanks_d": jar(base, "thanks-d", ry=-0.2, s=0.6, eager=True, only="d"),
         "nf": jar(base, "nf", ry=0, s=0.56, rz=1.42, spill=True, eager=True),
     }
     if meta.get("post") is not None:

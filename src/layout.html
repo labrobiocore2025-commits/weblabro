@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- GitHub Pages cannot set response headers, so CSP comes from <meta>. No inline scripts/styles/handlers anywhere. -->
-<meta http-equiv="Content-Security-Policy" content="{{ csp }}">
+<meta http-equiv="Content-Security-Policy" content="{{{ csp }}}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="labro-api" content="{{ api }}">
 <meta name="theme-color" content="#060A08">
@@ -22,11 +22,12 @@
 </head>
 <body data-price-kop="99000" data-page="{{ nav }}">
 <a class="skip-link" href="#main">Перейти до змісту</a>
+<!-- the fixed header sits outside .g-4 (z-index 2 stacking context) so its menu button stays above the open menu -->
+{{> header }}
 <div class="g-1">
 <div class="g-2"></div>
 <div class="g-3"></div>
 <div class="g-4">
-{{> header }}
 <main id="main">
 {{{ content }}}
 </main>

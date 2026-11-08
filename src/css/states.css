@@ -79,8 +79,10 @@
 .ft-53:not([aria-invalid="true"])+.mo-err-msg{display:none}
 
 /* page curtains: cover the page from the first paint until site.js lifts them (2.5 s CSS failsafe if it never runs;
-   without JS assets/noscript.css removes them) */
+   without JS assets/noscript.css removes them). Touch screens never start covered: first paint and LCP on phones
+   must not wait for an intro; the curtain only falls when leaving a page (site.js). */
 .ft-88,.ft-89{transform:translateY(0)}
+@media (max-width:899.98px),(hover:none),(pointer:coarse){.ft-88,.ft-89{transform:translateY(100%)}}
 .is-ready .ft-88,.is-ready .ft-89{transform:translateY(100%)}
 @keyframes curtain-failsafe{to{transform:translateY(-100%)}}
 html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving) .ft-89{animation:curtain-failsafe .8s 2.5s forwards}
@@ -138,3 +140,11 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
 #statusCard[data-status="retry"] .st-bad-actions{display:grid}
 #statusCard[data-status="bad"] #trackBtn,#statusCard[data-status="retry"] #trackBtn{display:none}
 .faq-h{margin:0;font:inherit;letter-spacing:inherit}
+
+/* touch targets ≥ 44 px on phones and tablets (desktop keeps the design's exact metrics) */
+@media (max-width:899.98px){
+  .ft-8,.ft-9,.ft-10{min-height:44px;display:inline-flex;align-items:center}
+  .pr-5,.ar-3{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
+  .ar-15{min-height:44px}
+  .skip-link{min-height:44px;display:inline-flex;align-items:center}
+}
