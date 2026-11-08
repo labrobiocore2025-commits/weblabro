@@ -148,3 +148,7 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
   .ar-15{min-height:44px}
   .skip-link{min-height:44px;display:inline-flex;align-items:center}
 }
+/* the narrowest phones: the hero price badge shrinks and lifts so it never covers the jar cap */
+@media (max-width:359px){
+  .s01-5{width:94px;height:94px;top:0}
+}
