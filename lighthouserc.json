@@ -6,10 +6,16 @@
       "url": [
         "http://localhost/index.html",
         "http://localhost/product.html",
-        "http://localhost/faq.html",
+        "http://localhost/about.html",
+        "http://localhost/blog.html",
         "http://localhost/blog/ashwagandha.html",
+        "http://localhost/delivery.html",
+        "http://localhost/contacts.html",
+        "http://localhost/faq.html",
+        "http://localhost/offer.html",
         "http://localhost/privacy.html",
-        "http://localhost/thanks.html"
+        "http://localhost/thanks.html",
+        "http://localhost/404.html"
       ],
       "settings": { "chromeFlags": "--no-sandbox" }
     },
@@ -20,7 +26,9 @@
         "categories:accessibility": ["error", { "minScore": 1 }],
         "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
         "cumulative-layout-shift": ["error", { "maxNumericValue": 0.05 }],
-        "total-blocking-time": ["error", { "maxNumericValue": 200 }]
+        "total-blocking-time": ["error", { "maxNumericValue": 200 }],
+        "resource-summary:script:size": ["error", { "maxNumericValue": 61440 }],
+        "resource-summary:total:size": ["error", { "maxNumericValue": 450000 }]
       }
     },
     "upload": { "target": "filesystem", "outputDir": ".lighthouseci" }
