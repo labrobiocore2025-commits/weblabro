@@ -22,12 +22,14 @@
   if (FINE && !R) root.classList.add('has-cursor');
   const jarSignal = () => document.dispatchEvent(new Event('labro:jar'));
 
-  // ═══ curtains: intro on the first page of a visit, a short lift after an internal navigation ═══
+  // ═══ curtains: a ≤ 1 s intro on the very first visit only (remembered in localStorage), a short lift after an
+  //     internal navigation, nothing at all on a returning visit ═══
   const curA = document.querySelector('[data-cur-a]'), curB = document.querySelector('[data-cur-b]');
   const curNum = document.querySelector('[data-cur-num]'), curBar = document.querySelector('[data-cur-bar]');
   const curLabel = document.querySelector('[data-cur-label]');
   let navLabel = null, firstVisit = true;
-  try { navLabel = sessionStorage.getItem('labro_nav'); sessionStorage.removeItem('labro_nav'); firstVisit = !sessionStorage.getItem('labro_seen'); sessionStorage.setItem('labro_seen', '1'); } catch (_) { /* storage blocked */ }
+  try { navLabel = sessionStorage.getItem('labro_nav'); sessionStorage.removeItem('labro_nav'); } catch (_) { /* storage blocked */ }
+  try { firstVisit = !localStorage.getItem('labro_seen'); localStorage.setItem('labro_seen', '1'); } catch (_) { firstVisit = false; }
   const t0 = performance.now();
 
   function liftCurtains() {
@@ -36,30 +38,31 @@
     if (R || !curA || !curB) { done(); return; }
     [curA, curB].forEach(el => el.getAnimations().forEach(a => a.cancel()));
     const up = [{ transform: 'translateY(0)' }, { transform: 'translateY(-100%)' }];
-    curB.animate(up, { duration: 800, easing: EIO, fill: 'forwards' });
-    const a = curA.animate(up, { duration: 800, delay: 100, easing: EIO, fill: 'forwards' });
-    setTimeout(startReveals, 200);                              // content animates in while the curtains rise
+    curB.animate(up, { duration: 480, easing: EIO, fill: 'forwards' });
+    const a = curA.animate(up, { duration: 480, delay: 60, easing: EIO, fill: 'forwards' });
+    setTimeout(startReveals, 120);                              // content animates in while the curtains rise
     a.finished.then(() => { [curA, curB].forEach(el => el.getAnimations().forEach(x => x.cancel())); done(); }, done);
   }
   if (curLabel) curLabel.textContent = navLabel || '';
   // matchMedia, not innerWidth: reading innerWidth here forced a full layout inside this script before the first paint
   const touch = matchMedia('(max-width: 899.98px)').matches || !matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (R || touch) { root.classList.add('is-ready'); }   // phones/tablets: page shown at once (curtain only on leaving)
-  else if (navLabel !== null || !firstVisit) {
+  // phones/tablets and returning visitors: the page is shown at once (curtain only on leaving)
+  if (R || touch || (!firstVisit && navLabel === null)) { root.classList.add('is-ready'); }
+  else if (navLabel !== null) {
     if (curNum) curNum.textContent = '→';
     if (curBar) curBar.style.transform = 'scaleX(1)';
-    requestAnimationFrame(() => setTimeout(liftCurtains, 180));
+    requestAnimationFrame(() => setTimeout(liftCurtains, 40));
   } else {
-    // first page of the visit: counter 0 → 100, curtains lift after ≥ 0.7 s (never waits for the 3D)
+    // the very first visit: counter 0 → 100 in 0.45 s, then the curtains lift (0.54 s) — under 1 s in all, never waits for the 3D
     const step = now => {
-      const p = Math.min(1, (now - t0) / 800), v = 1 - Math.pow(1 - p, 3);
+      const p = Math.min(1, (now - t0) / 450), v = 1 - Math.pow(1 - p, 3);
       if (curNum) curNum.textContent = String(Math.round(99 * v));
       if (curBar) curBar.style.transform = `scaleX(${v * 0.99})`;
       if (p < 1 && !root.classList.contains('is-ready')) requestAnimationFrame(step);
       else if (curNum) curNum.textContent = '100';
     };
     requestAnimationFrame(step);
-    setTimeout(liftCurtains, Math.max(0, 700 - (performance.now() - t0)));
+    setTimeout(liftCurtains, Math.max(0, 450 - (performance.now() - t0)));
   }
 
   // internal links: curtains fall, then the browser navigates (the next page lifts them)

@@ -129,7 +129,8 @@ def poster_sizes(key):
 
 
 def poster_srcset(base, key, ext):
-    return ", ".join(f"{base}assets/img/jar/{key}-{w}.{ext} {w}w" for w in (560, 800, 1100))
+    # up to 1600: the desktop poster is ≤ 800 CSS px (2× = 1600), the phone one ≤ 520 CSS px (iPhone 3× ≈ 1560)
+    return ", ".join(f"{base}assets/img/jar/{key}-{w}.{ext} {w}w" for w in (560, 800, 1100, 1400, 1600))
 
 
 def lcp_preloads(meta, base):
@@ -148,7 +149,7 @@ NOT_MOBILE, NOT_DESKTOP = "(min-width: 900px)", "(max-width: 899.98px)"
 
 
 def jar(base, key, cls="s01-4", ry=0.0, s=0.62, rz=None, spill=False, eager=False, only=None):
-    """[data-jar] anchor with its static poster (same scene, pre-rendered: assets/img/jar/<key>-{560,1100}.*)."""
+    """[data-jar] anchor with its static poster (the live scene's first frame, tools/bake: assets/img/jar/<key>-{560…1600}.*)."""
     attrs = f' data-ry="{ry}" data-s="{s}"' + (f' data-rz="{rz}"' if rz is not None else "") + (" data-spill" if spill else "")
     pack = key.startswith(("pack", "product"))
     # the anchor is hidden at the other breakpoint: an empty 1×1 source there, so its poster is never downloaded

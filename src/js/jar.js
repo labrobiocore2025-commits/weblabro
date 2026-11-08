@@ -73,13 +73,14 @@ export async function start({ labelBase, labelQuery = '' }) {
       a.appendChild(scene.canvas);
     }
     const r = a.getBoundingClientRect();
-    scene.setSize(Math.round(r.width), Math.round(r.height));
-    scene.tick(dt, now / 1000, {
+    scene.setSize(r.width, r.height);                  // CSS px, unrounded: the scene sizes its buffer in device pixels
+    const drawn = scene.tick(dt, now / 1000, {
       key, sf: +a.dataset.s || 0.62, ry: +a.dataset.ry || 0, rz: +a.dataset.rz || 0, spill: 'spill' in a.dataset ? 1 : 0,
       pack: root.dataset.pack === 'new' ? 1 : 0, reduced: false, nx: ptr.nx, ny: ptr.ny, drag: drag.d, dragging: drag.on,
     });
     drag.d = 0;
-    if (!a.classList.contains('has-3d')) a.classList.add('has-3d');
+    // the poster fades out only once the canvas holds the same frame (cross-fade, base.css)
+    if (drawn && !a.classList.contains('has-3d')) a.classList.add('has-3d');
     raf = requestAnimationFrame(frame);
   }
 

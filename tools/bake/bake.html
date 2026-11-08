@@ -1,26 +1,53 @@
 <!doctype html><meta charset="utf-8">
 <style>
-@font-face{font-family:Geologica;src:url(../../assets/fonts/geologica.woff2) format('woff2');font-weight:300 700;unicode-range:U+0400-045F}
-@font-face{font-family:Geologica;src:url(../../assets/fonts/geologica.woff2) format('woff2');font-weight:300 700;unicode-range:U+0000-00FF}
+@font-face{font-family:Geologica;src:url(../../assets/fonts/geologica.woff2) format('woff2');font-weight:300 700}
 @font-face{font-family:Oswald;src:url(oswald-normal-cyrillic.woff2) format('woff2');font-weight:400 600;unicode-range:U+0400-045F}
 @font-face{font-family:Oswald;src:url(oswald-normal-latin.woff2) format('woff2');font-weight:400 600;unicode-range:U+0000-00FF}
 @font-face{font-family:"Cormorant Garamond";font-style:italic;src:url(../../assets/fonts/cormorant-garamond-italic.woff2) format('woff2');font-weight:400 600}
 </style>
 <script type="module">
-import { drawLabels } from './scene.js';
-window.bake = async () => {
-  await Promise.all([document.fonts.load('600 100px Oswald'), document.fonts.load('italic 400 40px Oswald'), document.fonts.load('400 34px Oswald'),
-    document.fonts.load('500 36px Oswald'), document.fonts.load('600 100px Geologica'), document.fonts.load('400 30px Geologica'), document.fonts.load('italic 500 50px "Cormorant Garamond"')]);
+import { drawLabels, createScene } from './scene.js';
+
+const half = (c, w) => {                       // high-quality downscale of a canvas to width w (halving steps)
+  let src = c;
+  while (src.width / 2 >= w) {
+    const d = document.createElement('canvas'); d.width = src.width / 2; d.height = Math.round(src.height / 2);
+    const g = d.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(src, 0, 0, d.width, d.height); src = d;
+  }
+  if (src.width === w) return src;
+  const d = document.createElement('canvas'); d.width = w; d.height = Math.round(src.height * w / src.width);
+  const g = d.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(src, 0, 0, d.width, d.height); return d;
+};
+
+// labels: drawn once at 4096 (K = 1.6) and downscaled to 2560 — text and logo rendered at full resolution
+window.bakeLabels = async () => {
+  // with a sample text: fonts.load() without one loads only the Latin subset — the Cyrillic would fall back to Arial
+  const T = 'НЕЙРО-БАЛАНС Добавка дієтична ASHWAGANDHA LaBro 60';
+  await Promise.all(['600 100px Oswald', 'italic 400 40px Oswald', '400 34px Oswald', '500 36px Oswald', '600 100px Geologica',
+    '400 30px Geologica', '500 30px Geologica', 'italic 500 50px "Cormorant Garamond"'].map(f => document.fonts.load(f, T)));
+  const missing = ['600 100px Oswald', '600 100px Geologica'].filter(f => !document.fonts.check(f, 'НЕЙРО'));
+  if (missing.length) throw new Error('fonts not loaded: ' + missing);
   const mark = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.src = 'mark.png'; });
-  const L = drawLabels(mark), out = {};
+  const L = drawLabels(mark, 1.6), out = {};
   for (const [k, c] of Object.entries({ current: L.current, 'new': L.newMap, 'new-emissive': L.newEmissive })) {
-    for (const w of [2560, 1280]) {
-      const d = document.createElement('canvas'); d.width = w; d.height = Math.round(c.height * w / c.width);
-      d.getContext('2d').drawImage(c, 0, 0, d.width, d.height);
-      out[`label-${k}-${w}.webp`] = d.toDataURL('image/webp', k === 'new-emissive' ? 0.8 : 0.86);
-    }
+    for (const w of [4096, 2560]) out[`label-${k}-${w}.webp`] = half(c, w).toDataURL('image/webp', k === 'new-emissive' ? 0.9 : 0.94);
   }
   return out;
+};
+
+// posters: the live scene's first frame for each anchor (tick at t = 0 = the still pose), 3200 px with MSAA → 1600 px
+window.bakePosters = async specs => {
+  const scene = await createScene(name => '../../assets/img/jar/' + name + '?' + Date.now(), { bake: true, dpr: 1 });
+  scene.setSize(3200, 3200);
+  const out = {};
+  for (const [i, sp] of specs.entries()) {
+    if (sp.pack) await scene.loadNewPack();
+    const ok = scene.tick(0, 0, { key: i + 1, sf: sp.s, ry: sp.ry, rz: sp.rz || 0, spill: sp.spill ? 1 : 0, pack: sp.pack ? 1 : 0,
+      reduced: true, nx: 0, ny: 0, drag: 0, dragging: false });
+    if (!ok) throw new Error('not drawn: ' + sp.key);
+    out[`${sp.key}-1600.png`] = half(scene.canvas, 1600).toDataURL('image/png');
+  }
+  return { out, stats: scene.stats() };
 };
 window.ready = true;
 </script>
