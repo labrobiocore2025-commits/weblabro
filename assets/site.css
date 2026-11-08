@@ -110,8 +110,9 @@ img,svg{max-width:100%}
 .s01-2{position:relative;height:44svh;min-height:300px;max-height:420px}
 .s01-3{position:absolute;left:50%;top:50%;translate:-50% -50%;font-size:34vw;font-weight:700;letter-spacing:-.06em;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(238,241,234,.09);white-space:nowrap}
 .s01-4{position:absolute;inset:0}
-.s01-5{position:absolute;right:0;top:6%;width:92px;height:92px}
-.s01-6{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;fill:#C9D3CC}
+.s01-5{position:absolute;right:0;top:6%;width:104px;height:104px}
+/* 50 monospace characters (advance .6em) + letter-spacing = the whole circle 2π·46 ≈ 289: the loop closes on the trailing nbsp */
+.s01-6{font-family:'JetBrains Mono',monospace;font-size:8.6px;letter-spacing:.62px;fill:#C9D3CC}
 .s01-7{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .s01-8{width:44px;height:44px;border-radius:50%;background:#5CE08C;color:#04130A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
 .s01-9{position:relative;z-index:1;display:flex;flex-direction:column;gap:clamp(18px,2.6vh,28px);min-width:0}
@@ -828,4 +829,8 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
    past its sides were cut into thin slivers 20px from the screen edge — fade the sides of the box instead */
 @media (max-width:899.98px){
   .s01-4{-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+}
+/* the narrowest phones: the hero price badge shrinks and lifts so it never covers the jar cap */
+@media (max-width:359px){
+  .s01-5{width:94px;height:94px;top:0}
 }
