@@ -1,0 +1,76 @@
+<div id="checkoutModal" class="modal-root" inert>
+  <div class="ft-38" data-mo-backdrop></div>
+  <div class="ft-39">
+    <div role="dialog" aria-modal="true" aria-labelledby="moTitle" tabindex="-1" class="ft-40" data-mo-panel>
+      <button type="button" id="moClose" aria-label="Закрити" class="ft-41"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button>
+
+      <form id="moForm" novalidate class="ft-42" aria-busy="false">
+        <div data-mf class="ft-43"><span class="dl-9">LABRO BIOCORE</span><h2 id="moTitle" class="ft-44">Оформлення замовлення</h2></div>
+        <div data-mf class="ft-45">
+          <div class="ft-21"><span class="ft-46">Нейро-Баланс</span><span class="s02-25">60 веганських капсул · <span data-price>{{ price }} ₴</span></span></div>
+          <div role="group" aria-label="Кількість" class="ft-47">
+            <button type="button" id="moMinus" aria-label="Менше" class="ft-48">−</button>
+            <output id="moQty" aria-live="polite" class="ft-49">1</output>
+            <button type="button" id="moPlus" aria-label="Більше" class="ft-48">+</button>
+          </div>
+        </div>
+        <div class="ft-50">
+          <div data-mf class="ft-51"><label for="moName" class="ft-52">Ім'я та прізвище</label><input id="moName" name="name" type="text" autocomplete="name" maxlength="128" placeholder="Іван Петренко" aria-describedby="moNameErr" class="ft-53"><p id="moNameErr" class="ft-54 mo-err-msg"></p></div>
+          <div data-mf class="ft-51"><label for="moPhone" class="ft-52">Телефон</label><input id="moPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="+380 XX XXX XX XX" aria-describedby="moPhoneErr" class="ft-53"><p id="moPhoneErr" class="ft-54 mo-err-msg"></p></div>
+        </div>
+        <div data-mf class="ft-51"><label for="moCity" class="ft-52">Місто та відділення Нової Пошти</label><input id="moCity" name="city" type="text" autocomplete="address-level2" maxlength="256" placeholder="Харків, відд. №12" aria-describedby="moCityErr" class="ft-53"><p id="moCityErr" class="ft-54 mo-err-msg"></p></div>
+        <div data-mf class="ft-51"><label for="moComment" class="ft-52">Коментар (необов'язково)</label><input id="moComment" name="comment" type="text" maxlength="300" placeholder="Будь-яке уточнення…" class="ft-55"></div>
+        <div aria-hidden="true" class="ft-56"><label for="moWebsite">Не заповнюйте це поле</label><input id="moWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <fieldset data-mf class="ft-57 fs-reset">
+          <legend class="sr-only">Спосіб оплати</legend>
+          <label class="ft-58"><input type="radio" name="moPay" value="online" id="moPayOnline" class="sr-only" checked>
+            <span class="ft-59"><span class="ft-60"></span></span>
+            <span class="ar-29"><span class="ft-61">Онлайн через monobank</span><span class="ft-62">Картка · оплата на рахунок ФОП</span></span>
+          </label>
+          <label class="ft-58"><input type="radio" name="moPay" value="cod" id="moPayCod" class="sr-only">
+            <span class="ft-59"><span class="ft-60"></span></span>
+            <span class="ar-29"><span class="ft-61">Накладений платіж</span><span class="ft-62">Оплата при отриманні у відділенні</span></span>
+          </label>
+        </fieldset>
+        <div data-mf class="ft-63"><span class="pd-23">До сплати</span><span class="ft-64"><span id="moTotal">{{ price }}</span> <span class="ft-65">₴</span></span></div>
+        <div data-mf class="ft-51 mo-consent">
+          <div class="ft-66">
+            <input type="checkbox" id="moConsent" name="consent" aria-describedby="moConsentErr" class="ft-67">
+            <label for="moConsent" class="ft-68">Я погоджуюсь з <a href="{{ base }}privacy.html" target="_blank" rel="noopener" class="ft-69">Політикою конфіденційності</a> і даю згоду на обробку моїх персональних даних, зокрема на їх передачу за кордон (США, ОАЕ), для оформлення та доставки замовлення.</label>
+          </div>
+          <p id="moConsentErr" class="ft-54 consent-err">Щоб оформити замовлення, потрібна Ваша згода.</p>
+        </div>
+        <button data-mf type="submit" id="moSubmit" class="ft-70">Сплатити <span data-total-label>{{ price }}</span> ₴ через monobank</button>
+        <p data-mf class="ft-71">Дані картки вводяться лише на захищеній сторінці monobank — ми їх не отримуємо. {{ disclaimer }}</p>
+        <a data-mf href="{{ manager }}" target="_blank" rel="noopener" class="ft-72">або написати менеджеру → @LaBroudi</a>
+      </form>
+
+      <div id="mo-loading" role="status" aria-live="polite" class="ft-73 mo-state">
+        <div data-ms><div class="lb-spin"></div></div>
+        <h3 tabindex="-1" data-ms class="ft-74 mo-state-h">Обробляємо замовлення</h3>
+        <p data-ms class="ft-75" id="moLoadingText"></p>
+        <div data-ms class="ft-76"><div class="lb-skel"><i></i><i></i><i></i></div></div>
+      </div>
+
+      <div id="mo-error" role="alert" class="ft-77 mo-state">
+        <span data-ms class="ft-78" aria-hidden="true">!</span>
+        <h3 tabindex="-1" data-ms class="ft-79 mo-state-h" id="moErrorTitle">Не вдалося надіслати замовлення</h3>
+        <p data-ms class="ft-80" id="moErrorText"></p>
+        <pre data-ms class="ft-81" id="moOrderText"></pre>
+        <div data-ms class="ft-82">
+          <button type="button" id="moCopyBtn" class="ft-83">Скопіювати замовлення</button>
+          <a href="{{ manager }}" target="_blank" rel="noopener" class="th-12">Написати менеджеру →</a>
+        </div>
+        <button data-ms type="button" id="moResetBtn" class="ft-84">← Назад до форми</button>
+      </div>
+
+      <div id="mo-cod-success" role="status" class="ft-85 mo-state">
+        <svg data-ms width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true"><circle cx="40" cy="40" r="38" stroke="#5CE08C" stroke-width="1.5"></circle><path data-check d="M24 41l11 11 21-23" stroke="#5CE08C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" stroke-dashoffset="0"></path></svg>
+        <h3 tabindex="-1" data-ms class="ft-86 mo-state-h">Замовлення прийнято!</h3>
+        <p data-ms class="ft-75">Менеджер зв'яжеться з Вами найближчим часом. Оплата — при отриманні у відділенні.</p>
+        <a data-ms href="{{ manager }}" id="moCodTrack" class="ft-87 as-btn">Статус замовлення →</a>
+        <button data-ms type="button" id="moCodClose" class="ft-84">Закрити</button>
+      </div>
+    </div>
+  </div>
+</div>

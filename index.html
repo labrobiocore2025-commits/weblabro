@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" class="js-pending">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- GitHub Pages cannot set response headers, so CSP comes from <meta>. No inline scripts/styles/handlers anywhere. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://connect.facebook.net; style-src 'self'; font-src 'self'; img-src 'self' data: https://www.facebook.com https://connect.facebook.net; connect-src https://api.labrobiocore.com.ua 'self' https://www.facebook.com https://connect.facebook.net; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="labro-api" content="https://api.labrobiocore.com.ua">
+<meta name="theme-color" content="#060A08">
 <title>Нейро-Баланс — LABRO BIOCORE</title>
 <meta name="description" content="Нейро-Баланс — натуральний комплекс Ashwagandha, L-Theanine, Rhodiola для підтримки нервової системи. Сприяє спокою, якісному сну та концентрації. Дієтична добавка, 60 веганських капсул.">
 <meta name="keywords" content="нейро-баланс, ашваганда, ashwagandha, l-theanine, rhodiola, стрес, сон, концентрація, дієтична добавка">
@@ -13,663 +18,555 @@
 <meta property="og:url" content="https://labrobiocore.com.ua/">
 <meta property="og:image" content="https://labrobiocore.com.ua/favicon-512.png">
 <meta property="og:locale" content="uk_UA">
-<meta name="theme-color" content="#0A0907">
-<!-- Security. GitHub Pages cannot set response headers, so CSP comes from <meta>.
-     No inline scripts/styles/handlers: everything is under assets/. X-Frame-Options / frame-ancestors,
-     X-Content-Type-Options and Permissions-Policy are header-only and need a proxy (e.g. Cloudflare) in front of Pages. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://connect.facebook.net; style-src 'self'; font-src 'self'; img-src 'self' data: https://www.facebook.com https://connect.facebook.net; connect-src https://api.labrobiocore.com.ua https://www.facebook.com https://connect.facebook.net; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'; upgrade-insecure-requests">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="labro-api" content="https://api.labrobiocore.com.ua">
 <meta property="og:site_name" content="LABRO BIOCORE">
 <meta name="twitter:card" content="summary">
-<link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
-<link rel="manifest" href="site.webmanifest">
-<link rel="preload" href="assets/fonts/cormorant-garamond-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/inter-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=58931547a0">
-<script src="assets/js/meta-pixel.js?v=afd3607348" async></script>
-<script src="assets/app.js?v=8fca0008b2" defer></script>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/assets/fonts/geologica-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css?v=bf701a1958">
+<noscript><link rel="stylesheet" href="/assets/noscript.css?v=58f5918c6a"></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://labrobiocore.com.ua/#org","name":"LABRO BIOCORE","url":"https://labrobiocore.com.ua/","logo":"https://labrobiocore.com.ua/favicon-512.png","telephone":"+380932808111","email":"labrobiocore2025@gmail.com","sameAs":["https://instagram.com/labro.biocore","https://t.me/LaBroBioCore"]},{"@type":"WebSite","@id":"https://labrobiocore.com.ua/#site","url":"https://labrobiocore.com.ua/","name":"LABRO BIOCORE","inLanguage":"uk","publisher":{"@id":"https://labrobiocore.com.ua/#org"}},{"@type":"Product","@id":"https://labrobiocore.com.ua/product.html#product","name":"Нейро-Баланс","description":"Натуральний комплекс Ashwagandha, L-Theanine та Rhodiola Rosea. 60 веганських капсул без ГМО, глютену та лактози. Дієтична добавка. Не є лікарським засобом.","image":["https://labrobiocore.com.ua/assets/img/jar/product-d-1100.webp"],"brand":{"@type":"Brand","name":"LABRO BIOCORE"},"sku":"neuro-balance","offers":{"@type":"Offer","url":"https://labrobiocore.com.ua/product.html","price":"990","priceCurrency":"UAH","availability":"https://schema.org/InStock","itemCondition":"https://schema.org/NewCondition","seller":{"@id":"https://labrobiocore.com.ua/#org"}}}]}</script>
+<script src="/assets/js/meta-pixel.js?v=afd3607348" async></script>
+<script src="/assets/js/site.js?v=2fc3fdb108" defer></script>
+<script src="/assets/app.js?v=0ca330d5db" defer></script>
 </head>
-<body data-price-kop="99000">
+<body data-price-kop="99000" data-page="home">
 <a class="skip-link" href="#main">Перейти до змісту</a>
+<!-- the fixed header sits outside .g-4 (z-index 2 stacking context) so its menu button stays above the open menu -->
+<header class="g-5" data-header>
+  <div class="g-6">
+    <a href="/" aria-label="LABRO BIOCORE — на головну" class="g-7">
+      <picture><source type="image/avif" srcset="/assets/img/brand/labro-mark-68.avif"><source type="image/webp" srcset="/assets/img/brand/labro-mark-68.webp"><img src="/assets/img/brand/labro-mark-68.png" alt="" width="20" height="34" class="g-8"></picture>
+      <span class="g-9">LABRO <span class="g-10">BIOCORE</span></span>
+    </a>
+    <nav aria-label="Основна навігація" class="g-11 nav-wide">
+<a href="/product.html" class="g-12">Нейро-Баланс</a>
+<a href="/about.html" class="g-12">Про нас</a>
+<a href="/blog.html" class="g-12">Блог</a>
+<a href="/delivery.html" class="g-12">Доставка й оплата</a>
+<a href="/contacts.html" class="g-12">Контакти</a>
+    </nav>
+    <div class="g-13">
+      <a href="/#order" data-magnetic data-checkout class="g-14 d-only as-btn"><span>Замовити</span><span class="g-15">·</span><span data-price>990 ₴</span></a>
+      <button type="button" aria-label="Меню" aria-expanded="false" aria-controls="site-menu" class="g-16 nav-narrow" data-menu-toggle>
+        <span class="g-17"></span>
+        <span class="g-17"></span>
+      </button>
+    </div>
+  </div>
+</header>
 
-<!-- NAV -->
-<nav class="nav" id="mainNav" aria-label="Основна навігація">
-  <a href="#main" class="nav-logo" aria-label="LABRO BIOCORE — на початок">
-    <svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 32 32" fill="none">
-      <circle cx="16" cy="16" r="15.5" stroke="#4D6B2A" stroke-width="1"/>
-      <path d="M8 22 Q16 6 24 22" stroke="#6B8B3A" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="16" cy="10" r="3.5" fill="none" stroke="#C4944A" stroke-width="1.2"/>
-      <circle cx="16" cy="10" r="1.5" fill="#C4944A"/>
-    </svg>
-    <span class="nav-logotype">LABRO <b>BIOCORE</b></span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#ingredients">Склад</a></li>
-    <li><a href="#benefits">Переваги</a></li>
-    <li><a href="#order">Замовити</a></li>
-    <li><a href="#faq">FAQ</a></li>
-  </ul>
-  <a href="#order" class="nav-order" data-checkout>Замовити</a>
-</nav>
-
+<div class="g-1">
+<div class="g-2"></div>
+<div class="g-3"></div>
+<div class="g-4">
 <main id="main">
-<!-- HERO -->
-<section class="hero">
-  <canvas id="hero-canvas" aria-hidden="true"></canvas>
-  <div class="hero-glow"></div>
-
-  <div class="hero-content">
-    <div class="eyebrow">
-      <div class="eyebrow-pulse"></div>
-      <span class="eyebrow-text">Натуральний комплекс · LABRO BIOCORE</span>
+<section data-screen-label="01 Hero" class="s01-1">
+  <div class="s01-2 m-only">
+    <div aria-hidden="true" class="s01-3">LB</div>
+    <div data-jar data-ry="-0.1" data-s="0.7" class="s01-4"><picture class="jar-poster"><source media="(min-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/hero-m-560.avif 560w, /assets/img/jar/hero-m-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/hero-m-1100.webp" srcset="/assets/img/jar/hero-m-560.webp 560w, /assets/img/jar/hero-m-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" fetchpriority="high"></picture></div>
+    <div data-rotate class="s01-5" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="100%" height="100%"><defs><path id="hbm" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"></path></defs><text class="s01-6"><textPath href="#hbm">ВЕГАНСЬКІ КАПСУЛИ · КУРС 30 ДНІВ ·</textPath></text></svg>
+      <span class="s01-7"><span class="s01-8"><span data-price-short>990</span>₴</span></span>
     </div>
-    <h1 class="hero-title">
-      Відновлення<br>нервової системи<br><i>починається тут</i>
+  </div>
+  <div class="s01-9">
+    <div data-reveal class="s01-10">
+      <span data-pulse class="s01-11"></span>Натуральний комплекс · LABRO BIOCORE
+    </div>
+    <h1 data-chars class="s01-12 hero-h1">
+      <span class="s01-13">Відновлення</span>
+      <span class="s01-13">нервової системи</span>
+      <span class="s01-14">починається тут</span>
     </h1>
-    <p class="hero-sub">
-      Нейро-Баланс — 60 веганських капсул, що підтримують спокій, якісний сон і ясність думок. Без синтетики. Без залежності.
-    </p>
-    <div class="hero-btns">
-      <a href="#order" class="btn-cta" data-checkout>
-        <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Замовити зараз
-      </a>
-      <a href="#ingredients" class="btn-ghost">
-        <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="rgba(247,242,232,0.45)" stroke-width="1.2"/><path d="M7.5 5v3l1.5 1.5" stroke="rgba(247,242,232,0.45)" stroke-width="1.2" stroke-linecap="round"/></svg>
-        Склад та дія
-      </a>
+    <p data-words data-delay="250" class="s01-15"><span class="s01-16">Нейро-Баланс</span> — 60 веганських капсул, що підтримують спокій, якісний сон і ясність думок. Без синтетики. Без залежності.</p>
+    <div data-reveal data-delay="420" class="s01-17">
+      <a href="#order" data-magnetic data-checkout class="s01-18 as-btn"><span>Замовити — <span data-price>990 ₴</span></span><span class="s01-19"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></a>
+      <a href="#ingredients" class="s01-20 as-btn">Склад і дія ↓</a>
     </div>
+    <div data-reveal data-delay="520" class="s01-21">
+      <div class="s01-22"><span class="s01-23"><span data-count="60">60</span></span><span class="s01-24">веганських капсул</span></div>
+      <div class="s01-25"><span class="s01-26"><span data-count="2">2</span></span><span class="s01-24">капсули на день</span></div>
+      <div class="s01-25"><span class="s01-23"><span data-count="30">30</span></span><span class="s01-24">днів — курс</span></div>
+    </div>
+    <p data-reveal data-delay="600" class="s01-27">Дієтична добавка. Не є лікарським засобом.</p>
   </div>
-
-  <div class="hero-visual">
-    <div class="orb-wrap">
-      <!-- Orbital rings -->
-      <div class="ring ring-1"></div>
-      <div class="ring ring-2"></div>
-      <div class="ring ring-3"></div>
-      <!-- Glow core -->
-      <div class="orb-glow"></div>
-
-      <!-- Floating ingredient labels -->
-      <div class="ing-floating ing-1">
-        <div class="ing-dot"></div>
-        <span>Ashwagandha</span>
-      </div>
-      <div class="ing-floating ing-2">
-        <div class="ing-dot"></div>
-        <span>L-Theanine</span>
-      </div>
-      <div class="ing-floating ing-3">
-        <div class="ing-dot"></div>
-        <span>Rhodiola</span>
-      </div>
-
-      <!-- Stylised Bottle SVG -->
-      <svg aria-hidden="true" focusable="false" class="orb-bottle" viewBox="0 0 180 310" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="bG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F8F5F0"/><stop offset="1" stop-color="#DDD8D0"/></linearGradient>
-          <linearGradient id="lG" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#B0ACA4"/><stop offset="1" stop-color="#1E2D0E"/></linearGradient>
-          <linearGradient id="cG" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ECEAE6"/><stop offset="1" stop-color="#D8D4CC"/></linearGradient>
-          <filter id="bSh" x="-20%" y="-10%" width="140%" height="130%">
-            <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.35"/>
-            <feDropShadow dx="-6" dy="0" stdDeviation="8" flood-color="#3A5220" flood-opacity="0.2"/>
-          </filter>
-        </defs>
-        <g filter="url(#bSh)">
-          <!-- Cap -->
-          <rect x="46" y="16" width="88" height="52" rx="12" fill="url(#cG)"/>
-          <rect x="54" y="24" width="72" height="36" rx="8" fill="#F5F3EF"/>
-          <!-- Neck shoulder -->
-          <path d="M46 58 Q30 72 28 88 L28 96 L152 96 L152 88 Q150 72 134 58 Z" fill="url(#bG)"/>
-          <!-- Body -->
-          <rect x="28" y="88" width="124" height="198" rx="16" fill="url(#bG)"/>
-          <!-- Label zone - top gray section -->
-          <rect x="28" y="88" width="124" height="110" rx="0" fill="#C8C4BC" opacity=".65"/>
-          <!-- Label zone - dark olive section -->
-          <rect x="28" y="198" width="124" height="88" rx="0" fill="#1E2D0E"/>
-          <rect x="28" y="270" width="124" height="16" rx="0" fill="#253515" opacity=".8"/>
-          <!-- Label bottom rounded corners -->
-          <rect x="28" y="264" width="124" height="22" rx="0" fill="#1E2D0E"/>
-          <!-- Ingredient text lines -->
-          <rect x="44" y="100" width="64" height="5" rx="2.5" fill="rgba(255,255,255,0.6)"/>
-          <rect x="44" y="110" width="56" height="4" rx="2" fill="rgba(255,255,255,0.45)"/>
-          <rect x="44" y="119" width="50" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
-          <!-- Brand name block -->
-          <rect x="40" y="210" width="100" height="9" rx="3" fill="rgba(255,255,255,0.92)"/>
-          <rect x="44" y="225" width="70" height="5" rx="2.5" fill="rgba(255,255,255,0.4)"/>
-          <rect x="44" y="234" width="80" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
-          <rect x="44" y="243" width="64" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-          <!-- Green leaf logo mark -->
-          <circle cx="120" cy="148" r="14" stroke="#3A5220" stroke-width="1.2" fill="none"/>
-          <path d="M115 155 Q120 139 125 155" stroke="#6B8B3A" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="120" cy="138" r="2.5" fill="#C4944A"/>
-          <!-- Sheen highlight -->
-          <rect x="34" y="95" width="18" height="180" rx="9" fill="rgba(255,255,255,0.06)"/>
-          <!-- Bottom of bottle -->
-          <ellipse cx="90" cy="286" rx="62" ry="6" fill="rgba(0,0,0,0.15)"/>
-        </g>
-      </svg>
+  <div class="s01-28 d-only">
+    <div aria-hidden="true" data-parallax="0.08" class="s01-29">LB</div>
+    <div data-jar data-ry="-0.15" data-s="0.58" class="s01-4"><picture class="jar-poster"><source media="(max-width: 899.98px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/hero-d-560.avif 560w, /assets/img/jar/hero-d-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/hero-d-1100.webp" srcset="/assets/img/jar/hero-d-560.webp 560w, /assets/img/jar/hero-d-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" fetchpriority="high"></picture></div>
+    <div data-rotate class="s01-30" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="100%" height="100%"><defs><path id="hbd" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"></path></defs><text class="s01-6"><textPath href="#hbd">ВЕГАНСЬКІ КАПСУЛИ · КУРС 30 ДНІВ ·</textPath></text></svg>
+      <span class="s01-7"><span class="s01-31"><span data-price-short>990</span>₴</span></span>
+    </div>
+    <div data-reveal data-delay="800" class="s01-32">
+      <span class="s01-33"><span class="s01-34">01</span>Ashwagandha</span>
+      <span class="s01-33"><span class="s01-34">02</span>L-Theanine</span>
+      <span class="s01-33"><span class="s01-34">03</span>Rhodiola rosea</span>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat">
-    <div class="stat-num" data-target="60">60</div>
-    <div class="stat-lbl">веганських капсул</div>
+<div class="s01-35">
+  <div data-marquee data-dir="1" class="s01-36">
+    <div class="s01-37"><span>Ashwagandha</span><span class="s01-38"></span><span>L-Theanine</span><span class="s01-38"></span><span>Rhodiola rosea</span><span class="s01-38"></span><span>Без ГМО, глютену та лактози</span><span class="s01-38"></span><span>Відправка за 1–2 дні</span><span class="s01-38"></span></div>
+    <div aria-hidden="true" class="s01-37"><span>Ashwagandha</span><span class="s01-38"></span><span>L-Theanine</span><span class="s01-38"></span><span>Rhodiola rosea</span><span class="s01-38"></span><span>Без ГМО, глютену та лактози</span><span class="s01-38"></span><span>Відправка за 1–2 дні</span><span class="s01-38"></span></div>
   </div>
-  <div class="stat-div"></div>
-  <div class="stat">
-    <div class="stat-num" data-target="3">3</div>
-    <div class="stat-lbl">природних компоненти</div>
-  </div>
-  <div class="stat-div"></div>
-  <div class="stat">
-    <div class="stat-num" data-target="30">30</div>
-    <div class="stat-lbl">днів повний курс</div>
-  </div>
-  <div class="stat-div"></div>
-  <div class="stat">
-    <div class="stat-num">100%</div>
-    <div class="stat-lbl">без синтетики</div>
+  <div data-marquee data-dir="-1" class="s01-39" aria-hidden="true">
+    <div class="s01-40"><span>Спокій</span><span class="s01-41">✦</span><span>Сон</span><span class="s01-41">✦</span><span>Фокус</span><span class="s01-41">✦</span><span>Баланс</span><span class="s01-41">✦</span></div>
+    <div class="s01-40"><span>Спокій</span><span class="s01-41">✦</span><span>Сон</span><span class="s01-41">✦</span><span>Фокус</span><span class="s01-41">✦</span><span>Баланс</span><span class="s01-41">✦</span></div>
   </div>
 </div>
 
-<!-- PROBLEM -->
-<section class="sec problem">
-  <div class="prob-head reveal">
-    <div class="sec-eye">Впізнаєш себе?</div>
-    <h2 class="sec-h">Три сигнали виснаженої<br>нервової системи</h2>
-    <p class="sec-p">Стрес, неспокійний сон, туман у голові — знайомо? Подбайте про свою нервову систему вже сьогодні.</p>
+<section class="s01-42" aria-label="Про формулу">
+  <p data-fill class="s01-43">Нейро-Баланс поєднує три природні компоненти — <span class="g-10">Ashwagandha, L-Theanine та Rhodiola rosea</span> — для підтримки <span class="s01-44">спокою</span> вдень, якісного відпочинку вночі та ясності думок.</p>
+</section>
+
+<section id="ingredients" data-screen-label="02 Склад" class="s02-1" aria-labelledby="h-ingredients">
+  <div class="s02-2">
+    <span class="s02-3">01</span>
+    <span data-scramble class="s02-4">Склад</span>
+    <span data-rule class="s02-5"></span>
   </div>
-  <div class="prob-grid">
-    <!-- Card 1: Stress -->
-    <div class="prob-card">
-      <div class="prob-icon-wrap">
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="36" cy="36" r="32" stroke="rgba(196,85,32,0.15)" stroke-width="1" stroke-dasharray="5 4">
-            <animateTransform attributeName="transform" type="rotate" from="0 36 36" to="360 36 36" dur="14s" repeatCount="indefinite"/>
-          </circle>
-          <path d="M18 36 Q23 24 28 36 Q33 48 38 36 Q43 24 48 36 Q53 48 54 36" stroke="#C45520" stroke-width="2" fill="none" stroke-linecap="round">
-            <animate attributeName="d" values="M18 36 Q23 24 28 36 Q33 48 38 36 Q43 24 48 36 Q53 48 54 36;M18 36 Q23 48 28 36 Q33 24 38 36 Q43 48 48 36 Q53 24 54 36;M18 36 Q23 24 28 36 Q33 48 38 36 Q43 24 48 36 Q53 48 54 36" dur="2.4s" repeatCount="indefinite"/>
-          </path>
-          <circle cx="36" cy="36" r="5" fill="#C45520" opacity="0.5">
-            <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/>
-          </circle>
-        </svg>
+  <div class="s02-6">
+    <h2 id="h-ingredients" data-chars class="s02-7">Три компоненти. <span class="s02-8">Один результат.</span></h2>
+    <p data-words class="s02-9">Кожен компонент обраний з урахуванням традицій використання та поєднання з іншими. Нічого зайвого.</p>
+  </div>
+  <div class="s02-10">
+    <article data-tilt data-reveal class="s02-11">
+      <div class="s02-12">
+        <div class="s02-13"></div>
+        <div class="s02-14"></div>
+        <div class="s02-15"><span class="s02-16">01</span><span class="s02-17">Адаптоген</span></div>
+        <div class="s02-18"><h3 class="s02-19">Ashwagandha</h3><span class="s02-20">Withania somnifera</span></div>
+        <p class="s02-21">Адаптоген, який століттями використовують в аюрведі. Допомагає організму легше переносити стрес, підтримує спокій і стресостійкість без сонливості.</p>
+        <div class="s02-22"><span class="s02-23">Стресостійкість</span><span class="s02-23">Відновлення</span></div>
+        <div class="s02-24"><span class="s02-25">На порцію</span><span class="s02-26" data-ph>[мг — від замовника]</span></div>
       </div>
-      <h3 class="prob-title">Хронічний стрес</h3>
-      <p class="prob-text">Постійна напруга, роздратованість, відчуття що ти "на межі". Тіло не встигає відпочити між навантаженнями.</p>
+    </article>
+    <article data-tilt data-reveal data-delay="100" class="s02-11">
+      <div class="s02-12">
+        <div class="s02-13"></div>
+        <div class="s02-14"></div>
+        <div class="s02-15"><span class="s02-16">02</span><span class="s02-17">Нейромодулятор</span></div>
+        <div class="s02-18"><h3 class="s02-19">L-Theanine</h3><span class="s02-20">з листя Camellia sinensis</span></div>
+        <p class="s02-21">Амінокислота, що міститься в зеленому чаї. Сприяє стану спокійної зосередженості без сонливості — для роботи і відпочинку.</p>
+        <div class="s02-22"><span class="s02-23">Спокій</span><span class="s02-23">Зосередженість</span></div>
+        <div class="s02-24"><span class="s02-25">На порцію</span><span class="s02-26" data-ph>[мг — від замовника]</span></div>
+      </div>
+    </article>
+    <article data-tilt data-reveal data-delay="200" class="s02-11">
+      <div class="s02-12">
+        <div class="s02-13"></div>
+        <div class="s02-14"></div>
+        <div class="s02-15"><span class="s02-16">03</span><span class="s02-17">Адаптоген</span></div>
+        <div class="s02-18"><h3 class="s02-19">Rhodiola rosea</h3><span class="s02-20">родіола рожева</span></div>
+        <p class="s02-21">Скандинавський адаптоген арктичних гір. Сприяє фізичній та розумовій витривалості, допомагає менше відчувати втому та підтримує рівень енергії протягом дня.</p>
+        <div class="s02-22"><span class="s02-23">Енергія</span><span class="s02-23">Витривалість</span></div>
+        <div class="s02-24"><span class="s02-25">На порцію</span><span class="s02-26" data-ph>[мг — від замовника]</span></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="benefits" data-screen-label="03 Переваги" class="s02-1" aria-labelledby="h-benefits">
+  <div class="s02-2">
+    <span class="s02-3">02</span>
+    <span data-scramble class="s02-4">Переваги</span>
+    <span data-rule class="s02-5"></span>
+  </div>
+  <h2 id="h-benefits" data-chars class="s03-1">Комплексна дія <span class="s02-8">зсередини назовні</span></h2>
+  <div data-stack class="s03-2">
+    <article class="s03-3">
+      <div data-dim class="s03-4"></div>
+      <span aria-hidden="true" class="s03-5">01</span>
+      <div class="s03-6"><span class="s03-7">01 / 04 · Ashwagandha</span><h3 class="s03-8">Підтримка стресостійкості</h3></div>
+      <p class="s03-9">Ашваганда традиційно використовується, щоб допомогти організму легше переносити стрес і зберігати спокій.</p>
+    </article>
+    <article class="s03-10">
+      <div data-dim class="s03-4"></div>
+      <span aria-hidden="true" class="s03-5">02</span>
+      <div class="s03-6"><span class="s03-7">02 / 04 · L-Theanine</span><h3 class="s03-8">Сприяє якісному сну</h3></div>
+      <p class="s03-9">L-Theanine сприяє природному розслабленню, що важливо для спокійного та повноцінного сну.</p>
+    </article>
+    <article class="s03-11">
+      <div data-dim class="s03-4"></div>
+      <span aria-hidden="true" class="s03-12">03</span>
+      <div class="s03-6"><span class="s03-7">03 / 04 · Rhodiola rosea</span><h3 class="s03-8">Ясність думок і концентрація</h3></div>
+      <p class="s03-9">Rhodiola традиційно використовується для підтримки розумової працездатності та концентрації.</p>
+    </article>
+    <article class="s03-13">
+      <span aria-hidden="true" class="s03-14">04</span>
+      <div class="s03-6"><span class="s03-15">04 / 04 · Формула</span><h3 class="s03-8">Стабільна енергія без стимуляторів</h3></div>
+      <div class="s03-16"><p class="s03-17">Без кофеїну та стимуляторів. Адаптогени сприяють рівній енергії протягом дня — без різкого збудження та спаду.</p><a href="#order" data-checkout class="s03-18 as-btn"><span>Замовити — <span data-price>990 ₴</span></span></a></div>
+    </article>
+  </div>
+</section>
+
+<section id="pack" data-screen-label="04 Упаковка" class="s02-1" aria-labelledby="h-pack">
+  <div class="s02-2">
+    <span class="s02-3">03</span>
+    <span data-scramble class="s02-4">Упаковка</span>
+    <span data-rule class="s02-5"></span>
+  </div>
+  <div class="s04-1">
+    <div class="s04-2">
+      <h2 id="h-pack" data-chars class="s04-3">Справжня банка. <span class="s02-8">Покрутіть її.</span></h2>
+      <p data-words class="s04-4">3D-модель повторює реальну упаковку. Перемкніть, щоб побачити нову чорну банку, яка вже готується до запуску.</p>
+      <fieldset data-reveal class="s04-5 fs-reset" data-pack-switch>
+  <legend class="sr-only">Варіант упаковки</legend>
+  <span aria-hidden="true" class="s04-6"></span>
+  <label class="s04-7"><input type="radio" name="pack" value="current" class="sr-only" checked><span class="s04-8">Поточна</span><span class="s04-9">біла банка · у продажу</span></label>
+  <label class="s04-7"><input type="radio" name="pack" value="new" class="sr-only"><span class="s04-8">Нова</span><span class="s04-9">чорна · скоро</span></label>
+</fieldset>
+
+      <div data-drag3d class="s04-10 m-only">
+        <div data-jar data-ry="0.2" data-s="0.7" class="s01-4"><picture class="jar-poster pack-current"><source media="(min-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/pack-m-560.avif 560w, /assets/img/jar/pack-m-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-m-1100.webp" srcset="/assets/img/jar/pack-m-560.webp 560w, /assets/img/jar/pack-m-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture><picture class="jar-poster pack-new"><source media="(min-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/pack-m-new-560.avif 560w, /assets/img/jar/pack-m-new-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-m-new-1100.webp" srcset="/assets/img/jar/pack-m-new-560.webp 560w, /assets/img/jar/pack-m-new-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture></div>
+        <span class="s04-11" aria-hidden="true">← Потягніть, щоб обертати →</span>
+      </div>
+      <div data-reveal class="s04-12" aria-live="polite">
+        <div class="pack-current">
+          <div class="s04-13"><h3 class="s04-14">Поточна упаковка</h3><span class="s04-15"><span class="s04-16"></span>У продажу</span></div>
+          <p class="s04-17">Біла банка з сіро-графітовою етикеткою. Саме така зараз у продажу.</p>
+          <dl class="s04-18">
+            <dt class="s04-19">Кількість</dt><dd class="s04-20">60 веганських капсул</dd>
+            <dt class="s04-19">Маса нетто</dt><dd class="s04-20">34,2 г</dd>
+            <dt class="s04-19">Матеріал</dt><dd class="s04-20">PET банка · PE-HD кришка</dd>
+          </dl>
+        </div>
+        <div class="pack-new">
+          <div class="s04-13"><h3 class="s04-14">Нова упаковка</h3><span class="s04-21"><span class="s04-22"></span>Скоро</span></div>
+          <p class="s04-17">Матова чорна банка із золотою ілюстрацією та новим логотипом BIOCORE LaBro.</p>
+          <dl class="s04-18">
+            <dt class="s04-19">Склад</dt><dd class="s04-20">Ashwagandha · L-Theanine · Rhodiola</dd>
+            <dt class="s04-19">Дизайн</dt><dd class="s04-20">чорний мат · золото</dd>
+            <dt class="s04-19">Запуск</dt><dd class="s04-23" data-ph>[дата — від замовника]</dd>
+          </dl>
+        </div>
+      </div>
     </div>
-    <!-- Card 2: Sleep -->
-    <div class="prob-card d12">
-      <div class="prob-icon-wrap">
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M36 10 Q48 20 46 36 Q44 52 28 54 Q20 44 22 28 Q24 12 36 10Z" stroke="#7D5228" stroke-width="1.5" fill="rgba(125,82,40,0.1)">
-            <animate attributeName="opacity" values="0.7;1;0.7" dur="3.5s" repeatCount="indefinite"/>
-          </path>
-          <circle cx="52" cy="14" r="3.5" fill="#C4944A">
-            <animate attributeName="opacity" values="1;0.1;1" dur="1.8s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="59" cy="24" r="2.5" fill="#C4944A">
-            <animate attributeName="opacity" values="0.1;1;0.1" dur="1.8s" repeatCount="indefinite"/>
-          </circle>
-          <circle cx="56" cy="9" r="2" fill="#C4944A">
-            <animate attributeName="opacity" values="1;0.2;1" dur="2.4s" repeatCount="indefinite"/>
-          </circle>
-          <line x1="16" y1="42" x2="26" y2="42" stroke="rgba(125,82,40,0.35)" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="18" y1="50" x2="30" y2="50" stroke="rgba(125,82,40,0.25)" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="14" y1="58" x2="24" y2="58" stroke="rgba(125,82,40,0.18)" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <h3 class="prob-title">Порушений сон</h3>
-      <p class="prob-text">Довго не можеш заснути, прокидаєшся вночі, а зранку — ніби й не спав.</p>
+    <div data-drag3d class="s04-24 d-only">
+      <div aria-hidden="true" class="s04-25"></div>
+      <div data-jar data-ry="0.2" data-s="0.66" class="s01-4"><picture class="jar-poster pack-current"><source media="(max-width: 899.98px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/pack-d-560.avif 560w, /assets/img/jar/pack-d-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-d-1100.webp" srcset="/assets/img/jar/pack-d-560.webp 560w, /assets/img/jar/pack-d-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture><picture class="jar-poster pack-new"><source media="(max-width: 899.98px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="/assets/img/jar/pack-d-new-560.avif 560w, /assets/img/jar/pack-d-new-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/pack-d-new-1100.webp" srcset="/assets/img/jar/pack-d-new-560.webp 560w, /assets/img/jar/pack-d-new-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture></div>
+      <span class="s04-26" aria-hidden="true">← Потягніть, щоб обертати →</span>
     </div>
-    <!-- Card 3: Focus -->
-    <div class="prob-card d24">
-      <div class="prob-icon-wrap">
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="36" cy="36" rx="22" ry="20" stroke="rgba(58,82,32,0.4)" stroke-width="1.2"/>
-          <circle cx="30" cy="30" r="2.5" fill="#6B8B3A"><animate attributeName="opacity" values="1;0.2;1" dur="2.1s" repeatCount="indefinite"/></circle>
-          <circle cx="42" cy="28" r="2.5" fill="#6B8B3A"><animate attributeName="opacity" values="0.2;1;0.2" dur="2.1s" repeatCount="indefinite"/></circle>
-          <circle cx="36" cy="38" r="2.5" fill="#6B8B3A"><animate attributeName="opacity" values="0.6;1;0.6" dur="1.7s" repeatCount="indefinite"/></circle>
-          <circle cx="44" cy="38" r="2.5" fill="#4D6B2A"><animate attributeName="opacity" values="1;0.3;1" dur="2.5s" repeatCount="indefinite"/></circle>
-          <circle cx="28" cy="42" r="2" fill="#4D6B2A"><animate attributeName="opacity" values="0.4;1;0.4" dur="1.9s" repeatCount="indefinite"/></circle>
-          <line x1="30" y1="30" x2="42" y2="28" stroke="rgba(107,139,58,0.35)" stroke-width=".8"><animate attributeName="opacity" values="0.35;0.05;0.35" dur="2.1s" repeatCount="indefinite"/></line>
-          <line x1="42" y1="28" x2="36" y2="38" stroke="rgba(107,139,58,0.35)" stroke-width=".8"><animate attributeName="opacity" values="0.05;0.35;0.05" dur="2.1s" repeatCount="indefinite"/></line>
-          <line x1="36" y1="38" x2="44" y2="38" stroke="rgba(107,139,58,0.25)" stroke-width=".8"/>
-          <line x1="30" y1="30" x2="28" y2="42" stroke="rgba(107,139,58,0.2)" stroke-width=".8"><animate attributeName="opacity" values="0.2;0.5;0.2" dur="1.9s" repeatCount="indefinite"/></line>
-        </svg>
-      </div>
-      <h3 class="prob-title">Туман у голові</h3>
-      <p class="prob-text">Складно зосередитися, думки плутаються, проста задача здається великою.</p>
+  </div>
+  <div data-reveal class="s04-27">
+    <span aria-hidden="true" data-sweep class="s04-28"></span>
+    <div class="s04-29">
+      <span class="s04-30">Курс на 30 днів</span>
+      <span class="s04-31"><span data-odo data-price-short>990</span><span class="s04-32">₴</span></span>
+    </div>
+    <div class="s04-33"><div class="s04-34"><span class="s04-35">60</span><span class="s04-36">веганських капсул</span></div><div class="s04-37"><span class="s04-35">2</span><span class="s04-36">капсули на день</span></div><div class="s04-37"><span class="s04-35">1–2</span><span class="s04-36">дні до відправки</span></div></div>
+    <div class="s04-38">
+      <a href="#order" data-magnetic data-checkout class="s04-39 as-btn"><span>Замовити зараз</span><span class="s04-40"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></a>
     </div>
   </div>
 </section>
 
-<!-- INGREDIENTS -->
-<section class="sec ingredients" id="ingredients">
-  <div class="reveal">
-    <div class="sec-eye dark">Формула</div>
-    <h2 class="sec-h dark">Три компоненти.<br>Один результат.</h2>
-    <p class="sec-p dark">Кожен компонент обраний з урахуванням традицій використання та поєднання з іншими. Нічого зайвого.</p>
+<section id="how" data-screen-label="05 Застосування" class="s02-1" aria-labelledby="h-how">
+  <div class="s02-2">
+    <span class="s02-3">04</span>
+    <span data-scramble class="s02-4">Спосіб застосування</span>
+    <span data-rule class="s02-5"></span>
   </div>
-  <div class="ing-grid">
-    <!-- Ashwagandha -->
-    <div class="ing-card">
-      <div class="ing-icon-wrap">
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M44 78 L44 32" stroke="#3A5220" stroke-width="2" stroke-linecap="round"/>
-          <path d="M44 56 Q30 46 22 34 Q32 30 38 42" stroke="#4D6B2A" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <animate attributeName="d" values="M44 56 Q30 46 22 34 Q32 30 38 42;M44 58 Q28 48 20 36 Q30 32 36 44;M44 56 Q30 46 22 34 Q32 30 38 42" dur="5s" repeatCount="indefinite"/>
-          </path>
-          <path d="M44 46 Q58 36 66 24 Q56 20 50 32" stroke="#4D6B2A" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <animate attributeName="d" values="M44 46 Q58 36 66 24 Q56 20 50 32;M44 48 Q60 38 68 26 Q58 22 52 34;M44 46 Q58 36 66 24 Q56 20 50 32" dur="5s" repeatCount="indefinite"/>
-          </path>
-          <circle cx="44" cy="28" r="7" fill="none" stroke="#C4944A" stroke-width="1.5"/>
-          <circle cx="44" cy="28" r="3.5" fill="#C4944A"><animate attributeName="r" values="3.5;4.5;3.5" dur="3s" repeatCount="indefinite"/></circle>
-          <circle cx="22" cy="34" r="5" fill="#8B5228" opacity=".7"/>
-          <circle cx="66" cy="24" r="5" fill="#8B5228" opacity=".7"/>
-          <circle cx="36" cy="68" r="3.5" fill="#8B5228" opacity=".5"/>
-        </svg>
-      </div>
-      <div class="ing-label">Компонент 01</div>
-      <h3 class="ing-name-big">Ashwagandha</h3>
-      <p class="ing-desc">Адаптоген, який століттями використовують в аюрведі. Допомагає організму легше переносити стрес, підтримує спокій і стресостійкість без сонливості.</p>
-      <span class="ing-badge">Адаптоген</span>
+  <h2 id="h-how" data-chars class="s05-1">Простий <span class="s02-8">протокол</span></h2>
+  <div class="s05-2">
+    <div data-reveal class="s05-3">
+      <div aria-hidden="true" class="s05-4"></div>
+      <span class="s05-5">Головне правило</span>
+      <div class="s05-6"><span class="s05-7">1–2</span><span class="s05-8">капсули<br>вранці</span></div>
+      <p data-words class="s05-9">Під час їжі, <span data-mark class="s05-10">запиваючи водою</span>. Курс — <span data-mark class="s05-10">30 днів</span>.</p>
     </div>
-    <!-- L-Theanine -->
-    <div class="ing-card d15">
-      <div class="ing-icon-wrap">
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M44 72 C32 60 20 46 24 32 C28 18 44 14 44 14 C44 14 60 18 64 32 C68 46 56 60 44 72Z" stroke="#3A5220" stroke-width="1.5" fill="rgba(58,82,32,0.06)"/>
-          <path d="M44 68 L44 18" stroke="#4D6B2A" stroke-width="1" stroke-linecap="round"/>
-          <path d="M44 38 L34 30" stroke="#4D6B2A" stroke-width=".8" stroke-linecap="round"/>
-          <path d="M44 48 L54 40" stroke="#4D6B2A" stroke-width=".8" stroke-linecap="round"/>
-          <path d="M44 58 L32 50" stroke="#4D6B2A" stroke-width=".8" stroke-linecap="round"/>
-          <path d="M22 80 Q30 74 38 80 Q46 86 54 80 Q62 74 70 80" stroke="#C4944A" stroke-width="1.8" fill="none" stroke-linecap="round">
-            <animate attributeName="d" values="M22 80 Q30 74 38 80 Q46 86 54 80 Q62 74 70 80;M22 80 Q30 86 38 80 Q46 74 54 80 Q62 86 70 80;M22 80 Q30 74 38 80 Q46 86 54 80 Q62 74 70 80" dur="3s" repeatCount="indefinite"/>
-          </path>
-        </svg>
-      </div>
-      <div class="ing-label">Компонент 02</div>
-      <h3 class="ing-name-big">L-Theanine</h3>
-      <p class="ing-desc">Амінокислота, що міститься в зеленому чаї. Сприяє стану спокійної зосередженості без сонливості — для роботи і відпочинку.</p>
-      <span class="ing-badge">Нейромодулятор</span>
-    </div>
-    <!-- Rhodiola -->
-    <div class="ing-card d3">
-      <div class="ing-icon-wrap">
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 62 L44 22 L72 62" stroke="#7D5228" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
-          <path d="M28 62 L44 38 L60 62" stroke="#9E6B38" stroke-width="1" fill="none" stroke-linejoin="round" opacity=".6"/>
-          <circle cx="44" cy="22" r="6" fill="none" stroke="#C4944A" stroke-width="1.4"/>
-          <path d="M44 15 L44 10 M51 18 L56 14 M51 26 L56 30 M44 29 L44 34 M37 26 L32 30 M37 18 L32 14" stroke="#C4944A" stroke-width="1.3" stroke-linecap="round">
-            <animateTransform attributeName="transform" type="rotate" from="0 44 22" to="360 44 22" dur="24s" repeatCount="indefinite"/>
-          </path>
-          <path d="M44 63 L44 76 M44 70 L34 78 M44 73 L54 78" stroke="#7D5228" stroke-width="1.3" stroke-linecap="round" opacity=".7"/>
-        </svg>
-      </div>
-      <div class="ing-label">Компонент 03</div>
-      <h3 class="ing-name-big">Rhodiola rosea</h3>
-      <p class="ing-desc">Скандинавський адаптоген арктичних гір. Сприяє фізичній та розумовій витривалості, допомагає менше відчувати втому та підтримує рівень енергії протягом дня.</p>
-      <span class="ing-badge">Адаптоген</span>
+    <div class="s05-11">
+      <div class="s05-12"><div data-progress class="s05-13"></div></div>
+      <div data-reveal class="s05-14"><span class="s05-15"></span><span class="s05-16">Крок 01</span><h3 class="s04-14">Прийом вранці</h3><p class="s05-17">1–2 капсули вранці під час їжі, запиваючи водою.</p></div>
+      <div data-reveal data-delay="80" class="s05-14"><span class="s05-15"></span><span class="s05-16">Крок 02</span><h3 class="s04-14">Системна дія</h3><p class="s05-17">Адаптогени найкраще розкриваються при регулярному прийомі — важливо не пропускати дні курсу.</p></div>
+      <div data-reveal data-delay="160" class="s05-14"><span class="s05-15"></span><span class="s05-16">Крок 03</span><h3 class="s04-14">Накопичувальний ефект</h3><p class="s05-17">Ефект адаптогенів накопичується при регулярному прийомі. Можна приймати на постійній основі без прив'язки до курсу.</p></div>
     </div>
   </div>
 </section>
 
-<!-- BENEFITS -->
-<section class="sec benefits" id="benefits">
-  <div class="bene-layout">
-    <div class="bene-left reveal">
-      <div class="sec-eye">Що ти отримуєш</div>
-      <h2 class="sec-h">Комплексна дія<br>зсередини назовні</h2>
-      <p class="sec-p">Нейро-Баланс комплексно підтримує нервову систему завдяки поєднанню трьох рослинних і природних компонентів.</p>
-      <div class="bene-cta">
-        <a href="#order" class="btn-cta">Замовити курс</a>
-      </div>
+<section data-screen-label="06 Якість" class="s06-1" aria-labelledby="h-quality">
+  <div class="s06-2">
+    <div class="s06-3">
+      <span class="s06-4">05</span>
+      <span data-scramble class="s06-5">Якість і документи</span>
+      <span data-rule class="s06-6"></span>
     </div>
-    <div class="bene-right">
-      <div class="bene-item">
-        <svg aria-hidden="true" focusable="false" class="bene-check" viewBox="0 0 34 34" fill="none">
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(74,108,42,0.25)" stroke-width=".8"/>
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(107,139,58,0.5)" stroke-width=".8" stroke-dasharray="2 3" stroke-dashoffset="0">
-            <animateTransform attributeName="transform" type="rotate" from="0 17 17" to="360 17 17" dur="18s" repeatCount="indefinite"/>
-          </circle>
-          <path d="M10 17 L14.5 21.5 L24 12" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <h3 class="bene-title">Підтримка стресостійкості</h3>
-          <p class="bene-body">Ашваганда традиційно використовується, щоб допомогти організму легше переносити стрес і зберігати спокій.</p>
+    <div class="s06-7">
+      <h2 id="h-quality" data-chars class="s02-7">Прозорість <span class="s06-8">на кожному етапі</span></h2>
+      <p data-words class="s06-9">Відкрита формула з трьох компонентів, веганські капсули та документи якості, доступні до перегляду перед покупкою.</p>
+    </div>
+    <ul class="s06-10 plain-list">
+      <li data-reveal class="s06-11"><span class="s06-12"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span><span class="s06-13">Без ГМО</span></li>
+      <li data-reveal data-delay="60" class="s06-11"><span class="s06-12"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span><span class="s06-13">Без глютену</span></li>
+      <li data-reveal data-delay="120" class="s06-11"><span class="s06-12"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span><span class="s06-13">Без лактози</span></li>
+      <li data-reveal data-delay="180" class="s06-11"><span class="s06-12"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</span><span class="s06-13">Веганські капсули</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="order" data-screen-label="07 Замовлення" class="s07-1" aria-labelledby="h-order">
+  <div class="s02-2">
+    <span class="s02-3">06</span>
+    <span data-scramble class="s02-4">Замовлення</span>
+    <span data-rule class="s02-5"></span>
+  </div>
+  <div class="s07-2">
+    <div class="s07-3">
+      <div aria-hidden="true" class="s07-4"></div>
+      <div aria-hidden="true" class="s07-5"></div>
+      <div data-jar data-ry="-0.3" data-s="0.62" class="s01-4"><picture class="jar-poster"><source type="image/avif" srcset="/assets/img/jar/order-560.avif 560w, /assets/img/jar/order-1100.avif 1100w" sizes="(min-width:900px) 800px, 440px"><img src="/assets/img/jar/order-1100.webp" srcset="/assets/img/jar/order-560.webp 560w, /assets/img/jar/order-1100.webp 1100w" sizes="(min-width:900px) 800px, 440px" alt="" width="1100" height="1100" decoding="async" loading="lazy"></picture></div>
+    </div>
+    <div data-reveal class="s07-6 order-card">
+      <div class="s07-7"></div>
+      <div class="s07-8"><div class="s07-9"><h2 id="h-order" class="s07-10">Нейро-Баланс</h2><span class="s07-11">Ashwagandha · L-Theanine · Rhodiola · 60 вег. кап.</span></div><span class="s07-12"><span data-pulse class="s04-16"></span>В наявності</span></div>
+      <div class="s07-13"><span class="s07-14"><span data-odo data-price-short>990</span><span class="s07-15">₴</span></span><span class="s07-16">за флакон · 60 веганських капсул<br>курс на 30 днів</span></div>
+      <ul class="s07-17 plain-list">
+        <li class="s07-18"><span class="g-10" aria-hidden="true">✓</span>60 веганських капсул у флаконі</li>
+        <li class="s07-18"><span class="g-10" aria-hidden="true">✓</span>Курс 30 днів — 2 капсули на день</li>
+        <li class="s07-18"><span class="g-10" aria-hidden="true">✓</span>Без ГМО, глютену та лактози</li>
+        <li class="s07-18"><span class="g-10" aria-hidden="true">✓</span>Дієтична добавка, безпечне виробництво</li>
+        <li class="s07-18"><span class="g-10" aria-hidden="true">✓</span>Доставка Нова Пошта · Укрпошта</li>
+      </ul>
+      <a href="#order" data-magnetic data-checkout class="s07-19 as-btn">Купити зараз</a>
+      <div class="s07-20"><span class="s02-25">Або напишіть менеджеру — відповідь протягом кількох хвилин:</span>
+        <div class="s07-21">
+          <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" aria-label="Telegram" class="s07-22"><span aria-hidden="true" class="s07-23"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M5.3 11.6l11.4-4.4c.5-.2 1 .1.8.9l-1.9 9c-.1.6-.5.8-1 .5l-2.9-2.1-1.4 1.3c-.2.2-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2 0-.3-.3-.1l-6.6 4.1-2.8-.9c-.6-.2-.6-.6-.2-.9z" fill="#fff"></path></svg></span><span>Telegram</span></a>
+          <a href="https://wa.me/380932808111" target="_blank" rel="noopener" aria-label="WhatsApp" class="s07-22"><span aria-hidden="true" class="s07-24"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 5.2a6.8 6.8 0 0 0-5.8 10.3l-.9 3.3 3.4-.9A6.8 6.8 0 1 0 12 5.2z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"></path><path d="M9.4 8.9c.2-.4.4-.4.6-.4h.4c.1 0 .3 0 .4.3l.6 1.4c0 .1 0 .3-.1.4l-.4.5c-.1.1-.1.3 0 .4.5.9 1.2 1.5 2.1 2 .1.1.3.1.4 0l.5-.6c.1-.1.3-.2.4-.1l1.4.7c.2.1.2.2.2.3 0 .4-.1.9-.5 1.2-.4.3-1 .5-1.6.3-1.9-.5-3.5-2-4.2-3.9-.2-.6-.1-1.3.3-1.7z" fill="#fff"></path></svg></span><span>WhatsApp</span></a>
+          <a href="viber://chat?number=380932808111" aria-label="Viber" class="s07-22"><span aria-hidden="true" class="s07-25"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 4.8c-4 0-6.8 1.6-6.8 5.8 0 2.5 1 4 2.6 4.8v2.9l2.4-2.2c.6.1 1.2.1 1.8.1 4 0 6.8-1.6 6.8-5.6S16 4.8 12 4.8z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"></path><path d="M9.4 8.9c.2-.4.4-.4.6-.4h.4c.1 0 .3 0 .4.3l.6 1.4c0 .1 0 .3-.1.4l-.4.5c-.1.1-.1.3 0 .4.5.9 1.2 1.5 2.1 2 .1.1.3.1.4 0l.5-.6c.1-.1.3-.2.4-.1l1.4.7c.2.1.2.2.2.3 0 .4-.1.9-.5 1.2-.4.3-1 .5-1.6.3-1.9-.5-3.5-2-4.2-3.9-.2-.6-.1-1.3.3-1.7z" fill="#fff"></path></svg></span><span>Viber</span></a>
+          <a href="https://instagram.com/labro.biocore" target="_blank" rel="noopener" aria-label="Instagram" class="s07-22"><span aria-hidden="true" class="s07-26"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="3.4" fill="none" stroke="#fff" stroke-width="1.7"></rect><circle cx="12" cy="12" r="2.6" fill="none" stroke="#fff" stroke-width="1.7"></circle><circle cx="15.2" cy="8.8" r=".9" fill="#fff"></circle></svg></span><span>Instagram</span></a>
+
         </div>
       </div>
-      <div class="bene-item d1">
-        <svg aria-hidden="true" focusable="false" class="bene-check" viewBox="0 0 34 34" fill="none">
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(74,108,42,0.25)" stroke-width=".8"/>
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(107,139,58,0.5)" stroke-width=".8" stroke-dasharray="2 3">
-            <animateTransform attributeName="transform" type="rotate" from="0 17 17" to="360 17 17" dur="18s" repeatCount="indefinite"/>
-          </circle>
-          <path d="M10 17 L14.5 21.5 L24 12" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <h3 class="bene-title">Сприяє якісному сну</h3>
-          <p class="bene-body">L-Theanine сприяє природному розслабленню, що важливо для спокійного та повноцінного сну.</p>
-        </div>
-      </div>
-      <div class="bene-item d2">
-        <svg aria-hidden="true" focusable="false" class="bene-check" viewBox="0 0 34 34" fill="none">
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(74,108,42,0.25)" stroke-width=".8"/>
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(107,139,58,0.5)" stroke-width=".8" stroke-dasharray="2 3">
-            <animateTransform attributeName="transform" type="rotate" from="0 17 17" to="360 17 17" dur="18s" repeatCount="indefinite"/>
-          </circle>
-          <path d="M10 17 L14.5 21.5 L24 12" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <h3 class="bene-title">Ясність думок і концентрація</h3>
-          <p class="bene-body">Rhodiola традиційно використовується для підтримки розумової працездатності та концентрації.</p>
-        </div>
-      </div>
-      <div class="bene-item d3">
-        <svg aria-hidden="true" focusable="false" class="bene-check" viewBox="0 0 34 34" fill="none">
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(74,108,42,0.25)" stroke-width=".8"/>
-          <circle cx="17" cy="17" r="16.5" stroke="rgba(107,139,58,0.5)" stroke-width=".8" stroke-dasharray="2 3">
-            <animateTransform attributeName="transform" type="rotate" from="0 17 17" to="360 17 17" dur="18s" repeatCount="indefinite"/>
-          </circle>
-          <path d="M10 17 L14.5 21.5 L24 12" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <h3 class="bene-title">Стабільна енергія без стимуляторів</h3>
-          <p class="bene-body">Без кофеїну та стимуляторів. Адаптогени сприяють рівній енергії протягом дня — без різкого збудження та спаду.</p>
-        </div>
-      </div>
+      <div class="s07-27"><span class="s07-28">Оплата:</span><span class="s07-29">monobank</span><span class="s07-29">Банківська картка</span><span class="s07-29">Накладений платіж</span></div>
+      <span class="s07-30">Дієтична добавка. Не є лікарським засобом.</span>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section class="sec how">
-  <div class="how-head reveal">
-    <div class="sec-eye">Як це працює</div>
-    <h2 class="sec-h">Простий протокол</h2>
-    <p class="sec-p">Ніяких складних схем — три прості етапи.</p>
+<section id="faq" data-screen-label="08 FAQ" class="s08-1" aria-labelledby="h-faq">
+  <div class="s02-2">
+    <span class="s02-3">07</span>
+    <span data-scramble class="s02-4">FAQ</span>
+    <span data-rule class="s02-5"></span>
   </div>
-  <div class="how-steps">
-    <div class="how-step">
-      <div class="how-connector"></div>
-      <div class="how-step-num">01</div>
-      <h3 class="how-step-title">Прийом вранці</h3>
-      <p class="how-step-body">1–2 капсули вранці під час їжі, запиваючи водою.</p>
+  <div class="s08-2">
+    <div class="s08-3">
+      <h2 id="h-faq" data-chars class="s08-4">Часті <span class="s02-8">запитання</span></h2>
+      <p data-words class="s08-5">Не знайшли відповідь? Менеджер на зв'язку в Telegram, Viber, WhatsApp та Instagram.</p>
+      <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" data-reveal class="s08-6">Написати @LaBroudi →</a>
     </div>
-    <div class="how-step d12">
-      <div class="how-connector"></div>
-      <div class="how-step-num">02</div>
-      <h3 class="how-step-title">Системна дія</h3>
-      <p class="how-step-body">Адаптогени найкраще розкриваються при регулярному прийомі — важливо не пропускати дні курсу.</p>
-    </div>
-    <div class="how-step d24">
-      <div class="how-step-num">03</div>
-      <h3 class="how-step-title">Накопичувальний ефект</h3>
-      <p class="how-step-body">Ефект адаптогенів накопичується при регулярному прийомі. Можна приймати на постійній основі без прив'язки до курсу.</p>
+    <div data-reveal class="s07-20" data-faq-list>
+<div class="s08-7" data-faq><h3 class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="faq-q1" aria-controls="faq-a1"><span class="s08-9">01</span><span class="s08-10">Як правильно приймати Нейро-Баланс?</span><span class="s08-11"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></span></button></h3><section class="s08-12" id="faq-a1" aria-labelledby="faq-q1"><div class="s08-13"><p class="s08-14">По 2 капсули на день — вранці або вдень під час їди. Запивати водою. Рекомендований курс — 30 днів. Після можна повторювати з тижневою перервою.</p></div></section></div>
+<div class="s08-7" data-faq><h3 class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="faq-q2" aria-controls="faq-a2"><span class="s08-9">02</span><span class="s08-10">Коли відчується перший ефект?</span><span class="s08-11"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></span></button></h3><section class="s08-12" id="faq-a2" aria-labelledby="faq-q2"><div class="s08-13"><p class="s08-14">Відчуття індивідуальні. Компоненти Нейро-Баланс розраховані на регулярний прийом, тому рекомендуємо пройти повний курс — 30 днів.</p></div></section></div>
+<div class="s08-7" data-faq><h3 class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="faq-q3" aria-controls="faq-a3"><span class="s08-9">03</span><span class="s08-10">Чи є протипоказання?</span><span class="s08-11"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></span></button></h3><section class="s08-12" id="faq-a3" aria-labelledby="faq-q3"><div class="s08-13"><p class="s08-14">Не рекомендується при вагітності та лактації, індивідуальній непереносимості компонентів. При наявності хронічних захворювань — проконсультуйтеся з лікарем до початку прийому. Нейро-Баланс — дієтична добавка, не є лікарським засобом і не замінює лікування.</p></div></section></div>
+<div class="s08-7" data-faq><h3 class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="faq-q4" aria-controls="faq-a4"><span class="s08-9">04</span><span class="s08-10">Як зробити замовлення?</span><span class="s08-11"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></span></button></h3><section class="s08-12" id="faq-a4" aria-labelledby="faq-q4"><div class="s08-13"><p class="s08-14">Натисніть «Купити зараз» на цьому сайті, заповніть форму та оберіть оплату: онлайн через monobank або накладеним платежем. Також можна написати в Telegram (@LaBroudi), WhatsApp (+380 93 280 81 11) або Instagram (@labro.biocore) — менеджер відповість протягом кількох хвилин.</p></div></section></div>
+<div class="s08-7" data-faq><h3 class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="faq-q5" aria-controls="faq-a5"><span class="s08-9">05</span><span class="s08-10">Яка доставка та оплата?</span><span class="s08-11"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></span></button></h3><section class="s08-12" id="faq-a5" aria-labelledby="faq-q5"><div class="s08-13"><p class="s08-14">Доставка по всій Україні — Нова Пошта або Укрпошта. Оплата онлайн банківською карткою через monobank або накладеним платежем при отриманні. Відправка протягом 1–2 робочих днів.</p></div></section></div>
+<div class="s08-7" data-faq><h3 class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="faq-q6" aria-controls="faq-a6"><span class="s08-9">06</span><span class="s08-10">Чи можна поєднувати з іншими добавками?</span><span class="s08-11"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></span></button></h3><section class="s08-12" id="faq-a6" aria-labelledby="faq-q6"><div class="s08-13"><p class="s08-14">Нейро-Баланс добре поєднується з більшістю добавок — вітамінами, магнієм, омега-3. Якщо ви приймаєте медикаменти, проконсультуйтеся з лікарем щодо сумісності.</p></div></section></div>
     </div>
   </div>
 </section>
 
-<!-- ORDER -->
-<section class="sec order" id="order">
-  <div class="order-layout">
-    <div class="reveal">
-      <div class="sec-eye dark">Замовлення</div>
-      <h2 class="sec-h dark">Почни курс<br>відновлення сьогодні</h2>
-      <p class="sec-p dark">Доставка по всій Україні. Оформіть замовлення на сайті, у Telegram або Instagram. Оплата онлайн через monobank або при отриманні.</p>
-      <div class="order-features">
-        <div class="order-feat">
-          <svg aria-hidden="true" focusable="false" class="order-feat-leaf" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14 C5 11 2 8 3 5 C4 2 8 1 8 1 C8 1 12 2 13 5 C14 8 11 11 8 14Z" stroke="#3A5220" stroke-width="1" fill="none"/></svg>
-          60 веганських капсул у флаконі
-        </div>
-        <div class="order-feat">
-          <svg aria-hidden="true" focusable="false" class="order-feat-leaf" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14 C5 11 2 8 3 5 C4 2 8 1 8 1 C8 1 12 2 13 5 C14 8 11 11 8 14Z" stroke="#3A5220" stroke-width="1" fill="none"/></svg>
-          Курс 30 днів — 2 капсули на день
-        </div>
-        <div class="order-feat">
-          <svg aria-hidden="true" focusable="false" class="order-feat-leaf" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14 C5 11 2 8 3 5 C4 2 8 1 8 1 C8 1 12 2 13 5 C14 8 11 11 8 14Z" stroke="#3A5220" stroke-width="1" fill="none"/></svg>
-          Без ГМО, глютену та лактози
-        </div>
-        <div class="order-feat">
-          <svg aria-hidden="true" focusable="false" class="order-feat-leaf" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14 C5 11 2 8 3 5 C4 2 8 1 8 1 C8 1 12 2 13 5 C14 8 11 11 8 14Z" stroke="#3A5220" stroke-width="1" fill="none"/></svg>
-          Дієтична добавка, безпечне виробництво
-        </div>
-        <div class="order-feat">
-          <svg aria-hidden="true" focusable="false" class="order-feat-leaf" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14 C5 11 2 8 3 5 C4 2 8 1 8 1 C8 1 12 2 13 5 C14 8 11 11 8 14Z" stroke="#3A5220" stroke-width="1" fill="none"/></svg>
-          Доставка Нова Пошта · Укрпошта
-        </div>
-      </div>
-    </div>
-    <div class="order-card">
-      <div class="order-brand-lbl">LABRO BIOCORE</div>
-      <div class="order-prod-name">Нейро-Баланс</div>
-      <div class="order-compo">Ashwagandha · L-Theanine · Rhodiola · 60 вег. кап.</div>
-      <div class="order-price-box">
-        <div class="order-plabel">Ціна</div>
-        <div class="order-pvalue has-price" data-price>990&nbsp;₴</div>
-        <div class="order-pnote">за флакон · 60 веганських капсул</div>
-      </div>
-      <p class="order-disclaimer">Дієтична добавка. Не є лікарським засобом.</p>
-      <button type="button" class="order-main-btn" data-checkout>Купити зараз</button>
-      <div class="order-alt-grid">
-        <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="order-alt-btn">Написати у Telegram</a>
-        <a href="https://wa.me/380932808111" target="_blank" rel="noopener" class="order-alt-btn">Написати у WhatsApp</a>
-        <a href="viber://chat?number=380932808111" class="order-alt-btn">Написати у Viber</a>
-        <a href="https://instagram.com/labro.biocore" target="_blank" rel="noopener" class="order-alt-btn">Написати в Instagram</a>
-      </div>
-      <div class="pay-row">
-        <span class="pay-lbl">Оплата:</span>
-        <span class="pay-badge">monobank</span>
-        <span class="pay-badge">Банківська картка</span>
-        <span class="pay-badge">Накладений платіж</span>
-      </div>
-    </div>
+<section id="delivery" data-screen-label="09 Доставка" class="s09-1" aria-labelledby="h-delivery">
+  <div class="s02-2">
+    <span class="s02-3">08</span>
+    <span data-scramble class="s02-4">Доставка й оплата</span>
+    <span data-rule class="s02-5"></span>
+  </div>
+  <h2 id="h-delivery" data-chars class="s09-2">По всій <span class="s02-8">Україні</span></h2>
+  <div class="s09-3">
+    <div data-reveal class="s09-4"><span class="s09-5">01</span><h3 class="s09-6">Нова Пошта · Укрпошта</h3><p class="s05-17">Доставка по всій Україні. Відправка протягом <span data-mark class="s05-10">1–2 робочих днів</span>.</p></div>
+    <div data-reveal data-delay="80" class="s09-4"><span class="s09-5">02</span><h3 class="s09-6">Онлайн через monobank</h3><p class="s05-17">Оплата банківською карткою на рахунок ФОП через monobank. Дані картки вводяться лише на захищеній сторінці monobank — ми їх не отримуємо.</p></div>
+    <div data-reveal data-delay="160" class="s09-4"><span class="s09-5">03</span><h3 class="s09-6">Накладений платіж</h3><p class="s05-17">Оплата при отриманні у відділенні.</p></div>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="contact-head reveal">
-    <div class="sec-eye">Зв'язок</div>
-    <h2 class="sec-h">Залишились питання?<br><i>Ми відповімо швидко</i></h2>
-    <p class="contact-phone"><a href="tel:+380932808111">+380&nbsp;93&nbsp;280&nbsp;81&nbsp;11</a> · Viber / WhatsApp</p>
+<section data-screen-label="10 Фінал" class="s10-1" aria-labelledby="h-final">
+  <div aria-hidden="true" data-rotate class="s10-2"></div>
+  <span data-scramble class="s10-3"><span data-price>990 ₴</span> · 60 капсул · доставка по Україні</span>
+  <h2 id="h-final" data-chars class="s10-4">Почни свій курс <span class="s10-5">балансу</span> сьогодні</h2>
+  <a href="#order" data-magnetic data-reveal data-checkout class="s10-6 as-btn">Замовити<span class="s10-7"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></a>
+</section>
+
+<section data-screen-label="11 Блог" class="s11-1" aria-labelledby="h-blog">
+  <div class="s02-2">
+    <span class="s02-3">09</span>
+    <h2 id="h-blog" data-scramble class="s02-4 h-reset">Блог</h2>
+    <span data-rule class="s02-5"></span>
+    <a href="/blog.html" class="s11-2">Усі статті →</a>
   </div>
-  <div class="social-row">
-    <a href="https://wa.me/380932808111" target="_blank" rel="noopener" class="soc-btn soc-wa">
-      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#25D366"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.558 4.121 1.535 5.849L.046 23.7a.5.5 0 00.61.638l5.985-1.571A11.957 11.957 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.016-1.374l-.36-.214-3.727.977.996-3.639-.235-.374A9.818 9.818 0 1112 21.818z" fill="#25D366"/></svg>
-      WhatsApp
-    </a>
-    <a href="viber://chat?number=380932808111" class="soc-btn soc-vb">
-      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="#7E50C0"><path d="M12 0C6.074 0 2 3.897 2 8.689c0 2.816 1.418 5.354 3.818 7.047v3.764l3.496-1.72c.872.223 1.8.344 2.762.344 5.926 0 10-3.897 10-8.69C22 3.897 17.926 0 12 0zm1.028 11.683l-2.55-2.714-4.975 2.714 5.467-5.796 2.614 2.714 4.91-2.714-5.466 5.796z"/></svg>
-      Viber
-    </a>
-    <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="soc-btn soc-tg">
-      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="#0088CC"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.02 9.52c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.883.701z"/></svg>
-      Менеджер TG
-    </a>
-    <a href="https://t.me/LaBroBioCore" target="_blank" rel="noopener" class="soc-btn soc-tg">
-      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="#0088CC"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.02 9.52c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.883.701z"/></svg>
-      TG Канал
-    </a>
-    <a href="https://instagram.com/labro.biocore" target="_blank" rel="noopener" class="soc-btn soc-ig">
-      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#F9CE34"/><stop offset="50%" stop-color="#EE2A7B"/><stop offset="100%" stop-color="#6228D7"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="url(#ig)"/></svg>
-      Instagram
-    </a>
+  <div class="s11-3">
+<a href="/blog/ashwagandha.html" data-reveal data-cat="Інгредієнти" class="s11-4"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/ashwagandha-480.avif 480w, /assets/img/blog/ashwagandha-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/ashwagandha-480.webp 480w, /assets/img/blog/ashwagandha-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/ashwagandha-900.jpg" srcset="/assets/img/blog/ashwagandha-480.jpg 480w, /assets/img/blog/ashwagandha-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Сушені корені ашваганди" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">01</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>6 хв</span></div><h3 class="s11-12">Ашваганда: що відомо про адаптоген з аюрведи</h3></div></a>
+<a href="/blog/l-theanine.html" data-reveal data-cat="Інгредієнти" class="s11-4"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/green-tea-480.avif 480w, /assets/img/blog/green-tea-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/green-tea-480.webp 480w, /assets/img/blog/green-tea-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/green-tea-900.jpg" srcset="/assets/img/blog/green-tea-480.jpg 480w, /assets/img/blog/green-tea-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Чашка зеленого чаю з листям" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">02</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>5 хв</span></div><h3 class="s11-12">L-теанін і зелений чай: звідки береться спокійна зосередженість</h3></div></a>
+<a href="/blog/rhodiola-rosea.html" data-reveal data-cat="Інгредієнти" class="s11-4"><div class="s11-5"><picture><source type="image/avif" srcset="/assets/img/blog/rhodiola-480.avif 480w, /assets/img/blog/rhodiola-900.avif 900w" sizes="(min-width:900px) 440px, 82vw"><source type="image/webp" srcset="/assets/img/blog/rhodiola-480.webp 480w, /assets/img/blog/rhodiola-900.webp 900w" sizes="(min-width:900px) 440px, 82vw"><img src="/assets/img/blog/rhodiola-900.jpg" srcset="/assets/img/blog/rhodiola-480.jpg 480w, /assets/img/blog/rhodiola-900.jpg 900w" sizes="(min-width:900px) 440px, 82vw" alt="Суцвіття родіоли рожевої" width="900" height="563" decoding="async" loading="lazy" class="s11-6"></picture><div class="s11-7"></div><span class="s11-8">Інгредієнти</span><span class="s11-9">03</span></div><div class="s11-10"><div class="s11-11"><span class="g-10">Інгредієнти</span><span>·</span><span>5 хв</span></div><h3 class="s11-12">Родіола рожева: рослина арктичних гір у сучасних добавках</h3></div></a>
   </div>
 </section>
 
-<!-- FAQ -->
-<section class="faq" id="faq">
-  <div class="reveal faq-head">
-    <div class="sec-eye">FAQ</div>
-    <h2 class="sec-h">Часті запитання</h2>
-  </div>
-  <div class="faq-inner">
-    <div class="faq-item">
-      <h3 class="faq-h"><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a1" id="faq-q1"><span>Як правильно приймати Нейро-Баланс?</span><svg aria-hidden="true" focusable="false" class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#6B8B3A" stroke-width="1.5" stroke-linecap="round"/></svg></button></h3>
-      <section class="faq-ans" id="faq-a1" aria-labelledby="faq-q1"><div class="faq-ans-in">По 2 капсули на день — вранці або вдень під час їди. Запивати водою. Рекомендований курс — 30 днів. Після можна повторювати з тижневою перервою.</div></section>
-    </div>
-    <div class="faq-item">
-      <h3 class="faq-h"><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a2" id="faq-q2"><span>Коли відчується перший ефект?</span><svg aria-hidden="true" focusable="false" class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#6B8B3A" stroke-width="1.5" stroke-linecap="round"/></svg></button></h3>
-      <section class="faq-ans" id="faq-a2" aria-labelledby="faq-q2"><div class="faq-ans-in">Відчуття індивідуальні. Компоненти Нейро-Баланс розраховані на регулярний прийом, тому рекомендуємо пройти повний курс — 30 днів.</div></section>
-    </div>
-    <div class="faq-item">
-      <h3 class="faq-h"><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a3" id="faq-q3"><span>Чи є протипоказання?</span><svg aria-hidden="true" focusable="false" class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#6B8B3A" stroke-width="1.5" stroke-linecap="round"/></svg></button></h3>
-      <section class="faq-ans" id="faq-a3" aria-labelledby="faq-q3"><div class="faq-ans-in">Не рекомендується при вагітності та лактації, індивідуальній непереносимості компонентів. При наявності хронічних захворювань — проконсультуйтеся з лікарем до початку прийому. Нейро-Баланс — дієтична добавка, не є лікарським засобом і не замінює лікування.</div></section>
-    </div>
-    <div class="faq-item">
-      <h3 class="faq-h"><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a4" id="faq-q4"><span>Як зробити замовлення?</span><svg aria-hidden="true" focusable="false" class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#6B8B3A" stroke-width="1.5" stroke-linecap="round"/></svg></button></h3>
-      <section class="faq-ans" id="faq-a4" aria-labelledby="faq-q4"><div class="faq-ans-in">Натисніть «Купити зараз» на цьому сайті, заповніть форму та оберіть оплату: онлайн через monobank або накладеним платежем. Також можна написати в Telegram (@LaBroudi), WhatsApp (+380&nbsp;93&nbsp;280&nbsp;81&nbsp;11) або Instagram (@labro.biocore) — менеджер відповість протягом кількох хвилин.</div></section>
-    </div>
-    <div class="faq-item">
-      <h3 class="faq-h"><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a5" id="faq-q5"><span>Яка доставка та оплата?</span><svg aria-hidden="true" focusable="false" class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#6B8B3A" stroke-width="1.5" stroke-linecap="round"/></svg></button></h3>
-      <section class="faq-ans" id="faq-a5" aria-labelledby="faq-q5"><div class="faq-ans-in">Доставка по всій Україні — Нова Пошта або Укрпошта. Оплата онлайн банківською карткою через monobank або накладеним платежем при отриманні. Відправка протягом 1–2 робочих днів.</div></section>
-    </div>
-    <div class="faq-item">
-      <h3 class="faq-h"><button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a6" id="faq-q6"><span>Чи можна поєднувати з іншими добавками?</span><svg aria-hidden="true" focusable="false" class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#6B8B3A" stroke-width="1.5" stroke-linecap="round"/></svg></button></h3>
-      <section class="faq-ans" id="faq-a6" aria-labelledby="faq-q6"><div class="faq-ans-in">Нейро-Баланс добре поєднується з більшістю добавок — вітамінами, магнієм, омега-3. Якщо ви приймаєте медикаменти, проконсультуйтеся з лікарем щодо сумісності.</div></section>
-    </div>
-  </div>
-</section>
 </main>
-
-<!-- CHECKOUT MODAL -->
-<div class="mo" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="moTitle" inert>
-  <div class="mo-card">
-    <button type="button" class="mo-x" id="moClose" aria-label="Закрити">
-      <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-    </button>
-    <div class="mo-body">
-      <div class="mo-lbl">LABRO BIOCORE</div>
-      <h2 class="mo-title" id="moTitle">Оформлення<br>замовлення</h2>
-
-      <form id="moForm" novalidate>
-        <div class="mo-prod">
-          <svg aria-hidden="true" focusable="false" class="mo-bottle" viewBox="0 0 44 72" fill="none">
-          <rect x="7" y="16" width="30" height="52" rx="6" fill="#EEEBE6"/>
-          <rect x="11" y="10" width="22" height="10" rx="4" fill="#E2DDD8"/>
-          <rect x="7" y="26" width="30" height="34" rx="0" fill="#1E2D0E"/>
-          <rect x="7" y="50" width="30" height="18" rx="0" fill="#243015"/>
-          <rect x="11" y="30" width="22" height="5" rx="2" fill="rgba(255,255,255,.82)"/>
-          <rect x="13" y="38" width="16" height="3" rx="1.5" fill="rgba(255,255,255,.38)"/>
-          <rect x="13" y="54" width="18" height="3" rx="1.5" fill="rgba(255,255,255,.28)"/>
-          <rect x="4" y="62" width="36" height="6" rx="3" fill="rgba(0,0,0,.1)"/>
-        </svg>
-          <div>
-            <div class="mo-prod-name">Нейро-Баланс</div>
-            <div class="mo-prod-sub">Ashwagandha · L-Theanine · Rhodiola · 60 вег. кап. · Не є лікарським засобом</div>
-            <div class="mo-qty-row">
-              <span class="mo-qty-lbl" id="moQtyLbl">Кількість:</span>
-              <div class="mo-qty" role="group" aria-labelledby="moQtyLbl">
-                <button type="button" class="mo-qbtn" id="moMinus" aria-label="Менше">−</button>
-                <output class="mo-qnum" id="moQty" aria-live="polite">1</output>
-                <button type="button" class="mo-qbtn" id="moPlus" aria-label="Більше">+</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mo-row">
-          <div class="mo-field">
-            <label class="mo-field-lbl" for="moName">Ім'я та прізвище</label>
-            <input class="mo-input" id="moName" name="name" type="text" autocomplete="name" maxlength="128" placeholder="Іван Петренко" required aria-describedby="moNameErr">
-            <p class="mo-err" id="moNameErr"></p>
-          </div>
-          <div class="mo-field">
-            <label class="mo-field-lbl" for="moPhone">Телефон</label>
-            <input class="mo-input" id="moPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" placeholder="+380 XX XXX XX XX" required aria-describedby="moPhoneErr">
-            <p class="mo-err" id="moPhoneErr"></p>
-          </div>
-        </div>
-        <div class="mo-field">
-          <label class="mo-field-lbl" for="moCity">Місто та відділення Нової Пошти</label>
-          <input class="mo-input" id="moCity" name="city" type="text" autocomplete="address-level2" maxlength="256" placeholder="Харків, відд. №12" required aria-describedby="moCityErr">
-          <p class="mo-err" id="moCityErr"></p>
-        </div>
-        <div class="mo-field">
-          <label class="mo-field-lbl" for="moComment">Коментар (необов'язково)</label>
-          <input class="mo-input" id="moComment" name="comment" type="text" maxlength="300" placeholder="Будь-яке уточнення…">
-        </div>
-        <div class="hp" inert>
-          <label for="moWebsite">Не заповнюйте це поле</label>
-          <input id="moWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
-        </div>
-
-        <div class="mo-total">
-          <div class="mo-total-lbl">До сплати</div>
-          <div class="mo-total-val"><span class="mo-total-cur">₴</span><span id="moTotal">990</span></div>
-        </div>
-
-        <div class="mo-consent">
-          <input type="checkbox" id="moConsent" name="consent" required aria-describedby="moConsentErr">
-          <label for="moConsent">Я погоджуюсь з <a href="privacy.html" target="_blank" rel="noopener">Політикою конфіденційності</a> і даю згоду на обробку моїх персональних даних, зокрема на їх передачу за кордон (США, ОАЕ), для оформлення та доставки замовлення.</label>
-          <p class="mo-err" id="moConsentErr">Щоб оформити замовлення, потрібна Ваша згода.</p>
-        </div>
-
-        <button type="submit" class="mono-pay" id="moPayBtn">
-          <span class="mono-logo-text">mono</span>
-          Сплатити онлайн через monobank
-        </button>
-        <button type="button" class="mo-cod" id="moCodBtn">📬 Накладений платіж (оплата при отриманні)</button>
-        <p class="mo-hint">Дані картки вводяться лише на захищеній сторінці monobank — ми їх не отримуємо.</p>
-        <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="mo-alt">або написати менеджеру → @LaBroudi</a>
-      </form>
-
-      <div class="mo-state" id="mo-loading" role="status" aria-live="polite">
-        <div class="mo-spinner" aria-hidden="true"></div>
-        <h3 class="mo-state-h" tabindex="-1">Обробляємо замовлення</h3>
-        <p class="mo-state-p" id="moLoadingText">Перенаправляємо на сторінку оплати monobank…</p>
+<footer class="ft-1">
+  <div class="ft-2">
+    <div class="ft-3">
+      <div class="ft-4">
+        <picture><source type="image/avif" srcset="/assets/img/brand/labro-logo-108.avif"><source type="image/webp" srcset="/assets/img/brand/labro-logo-108.webp"><img src="/assets/img/brand/labro-logo-108.png" alt="LABRO BIOCORE" width="91" height="54" loading="lazy" class="ft-5"></picture>
+        <p class="ft-6">Дієтична добавка. Не є лікарським засобом.</p>
       </div>
-
-      <div class="mo-state" id="mo-error" role="alert">
-        <svg aria-hidden="true" focusable="false" width="52" height="52" viewBox="0 0 52 52" fill="none" class="mo-state-ico"><circle cx="26" cy="26" r="25" stroke="#C45520" stroke-width="1.2"/><path d="M26 16v14M26 35v2" stroke="#C45520" stroke-width="2" stroke-linecap="round"/></svg>
-        <h3 class="mo-state-h" id="moErrorTitle" tabindex="-1">Онлайн-оплата тимчасово недоступна</h3>
-        <p class="mo-state-p" id="moErrorText">Надішліть замовлення менеджеру — він оформить його вручну.</p>
-        <div class="mo-order-box" id="moOrderText"></div>
-        <button type="button" class="mo-copy" id="moCopyBtn">Скопіювати замовлення</button>
-        <br>
-        <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="mo-mgr-btn">Написати менеджеру →</a>
-        <br>
-        <button type="button" class="mo-reset" id="moResetBtn">← Назад до форми</button>
-      </div>
-
-      <div class="mo-state" id="mo-cod-success" role="status">
-        <svg aria-hidden="true" focusable="false" width="64" height="64" viewBox="0 0 64 64" fill="none" class="mo-state-ico"><circle cx="32" cy="32" r="31" stroke="#6B8B3A" stroke-width="1.2"/><path d="M18 32l10 10 18-18" stroke="#6B8B3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <h3 class="mo-state-h" tabindex="-1">Замовлення прийнято!</h3>
-        <p class="mo-state-p">Менеджер зв'яжеться з Вами найближчим часом.<br>Оплата — при отриманні у відділенні.</p>
-        <a href="thanks.html" class="mo-mgr-btn" id="moCodTrack">Статус замовлення →</a>
-        <br>
-        <button type="button" class="mo-reset" id="moCodClose">Закрити</button>
+      <nav class="pd-6" aria-label="Магазин"><span class="ft-7">Магазин</span>
+        <a href="/product.html" class="ft-8">Нейро-Баланс</a>
+        <a href="/delivery.html" class="ft-8">Доставка й оплата</a>
+        <a href="/faq.html" class="ft-8">FAQ</a>
+      </nav>
+      <nav class="pd-6" aria-label="Бренд"><span class="ft-7">Бренд</span>
+        <a href="/about.html" class="ft-8">Про нас</a>
+        <a href="/blog.html" class="ft-8">Блог</a>
+        <a href="/contacts.html" class="ft-8">Контакти</a>
+      </nav>
+      <nav class="pd-6" aria-label="Документи"><span class="ft-7">Документи</span>
+        <a href="/privacy.html" class="ft-8">Політика конфіденційності</a>
+        <a href="/offer.html" class="ft-8">Публічна оферта</a>
+        <button type="button" class="ft-8 footer-cc" data-cookie-settings hidden>Налаштування cookie</button>
+      </nav>
+      <div class="pd-6"><span class="ft-7">Контакти</span>
+        <a href="tel:+380932808111" class="ft-9">+380 93 280 81 11</a>
+        <a href="mailto:labrobiocore2025@gmail.com" class="ft-10">labrobiocore2025@gmail.com</a>
+        <a href="https://t.me/LaBroBioCore" target="_blank" rel="noopener" class="ft-8">Telegram-канал · @LaBroBioCore</a>
+        <a href="https://instagram.com/labro.biocore" target="_blank" rel="noopener" class="ft-8">Instagram · @labro.biocore</a>
+        <div class="ft-11"><a href="https://t.me/LaBroudi" target="_blank" rel="noopener" aria-label="Telegram" class="ft-12"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24"><path d="M5.3 11.6l11.4-4.4c.5-.2 1 .1.8.9l-1.9 9c-.1.6-.5.8-1 .5l-2.9-2.1-1.4 1.3c-.2.2-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2 0-.3-.3-.1l-6.6 4.1-2.8-.9c-.6-.2-.6-.6-.2-.9z" fill="#fff"></path></svg></a><a href="https://wa.me/380932808111" target="_blank" rel="noopener" aria-label="WhatsApp" class="ft-13"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24"><path d="M12 5.2a6.8 6.8 0 0 0-5.8 10.3l-.9 3.3 3.4-.9A6.8 6.8 0 1 0 12 5.2z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"></path><path d="M9.4 8.9c.2-.4.4-.4.6-.4h.4c.1 0 .3 0 .4.3l.6 1.4c0 .1 0 .3-.1.4l-.4.5c-.1.1-.1.3 0 .4.5.9 1.2 1.5 2.1 2 .1.1.3.1.4 0l.5-.6c.1-.1.3-.2.4-.1l1.4.7c.2.1.2.2.2.3 0 .4-.1.9-.5 1.2-.4.3-1 .5-1.6.3-1.9-.5-3.5-2-4.2-3.9-.2-.6-.1-1.3.3-1.7z" fill="#fff"></path></svg></a><a href="viber://chat?number=380932808111" aria-label="Viber" class="ft-14"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24"><path d="M12 4.8c-4 0-6.8 1.6-6.8 5.8 0 2.5 1 4 2.6 4.8v2.9l2.4-2.2c.6.1 1.2.1 1.8.1 4 0 6.8-1.6 6.8-5.6S16 4.8 12 4.8z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"></path><path d="M9.4 8.9c.2-.4.4-.4.6-.4h.4c.1 0 .3 0 .4.3l.6 1.4c0 .1 0 .3-.1.4l-.4.5c-.1.1-.1.3 0 .4.5.9 1.2 1.5 2.1 2 .1.1.3.1.4 0l.5-.6c.1-.1.3-.2.4-.1l1.4.7c.2.1.2.2.2.3 0 .4-.1.9-.5 1.2-.4.3-1 .5-1.6.3-1.9-.5-3.5-2-4.2-3.9-.2-.6-.1-1.3.3-1.7z" fill="#fff"></path></svg></a><a href="https://instagram.com/labro.biocore" target="_blank" rel="noopener" aria-label="Instagram" class="ft-15"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="3.4" fill="none" stroke="#fff" stroke-width="1.7"></rect><circle cx="12" cy="12" r="2.6" fill="none" stroke="#fff" stroke-width="1.7"></circle><circle cx="15.2" cy="8.8" r=".9" fill="#fff"></circle></svg></a>
+</div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-brand">LABRO <b>BIOCORE</b></div>
-  <div class="footer-note">
-    © 2026 LABRO BIOCORE. Дієтична добавка. Не є лікарським засобом.<br>
-    Instagram: @labro.biocore · TG: @LaBroBioCore
-  </div>
-  <a href="tel:+380932808111" class="footer-tel">+380&nbsp;93&nbsp;280&nbsp;81&nbsp;11</a>
-  <nav class="footer-links" aria-label="Документи">
-    <a href="privacy.html">Політика конфіденційності</a>
-    <button type="button" class="footer-cc" data-cookie-settings hidden>Налаштування cookie</button>
-  </nav>
-  <div class="footer-dev">
-    Розроблено <a href="https://infiniteunion.com.ua" target="_blank" rel="noopener">INFINITE UNION</a>
+    <div aria-hidden="true" class="ft-16">LABRO BIOCORE</div>
+    <div class="ft-17">
+      <span>© 2026 LABRO BIOCORE</span>
+    </div>
+    <a href="https://infiniteunion.com.ua" target="_blank" rel="noopener" aria-label="Сайт розроблено студією INFINITE UNION" class="ft-20">
+      <span class="ft-21"><span class="ft-22">Сайт розроблено студією</span><span class="ft-23">INFINITE <span class="ft-24">UNION</span></span></span>
+      <span class="ft-25" aria-hidden="true">↗</span>
+    </a>
   </div>
 </footer>
+
+</div>
+<aside class="ft-26" data-bar aria-label="Швидке замовлення">
+  <div class="ft-27">
+    <div class="ft-28"><span class="pr-10">Нейро-Баланс</span><span class="ft-29"><span data-price>990 ₴</span> · 60 капсул</span></div>
+    <a href="/#order" data-checkout class="ft-30 as-btn">Замовити</a>
+  </div>
+</aside>
+
+</div>
+<aside class="ft-31" id="site-menu" data-menu aria-label="Меню" hidden>
+  <nav aria-label="Меню">
+<a href="/" data-mi class="ft-32" aria-current="page"><span>Головна</span><span class="ft-33">01</span></a>
+<a href="/product.html" data-mi class="ft-32"><span>Нейро-Баланс</span><span class="ft-33">02</span></a>
+<a href="/about.html" data-mi class="ft-32"><span>Про нас</span><span class="ft-33">03</span></a>
+<a href="/blog.html" data-mi class="ft-32"><span>Блог</span><span class="ft-33">04</span></a>
+<a href="/delivery.html" data-mi class="ft-32"><span>Доставка й оплата</span><span class="ft-33">05</span></a>
+<a href="/contacts.html" data-mi class="ft-32"><span>Контакти</span><span class="ft-33">06</span></a>
+<a href="/faq.html" data-mi class="ft-32"><span>FAQ</span><span class="ft-33">07</span></a>
+  </nav>
+  <div data-mi class="ft-34">
+    <a href="/#order" data-checkout class="ft-35 as-btn"><span>Замовити — <span data-price>990 ₴</span></span></a>
+    <div class="ft-36">
+      <a href="tel:+380932808111" class="ft-37">Подзвонити</a>
+      <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="ft-37">Telegram</a>
+    </div>
+  </div>
+</aside>
+
+<div id="checkoutModal" class="modal-root" inert>
+  <div class="ft-38" data-mo-backdrop></div>
+  <div class="ft-39">
+    <div role="dialog" aria-modal="true" aria-labelledby="moTitle" tabindex="-1" class="ft-40" data-mo-panel>
+      <button type="button" id="moClose" aria-label="Закрити" class="ft-41"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button>
+
+      <form id="moForm" novalidate class="ft-42" aria-busy="false">
+        <div data-mf class="ft-43"><span class="dl-9">LABRO BIOCORE</span><h2 id="moTitle" class="ft-44">Оформлення замовлення</h2></div>
+        <div data-mf class="ft-45">
+          <div class="ft-21"><span class="ft-46">Нейро-Баланс</span><span class="s02-25">60 веганських капсул · <span data-price>990 ₴</span></span></div>
+          <div role="group" aria-label="Кількість" class="ft-47">
+            <button type="button" id="moMinus" aria-label="Менше" class="ft-48">−</button>
+            <output id="moQty" aria-live="polite" class="ft-49">1</output>
+            <button type="button" id="moPlus" aria-label="Більше" class="ft-48">+</button>
+          </div>
+        </div>
+        <div class="ft-50">
+          <div data-mf class="ft-51"><label for="moName" class="ft-52">Ім'я та прізвище</label><input id="moName" name="name" type="text" autocomplete="name" maxlength="128" placeholder="Іван Петренко" aria-describedby="moNameErr" class="ft-53"><p id="moNameErr" class="ft-54 mo-err-msg"></p></div>
+          <div data-mf class="ft-51"><label for="moPhone" class="ft-52">Телефон</label><input id="moPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="+380 XX XXX XX XX" aria-describedby="moPhoneErr" class="ft-53"><p id="moPhoneErr" class="ft-54 mo-err-msg"></p></div>
+        </div>
+        <div data-mf class="ft-51"><label for="moCity" class="ft-52">Місто та відділення Нової Пошти</label><input id="moCity" name="city" type="text" autocomplete="address-level2" maxlength="256" placeholder="Харків, відд. №12" aria-describedby="moCityErr" class="ft-53"><p id="moCityErr" class="ft-54 mo-err-msg"></p></div>
+        <div data-mf class="ft-51"><label for="moComment" class="ft-52">Коментар (необов'язково)</label><input id="moComment" name="comment" type="text" maxlength="300" placeholder="Будь-яке уточнення…" class="ft-55"></div>
+        <div aria-hidden="true" class="ft-56"><label for="moWebsite">Не заповнюйте це поле</label><input id="moWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <fieldset data-mf class="ft-57 fs-reset">
+          <legend class="sr-only">Спосіб оплати</legend>
+          <label class="ft-58"><input type="radio" name="moPay" value="online" id="moPayOnline" class="sr-only" checked>
+            <span class="ft-59"><span class="ft-60"></span></span>
+            <span class="ar-29"><span class="ft-61">Онлайн через monobank</span><span class="ft-62">Картка · оплата на рахунок ФОП</span></span>
+          </label>
+          <label class="ft-58"><input type="radio" name="moPay" value="cod" id="moPayCod" class="sr-only">
+            <span class="ft-59"><span class="ft-60"></span></span>
+            <span class="ar-29"><span class="ft-61">Накладений платіж</span><span class="ft-62">Оплата при отриманні у відділенні</span></span>
+          </label>
+        </fieldset>
+        <div data-mf class="ft-63"><span class="pd-23">До сплати</span><span class="ft-64"><span id="moTotal">990</span> <span class="ft-65">₴</span></span></div>
+        <div data-mf class="ft-51 mo-consent">
+          <div class="ft-66">
+            <input type="checkbox" id="moConsent" name="consent" aria-describedby="moConsentErr" class="ft-67">
+            <label for="moConsent" class="ft-68">Я погоджуюсь з <a href="/privacy.html" target="_blank" rel="noopener" class="ft-69">Політикою конфіденційності</a> і даю згоду на обробку моїх персональних даних, зокрема на їх передачу за кордон (США, ОАЕ), для оформлення та доставки замовлення.</label>
+          </div>
+          <p id="moConsentErr" class="ft-54 consent-err">Щоб оформити замовлення, потрібна Ваша згода.</p>
+        </div>
+        <button data-mf type="submit" id="moSubmit" class="ft-70">Сплатити <span data-total-label>990</span> ₴ через monobank</button>
+        <p data-mf class="ft-71">Дані картки вводяться лише на захищеній сторінці monobank — ми їх не отримуємо. Дієтична добавка. Не є лікарським засобом.</p>
+        <a data-mf href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="ft-72">або написати менеджеру → @LaBroudi</a>
+      </form>
+
+      <div id="mo-loading" role="status" aria-live="polite" class="ft-73 mo-state">
+        <div data-ms><div class="lb-spin"></div></div>
+        <h3 tabindex="-1" data-ms class="ft-74 mo-state-h">Обробляємо замовлення</h3>
+        <p data-ms class="ft-75" id="moLoadingText"></p>
+        <div data-ms class="ft-76"><div class="lb-skel"><i></i><i></i><i></i></div></div>
+      </div>
+
+      <div id="mo-error" role="alert" class="ft-77 mo-state">
+        <span data-ms class="ft-78" aria-hidden="true">!</span>
+        <h3 tabindex="-1" data-ms class="ft-79 mo-state-h" id="moErrorTitle">Не вдалося надіслати замовлення</h3>
+        <p data-ms class="ft-80" id="moErrorText"></p>
+        <pre data-ms class="ft-81" id="moOrderText"></pre>
+        <div data-ms class="ft-82">
+          <button type="button" id="moCopyBtn" class="ft-83">Скопіювати замовлення</button>
+          <a href="https://t.me/LaBroudi" target="_blank" rel="noopener" class="th-12">Написати менеджеру →</a>
+        </div>
+        <button data-ms type="button" id="moResetBtn" class="ft-84">← Назад до форми</button>
+      </div>
+
+      <div id="mo-cod-success" role="status" class="ft-85 mo-state">
+        <svg data-ms width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true"><circle cx="40" cy="40" r="38" stroke="#5CE08C" stroke-width="1.5"></circle><path data-check d="M24 41l11 11 21-23" stroke="#5CE08C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" stroke-dashoffset="0"></path></svg>
+        <h3 tabindex="-1" data-ms class="ft-86 mo-state-h">Замовлення прийнято!</h3>
+        <p data-ms class="ft-75">Менеджер зв'яжеться з Вами найближчим часом. Оплата — при отриманні у відділенні.</p>
+        <a data-ms href="https://t.me/LaBroudi" id="moCodTrack" class="ft-87 as-btn">Статус замовлення →</a>
+        <button data-ms type="button" id="moCodClose" class="ft-84">Закрити</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div aria-hidden="true" class="ft-88" data-cur-a></div>
+<div aria-hidden="true" class="ft-89" data-cur-b>
+  <div class="ft-90"><span class="ar-6"><picture><source type="image/avif" srcset="/assets/img/brand/labro-mark-68.avif"><source type="image/webp" srcset="/assets/img/brand/labro-mark-68.webp"><img src="/assets/img/brand/labro-mark-68.png" alt="" width="17" height="28" class="ft-91"></picture>LABRO BIOCORE</span><span data-cur-num>0</span></div>
+  <div class="s08-3">
+    <div class="ft-92"><div class="bl-7" data-cur-bar></div></div>
+    <div class="ft-93" data-cur-label></div>
+  </div>
+</div>
+
+<div class="ft-95" aria-hidden="true" data-cursor></div>
 </body>
 </html>
