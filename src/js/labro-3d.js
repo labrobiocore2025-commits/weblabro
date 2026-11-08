@@ -133,6 +133,21 @@ function labelNew(mark) {
   return { map: c, emissive: e };
 }
 
+// Build-time only: the label artwork as canvases (tools/bake-labels.mjs saves them as WebP into assets/img/jar/).
+// At runtime the scene loads those images instead of drawing ~3 MB of canvas and waiting for the Oswald font.
+export function drawLabels(mark) {
+  seed = 20261108;
+  const nl = labelNew(mark);
+  return { current: labelCurrent(mark), newMap: nl.map, newEmissive: nl.emissive };
+}
+
+// decoded off the main thread; flipped like a CanvasTexture would be (three's default flipY = true)
+async function loadBitmap(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('label ' + r.status);
+  return createImageBitmap(await r.blob(), { imageOrientation: 'flipY' });
+}
+
 function radialTex(stops, size = 256, ring) {
   const c = document.createElement('canvas'); c.width = c.height = size;
   const g = c.getContext('2d'); const r = size / 2;
@@ -164,16 +179,13 @@ function downscale(c, k) {
 
 // Canvas is NOT attached here — the page moves scene.canvas into whichever [data-jar] anchor is on screen,
 // so the jar scrolls natively with its section and only that box is rendered.
-export async function createScene(markUrl) {
+// labels: { size: url => url of the baked label image (current / new / new-emissive) at the given width }
+export async function createScene(labels) {
   seed = 20261108;
-  try {
-    await Promise.race([Promise.all([
-      document.fonts.load('600 100px Oswald'), document.fonts.load('italic 400 40px Oswald'),
-      document.fonts.load('600 100px Geologica'), document.fonts.load('italic 500 50px "Cormorant Garamond"'),
-    ]), new Promise(r => setTimeout(r, 1500))]);
-  } catch (e) {}
-  const mark = await loadImg(markUrl);
   const tier = detectTier();
+  const lw = tier === 2 ? 2560 : 1280;                 // phones/tablets: half-resolution labels (the jar is ≤ 420 px tall)
+  const labelAImg = loadBitmap(labels(`label-current-${lw}.webp`));
+  let labelBReq = null;                                 // the black pack label is fetched only when it is first shown
   const cap = Math.min(window.devicePixelRatio || 1, [1, 1.5, 2][tier]);
   let prIdx = 0; PR_STEPS.forEach((p, i) => { if (p <= cap + 1e-3) prIdx = i; });
   const maxIdx = prIdx;
@@ -215,13 +227,19 @@ export async function createScene(markUrl) {
   const bodyMat = new THREE.MeshPhysicalMaterial({ color: W0.body, roughness: 0.3, clearcoat: tier ? 1 : 0, clearcoatRoughness: 0.18, side: THREE.DoubleSide });
   const capMat = new THREE.MeshPhysicalMaterial({ color: W0.cap, roughness: 0.48, clearcoat: tier ? 0.3 : 0, side: THREE.DoubleSide });
   const aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-  const tex = c => { const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso; return t; };
-  const k = [0.5, 0.75, 1][tier];
-  const nl = labelNew(mark);
+  const tex = img => { const t = new THREE.Texture(img); t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso; t.needsUpdate = true; return t; };
+  const blank = () => { const t = new THREE.Texture(); t.colorSpace = THREE.SRGBColorSpace; return t; };
   const labelGeo = r => new THREE.CylinderGeometry(r, r, 1.46, tier ? 160 : 96, 1, true, -Math.PI, Math.PI * 2);
-  const labelAMat = new THREE.MeshPhysicalMaterial({ map: tex(downscale(labelCurrent(mark), k)), roughness: 0.4, clearcoat: tier ? 0.7 : 0, clearcoatRoughness: 0.22 });
+  const labelAMat = new THREE.MeshPhysicalMaterial({ map: tex(await labelAImg), roughness: 0.4, clearcoat: tier ? 0.7 : 0, clearcoatRoughness: 0.22 });
   const labelA = new THREE.Mesh(labelGeo(0.66), labelAMat);
-  const labelBMat = new THREE.MeshPhysicalMaterial({ map: tex(downscale(nl.map, k)), emissiveMap: tex(downscale(nl.emissive, k)), emissive: new THREE.Color('#ffffff'), emissiveIntensity: 0.9, roughness: 0.55, clearcoat: tier ? 0.25 : 0, transparent: true, opacity: 0 });
+  const labelBMat = new THREE.MeshPhysicalMaterial({ map: blank(), emissiveMap: blank(), emissive: new THREE.Color('#ffffff'), emissiveIntensity: 0.9, roughness: 0.55, clearcoat: tier ? 0.25 : 0, transparent: true, opacity: 0 });
+  let labelBReady = false;
+  const ensureLabelB = () => {
+    if (labelBReq) return;
+    labelBReq = Promise.all([loadBitmap(labels(`label-new-${lw}.webp`)), loadBitmap(labels(`label-new-emissive-${lw}.webp`))])
+      .then(([m, e]) => { labelBMat.map.dispose(); labelBMat.emissiveMap.dispose(); labelBMat.map = tex(m); labelBMat.emissiveMap = tex(e); labelBMat.needsUpdate = true; labelBReady = true; })
+      .catch(() => { labelBReady = true; });
+  };
   const labelB = new THREE.Mesh(labelGeo(0.662), labelBMat);
   labelA.position.y = labelB.position.y = -0.2;
   const inner = new THREE.Group();
@@ -287,6 +305,7 @@ export async function createScene(markUrl) {
 
   const st = { ry: 0, rz: 0, spill: 0, mix: 0, appear: 0, key: -1, drag: 0, spin: 0, spinT: 0, packT: -1 };
   let lastSig = '';
+  if (renderer.compileAsync) { try { await renderer.compileAsync(scene, camera); } catch (e) { /* first render compiles */ } }
   return {
     canvas: cv, tier,
     setSize(w, h) {
@@ -300,8 +319,10 @@ export async function createScene(markUrl) {
       govern(dtRaw, t);
       const dt = Math.min(dtRaw, 0.05), R = I.reduced;
       if (I.key !== st.key) { st.key = I.key; st.appear = R ? 1 : 0; st.ry = I.ry; st.rz = I.rz; st.spill = I.spill; gov.acc = 0; gov.n = 0; gov.t = t; }
-      if (st.packT === -1) { st.packT = I.pack; st.mix = I.pack; }
-      if (I.pack !== st.packT) { st.packT = I.pack; if (!R) st.spinT += Math.PI * 2; }
+      if (st.packT === -1) { st.packT = 0; st.mix = 0; }
+      if (I.pack) ensureLabelB();
+      const pack = I.pack && labelBReady ? 1 : 0;        // stay on the current pack until the black label has loaded
+      if (pack !== st.packT) { st.packT = pack; if (!R) st.spinT += Math.PI * 2; }
       const kk = R ? 1 : 1 - Math.exp(-dt * 3);
       st.appear = Math.min(1, st.appear + dt / 1.2);
       st.ry += (I.ry - st.ry) * kk; st.rz += (I.rz - st.rz) * kk; st.spill += (I.spill - st.spill) * kk;

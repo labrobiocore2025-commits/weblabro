@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8">
+<style>
+@font-face{font-family:Geologica;src:url(../../assets/fonts/geologica.woff2) format('woff2');font-weight:300 700;unicode-range:U+0400-045F}
+@font-face{font-family:Geologica;src:url(../../assets/fonts/geologica.woff2) format('woff2');font-weight:300 700;unicode-range:U+0000-00FF}
+@font-face{font-family:Oswald;src:url(oswald-normal-cyrillic.woff2) format('woff2');font-weight:400 600;unicode-range:U+0400-045F}
+@font-face{font-family:Oswald;src:url(oswald-normal-latin.woff2) format('woff2');font-weight:400 600;unicode-range:U+0000-00FF}
+@font-face{font-family:"Cormorant Garamond";font-style:italic;src:url(../../assets/fonts/cormorant-garamond-italic.woff2) format('woff2');font-weight:400 600}
+</style>
+<script type="module">
+import { drawLabels } from './scene.js';
+window.bake = async () => {
+  await Promise.all([document.fonts.load('600 100px Oswald'), document.fonts.load('italic 400 40px Oswald'), document.fonts.load('400 34px Oswald'),
+    document.fonts.load('500 36px Oswald'), document.fonts.load('600 100px Geologica'), document.fonts.load('400 30px Geologica'), document.fonts.load('italic 500 50px "Cormorant Garamond"')]);
+  const mark = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.src = 'mark.png'; });
+  const L = drawLabels(mark), out = {};
+  for (const [k, c] of Object.entries({ current: L.current, 'new': L.newMap, 'new-emissive': L.newEmissive })) {
+    for (const w of [2560, 1280]) {
+      const d = document.createElement('canvas'); d.width = w; d.height = Math.round(c.height * w / c.width);
+      d.getContext('2d').drawImage(c, 0, 0, d.width, d.height);
+      out[`label-${k}-${w}.webp`] = d.toDataURL('image/webp', k === 'new-emissive' ? 0.8 : 0.86);
+    }
+  }
+  return out;
+};
+window.ready = true;
+</script>

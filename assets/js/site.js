@@ -36,9 +36,9 @@
     if (R || !curA || !curB) { done(); return; }
     [curA, curB].forEach(el => el.getAnimations().forEach(a => a.cancel()));
     const up = [{ transform: 'translateY(0)' }, { transform: 'translateY(-100%)' }];
-    curB.animate(up, { duration: 1000, easing: EIO, fill: 'forwards' });
-    const a = curA.animate(up, { duration: 1000, delay: 120, easing: EIO, fill: 'forwards' });
-    setTimeout(startReveals, 250);                              // content animates in while the curtains rise
+    curB.animate(up, { duration: 800, easing: EIO, fill: 'forwards' });
+    const a = curA.animate(up, { duration: 800, delay: 100, easing: EIO, fill: 'forwards' });
+    setTimeout(startReveals, 200);                              // content animates in while the curtains rise
     a.finished.then(() => { [curA, curB].forEach(el => el.getAnimations().forEach(x => x.cancel())); done(); }, done);
   }
   if (curLabel) curLabel.textContent = navLabel || '';
@@ -49,16 +49,16 @@
     if (curBar) curBar.style.transform = 'scaleX(1)';
     requestAnimationFrame(() => setTimeout(liftCurtains, 180));
   } else {
-    // first page of the visit: counter 0 → 100, curtains lift after ≥ 1.3 s (never waits for the 3D)
+    // first page of the visit: counter 0 → 100, curtains lift after ≥ 0.7 s (never waits for the 3D)
     const step = now => {
-      const p = Math.min(1, (now - t0) / 1600), v = 1 - Math.pow(1 - p, 3);
+      const p = Math.min(1, (now - t0) / 800), v = 1 - Math.pow(1 - p, 3);
       if (curNum) curNum.textContent = String(Math.round(99 * v));
       if (curBar) curBar.style.transform = `scaleX(${v * 0.99})`;
       if (p < 1 && !root.classList.contains('is-ready')) requestAnimationFrame(step);
       else if (curNum) curNum.textContent = '100';
     };
     requestAnimationFrame(step);
-    setTimeout(liftCurtains, Math.max(0, 1300 - (performance.now() - t0)));
+    setTimeout(liftCurtains, Math.max(0, 700 - (performance.now() - t0)));
   }
 
   // internal links: curtains fall, then the browser navigates (the next page lifts them)
@@ -184,16 +184,42 @@
   }
 
   const REVEAL = '[data-reveal],[data-chars],[data-words],[data-count],[data-mark],[data-odo],[data-rule],[data-scramble]';
-  $$('[data-chars]').forEach(el => split(el, LITE ? 'w' : 'ch'));
-  $$('[data-words],[data-fill]').forEach(el => split(el, 'w'));
-  $$('[data-odo]').forEach(buildOdo);
-  const pending = $$(REVEAL);
-  if (R) pending.forEach(showNow);
-  else pending.forEach(el => { prep(el); el.__base = el.getBoundingClientRect().top < innerHeight ? (root.classList.contains('is-ready') ? 0 : 450) : 0; });
+  // Entrance animations are prepared off the critical path: after the first frame, in small chunks (no long task).
+  // All reads first, then writes (no layout thrashing). Without a curtain (phones, back/forward) whatever is on the
+  // first screen is left as painted — hiding it again would delay LCP and flash the content; only what is below the
+  // first screen (or under the desktop intro curtain) gets its entrance animation.
+  const covered = !root.classList.contains('is-ready');
+  const pending = [];
+  let fills = [], prepared = false, wantReveals = false;
+  const nextTask = () => new Promise(r => setTimeout(r, 0));
+  async function prepareReveals() {
+    $$('[data-fill]').forEach(el => split(el, 'w'));
+    fills = $$('[data-fill]').map(el => ({ el, ws: $$('.w', el), p: -1 }));
+    const all = $$(REVEAL);
+    const tops = all.map(el => el.getBoundingClientRect().top);   // one layout for all reads
+    const vh = innerHeight;
+    for (let i = 0; i < all.length; i += 40) {
+      all.slice(i, i + 40).forEach((el, j) => {
+        const above = tops[i + j] < vh;
+        if (R || (above && !covered)) { el.__done = true; showNow(el); return; }
+        if (el.hasAttribute('data-chars')) split(el, LITE ? 'w' : 'ch');
+        if (el.hasAttribute('data-words')) split(el, 'w');
+        if (el.hasAttribute('data-odo')) buildOdo(el);
+        prep(el); el.__base = covered && above ? 300 : 0;
+        pending.push(el);
+      });
+      await nextTask();
+    }
+    prepared = true;
+    if (wantReveals) { revealsStarted = false; startReveals(); }
+    scrollFx();
+  }
+  requestAnimationFrame(() => setTimeout(prepareReveals, 0));
 
   let io = null, revealsStarted = false;
   function startReveals() {
     if (revealsStarted || R) return; revealsStarted = true;
+    if (!prepared) { wantReveals = true; return; }   // prepareReveals() calls back when done
     io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target); play(en.target); } }), { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
     pending.forEach(el => { if (!el.__done) io.observe(el); });
     $$('[data-marquee]').forEach(el => { const d = +el.getAttribute('data-dir') || 1; el.animate(d > 0 ? [{ translate: '0 0' }, { translate: '-50% 0' }] : [{ translate: '-50% 0' }, { translate: '0 0' }], { duration: d > 0 ? 34000 : 42000, iterations: Infinity }); });
@@ -209,7 +235,6 @@
   // ═══ scroll-driven effects: one passive listener, work only in an animation frame ═══
   // words not yet "filled" stay readable: 0.45 keeps ≥ 3:1 contrast for this large text (the design used 0.14)
   const FILL_MIN = 0.45;
-  const fills = $$('[data-fill]').map(el => ({ el, ws: $$('.w', el), p: -1 }));
   const stacks = $$('[data-stack]').map(el => [...el.children]);
   const progs = $$('[data-progress]');
   const pars = $$('[data-parallax]');
@@ -392,7 +417,7 @@
         ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(t => removeEventListener(t, go, { passive: true }));
         const base = document.querySelector('link[rel="stylesheet"]').getAttribute('href').replace(/assets\/site\.css.*$/, '');
         import(new URL(base + 'assets/js/jar3d.js', location.href).href)
-          .then(m => m.start({ markUrl: new URL(base + 'assets/img/brand/labro-mark-texture.png', location.href).href }))
+          .then(m => m.start({ labelBase: new URL(base + 'assets/img/jar/', location.href).href }))
           .catch(() => { /* posters stay */ });
       };
       // first sign of a person (mouse move, touch, scroll, key): never during the initial load, never for a bot

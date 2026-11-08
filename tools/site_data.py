@@ -114,6 +114,34 @@ def post_card(base, i, post, cls="s11-4", h="h3"):
             f'<{h} class="s11-12">{E(title)}</{h}></div></a>')
 
 
+POSTER_SIZES = "(min-width:900px) 800px, 440px"
+# displayed poster height on phones = the anchor's height (svh-based, capped in design.css): exact sizes → smaller files
+MOBILE_SIZE = {"hero-m": "min(44svh, 420px)", "pack-m": "min(56svh, 520px)", "product-m": "min(52svh, 480px)",
+               "thanks-m": "max(36svh, 260px)", "nf": "max(36svh, 240px)"}
+
+
+def poster_sizes(key):
+    base_key = key[:-4] if key.endswith("-new") else key
+    if base_key.endswith("-d") or base_key == "order":
+        return "(min-width:900px) min(84svh, 800px), 92vw"
+    return f"(min-width:900px) 800px, {MOBILE_SIZE.get(base_key, '440px')}"
+
+
+def poster_srcset(base, key, ext):
+    return ", ".join(f"{base}assets/img/jar/{key}-{w}.{ext} {w}w" for w in (560, 800, 1100))
+
+
+def lcp_preloads(meta, base):
+    """The page's LCP poster (above the fold) is requested from <head>, together with the CSS — not after layout."""
+    out = []
+    for key in meta.get("lcp", []):
+        media = NOT_DESKTOP if key.endswith("-m") else (NOT_MOBILE if key.endswith("-d") else "")
+        out.append(f'<link rel="preload" as="image" type="image/avif" fetchpriority="high" '
+                   f'imagesrcset="{poster_srcset(base, key, "avif")}" imagesizes="{poster_sizes(key)}"'
+                   + (f' media="{media}"' if media else "") + ">")
+    return "\n".join(out)
+
+
 GIF1 = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
 NOT_MOBILE, NOT_DESKTOP = "(min-width: 900px)", "(max-width: 899.98px)"
 
@@ -125,13 +153,14 @@ def jar(base, key, cls="s01-4", ry=0.0, s=0.62, rz=None, spill=False, eager=Fals
     # the anchor is hidden at the other breakpoint: an empty 1×1 source there, so its poster is never downloaded
     skip = f'<source media="{NOT_MOBILE if only == "m" else NOT_DESKTOP}" srcset="{GIF1}">' if only else ""
 
-    def pic(k, extra_cls=""):
-        src = lambda ext: f"{base}assets/img/jar/{k}-560.{ext} 560w, {base}assets/img/jar/{k}-1100.{ext} 1100w"  # noqa: E731
-        load = ' fetchpriority="high"' if eager else ' loading="lazy"'
-        return (f'<picture class="jar-poster{extra_cls}">{skip}<source type="image/avif" srcset="{src("avif")}" sizes="(min-width:900px) 800px, 440px">'
-                f'<img src="{base}assets/img/jar/{k}-1100.webp" srcset="{src("webp")}" sizes="(min-width:900px) 800px, 440px" '
+    def pic(k, extra_cls="", lazy=False):
+        src = lambda ext: poster_srcset(base, k, ext)  # noqa: E731
+        load = ' fetchpriority="high"' if eager and not lazy else ' loading="lazy"'
+        return (f'<picture class="jar-poster{extra_cls}">{skip}<source type="image/avif" srcset="{src("avif")}" sizes="{poster_sizes(k)}">'
+                f'<img src="{base}assets/img/jar/{k}-1100.webp" srcset="{src("webp")}" sizes="{poster_sizes(k)}" '
                 f'alt="" width="1100" height="1100" decoding="async"{load}></picture>')
-    posters = pic(key, " pack-current") + pic(key + "-new", " pack-new") if pack else pic(key)
+    # the black pack poster is hidden until the switch: lazy, so it is not downloaded with the page
+    posters = pic(key, " pack-current") + pic(key + "-new", " pack-new", lazy=True) if pack else pic(key)
     return f'<div data-jar{attrs} class="{cls}">{posters}</div>'
 
 
@@ -171,10 +200,15 @@ def head_ld(meta):
     return ld({"@context": "https://schema.org", "@graph": graph})
 
 
-def head_meta(meta, url, base):
+def head_meta(meta, url, base):  # noqa: C901
     title, desc = meta["title"], meta["description"]
     index = meta.get("robots", "index") == "index"
     out = [f"<title>{E(title)}</title>", f'<meta name="description" content="{E(desc)}">']
+    if meta.get("lcp"):
+        out.append(lcp_preloads(meta, base))
+    # pages that call the API (price / checkout / order status): open the connection while the page parses
+    if meta.get("modal", True) or meta.get("pixel") == "purchase":
+        out.append(f'<link rel="preconnect" href="{API}" crossorigin>')
     if meta.get("keywords"):
         out.append(f'<meta name="keywords" content="{E(meta["keywords"])}">')
     if index:
