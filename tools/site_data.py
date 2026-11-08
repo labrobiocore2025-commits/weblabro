@@ -106,10 +106,10 @@ def picture(base, name, alt, cls, widths, sizes, lazy=True, w=900, h=563):
             f'width="{w}" height="{h}" decoding="async"{load} class="{cls}"></picture>')
 
 
-def post_card(base, i, post, cls="s11-4", h="h3"):
+def post_card(base, i, post, cls="s11-4", h="h3", lcp=False):
     slug, title, cat, mins, img, alt, _ = post
     return (f'<a href="{base}blog/{slug}.html" data-reveal data-cat="{E(cat)}" class="{cls}">'
-            f'<div class="s11-5">{picture(base, img, alt, "s11-6", ["480", "900"], "(min-width:900px) 440px, 82vw")}'
+            f'<div class="s11-5">{picture(base, img, alt, "s11-6", ["480", "640", "900"], "(min-width:900px) 440px, 82vw", lazy=not lcp)}'
             f'<div class="s11-7"></div><span class="s11-8">{E(cat)}</span><span class="s11-9">{i:02d}</span></div>'
             f'<div class="s11-10"><div class="s11-11"><span class="g-10">{E(cat)}</span><span>·</span><span>{E(mins)}</span></div>'
             f'<{h} class="s11-12">{E(title)}</{h}></div></a>')
@@ -257,7 +257,8 @@ def context(meta, base):
         "html_class": "js-pending" + (" is-solid" if current != "home" else ""),
         "faq_items": faq_items(), "faq_items_page": faq_items("faqp", "h2"),
         "home_posts": "\n".join(post_card(base, i, p) for i, p in enumerate(POSTS[:3], 1)),
-        "all_posts": "\n".join(post_card(base, i, p, "bl-5", "h2") for i, p in enumerate(POSTS, 1)),
+        # the first card is the blog page's first screen (its LCP): loaded at once, the rest lazily
+        "all_posts": "\n".join(post_card(base, i, p, "bl-5", "h2", lcp=i == 1) for i, p in enumerate(POSTS, 1)),
         "cat_tabs": "\n".join(f'<button type="button" role="tab" class="pd-4" aria-selected="{"true" if i == 0 else "false"}" '
                               f'data-cat="{E(c)}">{E(c)}</button>' for i, c in enumerate(CATS)),
         "nav_links": "\n".join(f'<a href="{rel(u)}" class="g-12"{CUR if k == current or (k == "blog" and current == "article") else ""}>{E(l)}</a>'
