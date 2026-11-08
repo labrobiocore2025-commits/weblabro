@@ -7,7 +7,7 @@
 // * a lost WebGL context or any error tears the scene down and leaves the posters — the page never breaks.
 import { createScene } from './labro-3d.js';
 
-export async function start({ labelBase }) {
+export async function start({ labelBase, labelQuery = '' }) {
   const anchors = [...document.querySelectorAll('[data-jar]')];
   if (!anchors.length) return null;
 
@@ -56,7 +56,7 @@ export async function start({ labelBase }) {
 
   async function ensure() {
     if (scene || dead) return scene;
-    scene = await createScene(name => labelBase + name);
+    scene = await createScene(name => labelBase + name + labelQuery);
     scene.canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); stop(); }, { once: true });
     return scene;
   }

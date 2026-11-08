@@ -415,9 +415,10 @@
     if (!weak) {
       const go = () => {
         ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(t => removeEventListener(t, go, { passive: true }));
-        const base = document.querySelector('link[rel="stylesheet"]').getAttribute('href').replace(/assets\/site\.css.*$/, '');
-        import(new URL(base + 'assets/js/jar3d.js', location.href).href)
-          .then(m => m.start({ labelBase: new URL(base + 'assets/img/jar/', location.href).href }))
+        // versioned URLs from the build (<body data-jar3d data-jar-labels>): the CDN caches them for a year
+        const b = document.body.dataset, src = new URL(b.jar3d, location.href);
+        import(src.href)
+          .then(m => m.start({ labelBase: new URL('../img/jar/', src).href, labelQuery: '?v=' + b.jarLabels }))
           .catch(() => { /* posters stay */ });
       };
       // first sign of a person (mouse move, touch, scroll, key): never during the initial load, never for a bot
