@@ -173,3 +173,21 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
 @media (max-width:359px){
   .s01-5{width:94px;height:94px;top:0}
 }
+/* phones: the longest Ukrainian words («конфіденційності», «перевантаження:», «Накопичувальний») are wider than a
+   320–360 px line at the desktop minimum sizes and ran into the screen / card edge — scale them with the viewport */
+@media (max-width:599.98px){
+  .lg-2{font-size:min(40px,10.2vw)}
+  .ar-4{font-size:min(36px,10.2vw)}
+}
+@media (max-width:379.98px){
+  .s04-14{font-size:22px}
+  .s05-14{padding:20px}
+  .s04-36{font-size:12.5px}
+  .s04-34,.s04-37{padding:18px 12px}
+}
+/* thanks on phones: the payment status comes first (that is why the buyer is here), the jar below it —
+   the poster stays preloaded (it is still on the first screen) */
+@media (max-width:899.98px){
+  .th-1{min-height:0;align-items:start}
+  .th-2{order:1;height:30svh;min-height:220px}
+}
