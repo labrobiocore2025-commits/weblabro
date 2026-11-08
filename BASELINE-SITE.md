@@ -148,3 +148,22 @@ prod-thanks  desktop perf 100 a11y 95 bp 100 seo 54 | LCP 0.25s CLS 0.013 TBT 0m
 
 - Главная на 320 и 375 px даёт горизонтальный скролл (баг прода).
 - Консоль: 0 ошибок на всех страницах (на несуществующем URL — только ожидаемый 404 самого документа).
+
+## Отличия после редизайна v3 (всё, что было, работает так же; ниже — только новое)
+
+| Что | Было | Стало |
+|---|---|---|
+| Дизайн | старый лендинг | Claude Design v3 (тёмная тема, Geologica / Cormorant / JetBrains Mono), 3D-банка |
+| URL | `/`, `/privacy.html`, `/thanks.html`, `/404.html` | те же + `/product.html`, `/about.html`, `/blog.html`, `/blog/*.html` (6), `/delivery.html`, `/contacts.html`, `/faq.html`, `/offer.html` |
+| Индексация | 2 URL в sitemap | 9 URL; 5 статей-заглушек и оферта — `noindex`, не в sitemap |
+| Модалка заказа | две кнопки (онлайн / наложка) | выбор способа радиокнопками + одна кнопка; поля, маска, honeypot, form_ms, consent 1.2, запросы — без изменений |
+| Пиксель | события на главной | те же события и правила; модалка заказа есть на всех страницах с кнопкой «Замовити» (InitiateCheckout там же) |
+| CSP | `connect-src` без `'self'` | + `'self'` (Lighthouse не мог прочитать robots.txt → SEO 92); остальное без изменений, без `unsafe-*` |
+| schema.org | нет | Organization, WebSite, Product (990 UAH), BreadcrumbList, Article, FAQPage |
+| Горизонтальный скролл 320/375 | был | нет |
+| Ассеты | `assets/style.css`, `tools/stamp-assets.py` | `assets/site.css` из `src/css/*`, страницы из `src/` — `tools/build.py` (CI: `--check`) |
+| 3D | — | `assets/js/jar3d.js` (three@0.160.0, tree-shaken), грузится после первого взаимодействия и только если банка видна; статичные постеры — до этого, при reduced motion и на слабых устройствах |
+| Интро-шторка | — | только на широких экранах с мышью (на телефонах — нет, ради LCP) |
+
+Известная проблема (была и до редизайна): после согласия на cookie fbevents пытается слать события в Meta Conversions API Gateway
+(`mpc-prod-28-….us-central1.run.app`, `kw-….ecs.us-west-1.on.aws`), CSP это блокирует → ошибки в консоли. См. INFRA.md (BOTLABRO) → Known issues.
