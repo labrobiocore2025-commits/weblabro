@@ -76,3 +76,13 @@ img,svg{max-width:100%}
 .lg-4.prose>h2:first-child{margin-top:0}
 .ar-11 a{text-decoration:underline;text-underline-offset:3px}
 .footer-cc{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
+
+/* phones: legal tables as stacked cards (no sideways scrolling, nothing cut off); the column name is shown per cell */
+@media (max-width:599.98px){
+  .prose .table-wrap{overflow:visible}
+  .prose .table-wrap table{min-width:0}
+  .prose .table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .prose .table-wrap tr{display:block;padding:12px 0;border-bottom:1px solid rgba(238,241,234,.1)}
+  .prose .table-wrap td{display:block;padding:4px 0;border:0}
+  .prose .table-wrap td::before{content:attr(data-label);display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7E8B83;margin-bottom:2px}
+}

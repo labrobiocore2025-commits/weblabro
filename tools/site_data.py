@@ -248,7 +248,7 @@ def context(meta, base):
     url = f"{SITE}/" + ("" if path == "index.html" else path)
     rel = lambda p: f"{base}{p}"  # noqa: E731
     ctx.update({
-        "base": base, "api": API, "csp": CSP, "price": PRICE, "phone": PHONE, "phone_tel": PHONE_TEL, "email": EMAIL,
+        "base": base, "api": API, "csp": CSP, "price": PRICE, "phone": PHONE, "phone_tel": PHONE_TEL, "email": EMAIL, "email_html": EMAIL.replace("@", "<wbr>@"),
         "manager": MANAGER, "channel": CHANNEL, "instagram": INSTAGRAM, "whatsapp": WHATSAPP, "viber": VIBER,
         "disclaimer": DISCLAIMER, "arrow": ARROW, "url": url,
         "canonical": url if meta.get("robots", "index") == "index" else "",

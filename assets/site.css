@@ -77,6 +77,16 @@ img,svg{max-width:100%}
 .ar-11 a{text-decoration:underline;text-underline-offset:3px}
 .footer-cc{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
 
+/* phones: legal tables as stacked cards (no sideways scrolling, nothing cut off); the column name is shown per cell */
+@media (max-width:599.98px){
+  .prose .table-wrap{overflow:visible}
+  .prose .table-wrap table{min-width:0}
+  .prose .table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .prose .table-wrap tr{display:block;padding:12px 0;border-bottom:1px solid rgba(238,241,234,.1)}
+  .prose .table-wrap td{display:block;padding:4px 0;border:0}
+  .prose .table-wrap td::before{content:attr(data-label);display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7E8B83;margin-bottom:2px}
+}
+
 .g-1{position:relative;min-height:100vh;font-family:Geologica,system-ui,sans-serif;color:#EEF1EA;overflow-x:clip}
 .g-2{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(55% 50% at 75% 30%,rgba(46,196,120,.10),transparent 70%),radial-gradient(45% 45% at 5% 95%,rgba(226,183,106,.05),transparent 70%),#060A08}
 .g-3{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(90deg,rgba(238,241,234,.03) 1px,transparent 1px);background-size:calc(100% / 6) 100%}
@@ -797,4 +807,25 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
   .pr-5,.ar-3{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
   .ar-15{min-height:44px}
   .skip-link{min-height:44px;display:inline-flex;align-items:center}
+}
+
+/* phones / tablets */
+@media (max-width:899.98px){
+  .pr-4,.ar-2{align-items:center}                  /* crumbs: the 44px tap-target links and the "/" separators on one line */
+  .ft-10{word-break:normal;overflow-wrap:break-word}   /* e-mail breaks only before "@" (<wbr>), not mid-word */
+  .ft-22{font-size:10px}
+  .s11-8{font-size:11px}
+}
+@media (max-width:599.98px){
+  .ct-3{align-self:stretch}                        /* phone card as wide as the messenger cards below it */
+  .ab-6{min-height:0}.ab-7{margin-top:22px}         /* about cards: no empty band between the number and the title */
+}
+/* single-column article: the table of contents is a normal block (sticky, it covered the text while scrolling) */
+@media (max-width:639.98px){
+  .ar-13{position:static;max-width:none}
+}
+/* phones: the jar box (.s01-4, overflow hidden) is narrower than the square poster / 3D canvas, so capsules flying
+   past its sides were cut into thin slivers 20px from the screen edge — fade the sides of the box instead */
+@media (max-width:899.98px){
+  .s01-4{-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
 }
