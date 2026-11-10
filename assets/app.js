@@ -71,7 +71,7 @@ const moSubmit = $('moSubmit');
 const panel = moModal.querySelector('[data-mo-panel]');
 const backdrop = moModal.querySelector('[data-mo-backdrop]');
 const payRadios = [...moModal.querySelectorAll('input[name="moPay"]')];
-const fields = { name: $('moName'), phone: $('moPhone'), city: $('moCity'), comment: $('moComment') };
+const fields = { last: $('moLastName'), first: $('moFirstName'), middle: $('moMiddleName'), phone: $('moPhone'), city: $('moCity'), comment: $('moComment') };
 const consent = $('moConsent');
 let moQty = 1;
 let payType = 'online';
@@ -122,7 +122,7 @@ function moOpen(trigger, qty) {
       { duration: 650, delay: 140 + i * 45, easing: EASE, fill: 'backwards' }));
   }
   // desktop: straight into the first field; phones: focus the dialog (no keyboard popping over the form)
-  setTimeout(() => (isMobile() ? panel : fields.name).focus({ preventScroll: true }), isMobile() ? 50 : 320);
+  setTimeout(() => (isMobile() ? panel : fields.last).focus({ preventScroll: true }), isMobile() ? 50 : 320);
 }
 function moClose() {
   if (!moModal.classList.contains('open') || closing) return;
@@ -213,25 +213,70 @@ function localDigits(v) {
 }
 function formatPhone(local) {
   const g = [local.slice(0, 2), local.slice(2, 5), local.slice(5, 7), local.slice(7, 9), local.slice(9)].filter(Boolean);
-  return '+380' + (g.length ? ' ' + g.join(' ') : '');
+  return '+380 ' + g.join(' ');                        // never shorter than the "+380 " prefix
 }
-fields.phone.addEventListener('input', () => {
-  fields.phone.value = formatPhone(localDigits(fields.phone.value));
-  if (fields.phone.getAttribute('aria-invalid') === 'true') validate('phone');
+const PREFIX = 5;                                       // "+380 "
+const digitsOf = s => s.replace(/\D/g, '');
+function caretAfter(formatted, n) {                    // index in the formatted value after n local digits
+  let i = PREFIX;
+  while (n > 0 && i < formatted.length) { if (/\d/.test(formatted[i])) n--; i++; }
+  return i;
+}
+// The edit is applied to the local digits wherever the caret was: typing with the caret inside "+380" (a tap on the
+// start of the field, keys pressed before the caret moved on focus) used to mix the prefix digits into the number.
+let phonePrev = '';
+fields.phone.addEventListener('input', e => {
+  const el = fields.phone, v = el.value, prev = phonePrev;
+  let local, typedEnd;
+  if (!prev || v.startsWith('+380')) {
+    local = localDigits(v);
+    typedEnd = localDigits(v.slice(0, el.selectionStart ?? v.length)).length;
+    // Backspace / Delete that only removed a space: remove the digit next to it, as people expect
+    if (prev && e.inputType && e.inputType.startsWith('delete') && local === localDigits(prev)) {
+      const k = e.inputType === 'deleteContentBackward' ? typedEnd - 1 : typedEnd;
+      if (k >= 0 && k < local.length) { local = local.slice(0, k) + local.slice(k + 1); typedEnd = k; }
+    }
+  } else {
+    let a = 0; while (a < prev.length && a < v.length && prev[a] === v[a]) a++;
+    let b = 0; while (b < prev.length - a && b < v.length - a && prev[prev.length - 1 - b] === v[v.length - 1 - b]) b++;
+    const typed = digitsOf(v.slice(a, v.length - b));
+    const head = digitsOf(prev.slice(PREFIX, Math.max(PREFIX, a)));
+    const tail = digitsOf(prev.slice(Math.max(PREFIX, prev.length - b)));
+    local = head ? (head + typed + tail).slice(0, 12) : localDigits(typed + tail);
+    typedEnd = head ? head.length + typed.length : Math.max(0, local.length - tail.length);
+  }
+  el.value = phonePrev = formatPhone(local);
+  if (document.activeElement === el) { const c = caretAfter(el.value, typedEnd); el.setSelectionRange(c, c); }
+  if (el.getAttribute('aria-invalid') === 'true') validate('phone');
 });
+const caretOutOfPrefix = () => {
+  const el = fields.phone;
+  if (document.activeElement === el && el.selectionStart === el.selectionEnd && el.selectionStart < PREFIX) {
+    const n = el.value.length; el.setSelectionRange(n, n);
+  }
+};
 fields.phone.addEventListener('focus', () => {
-  if (!fields.phone.value) fields.phone.value = '+380 ';
-  const n = fields.phone.value.length;
-  requestAnimationFrame(() => fields.phone.setSelectionRange(n, n));
+  if (!fields.phone.value) fields.phone.value = phonePrev = '+380 ';
+  caretOutOfPrefix();
+  requestAnimationFrame(caretOutOfPrefix);              // iOS places the caret after the focus event
 });
+['click', 'keyup'].forEach(t => fields.phone.addEventListener(t, caretOutOfPrefix));
 fields.phone.addEventListener('keydown', e => {
   // never delete the +380 prefix
   if ((e.key === 'Backspace' && fields.phone.selectionStart <= 5 && fields.phone.selectionEnd <= 5)) e.preventDefault();
 });
 
 // ── validation with messages under each field ──
+// recipient name for Nova Poshta — the same rules as the server: letters (UA/RU/Latin), an apostrophe or a hyphen
+// between letters, 2–50 characters; every apostrophe variant becomes ' and the first letter a capital
+const NAME_RE = /^[A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+(?:['-][A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+)*$/;
+const cleanName = v => { const s = v.replace(/[’ʼ`´‘ʹ]/g, "'").trim(); return s ? s[0].toUpperCase() + s.slice(1) : s; };
+const nameOk = v => { const s = cleanName(v); return s.length >= 2 && s.length <= 50 && NAME_RE.test(s); };
+const NAME_HINT = 'лише літери, апостроф або дефіс, від 2 символів';
 const RULES = {
-  name: v => v.trim().length >= 3 || "Вкажіть ім'я та прізвище (щонайменше 3 символи)",
+  last: v => nameOk(v) || `Вкажіть прізвище — ${NAME_HINT}`,
+  first: v => nameOk(v) || `Вкажіть ім'я — ${NAME_HINT}`,
+  middle: v => !v.trim() || nameOk(v) || `По батькові — ${NAME_HINT} (або залиште порожнім)`,
   phone: v => localDigits(v).length === 9 || 'Вкажіть номер повністю: +380 XX XXX XX XX',
   city: v => v.trim().length >= 5 || 'Вкажіть місто та номер відділення Нової Пошти',
 };
@@ -246,20 +291,25 @@ function validate(key) {
   $(el.id + 'Err').textContent = res;
   return false;
 }
-['name', 'phone', 'city'].forEach(k => fields[k].addEventListener('blur', () => { if (fields[k].value) validate(k); }));
-['name', 'city'].forEach(k => fields[k].addEventListener('input', () => {
+['last', 'first', 'middle'].forEach(k => fields[k].addEventListener('blur', () => {
+  const s = cleanName(fields[k].value); if (s !== fields[k].value) fields[k].value = s;
+}));
+['last', 'first', 'middle', 'phone', 'city'].forEach(k => fields[k].addEventListener('blur', () => { if (fields[k].value) validate(k); }));
+['last', 'first', 'middle', 'city'].forEach(k => fields[k].addEventListener('input', () => {
   if (fields[k].getAttribute('aria-invalid') === 'true') validate(k);
 }));
 consent.addEventListener('change', () => { if (consent.checked) consent.closest('.mo-consent').classList.remove('err'); });
 
 function readForm() {
-  const bad = ['name', 'phone', 'city'].filter(k => !validate(k));
+  const bad = ['last', 'first', 'middle', 'phone', 'city'].filter(k => !validate(k));
   const consentBox = consent.closest('.mo-consent');
   consentBox.classList.toggle('err', !consent.checked);
   if (bad.length) { fields[bad[0]].focus(); shake(); return null; }
   if (!consent.checked) { consent.focus(); shake(); return null; }
   return {
-    name: fields.name.value.trim(),
+    last_name: cleanName(fields.last.value),
+    first_name: cleanName(fields.first.value),
+    middle_name: cleanName(fields.middle.value),
     phone: '+380' + localDigits(fields.phone.value),
     city: fields.city.value.trim(),
     comment: fields.comment.value.trim(),
@@ -281,7 +331,7 @@ const ERRORS = {
   too_fast: 'Будь ласка, заповніть форму ще раз.',
 };
 function orderText(f, payLabel) {
-  return `Нейро-Баланс × ${f.qty} = ${fmtUah(priceKop * f.qty)} ₴\nІм'я: ${f.name}\nТел: ${f.phone}\nДоставка: ${f.city}\nОплата: ${payLabel}` +
+  return `Нейро-Баланс × ${f.qty} = ${fmtUah(priceKop * f.qty)} ₴\nОтримувач: ${[f.last_name, f.first_name, f.middle_name].filter(Boolean).join(' ')}\nТел: ${f.phone}\nДоставка: ${f.city}\nОплата: ${payLabel}` +
     (f.comment ? `\nКоментар: ${f.comment}` : '');
 }
 function showFailure(f, title, payLabel, code) {
