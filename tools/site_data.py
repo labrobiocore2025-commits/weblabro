@@ -46,26 +46,38 @@ FAQ = [
 ]
 
 # blog: (slug, title, category, minutes, image, alt, credit html)
+# publication dates (ISO) of the blog articles; all texts are by the editorial team
+POST_DATES = {"ashwagandha": "2026-11-10", "l-theanine": "2026-11-10", "rhodiola-rosea": "2026-11-10",
+              "evening-ritual": "2026-11-10", "focus-techniques": "2026-11-10", "overload-signals": "2026-11-10"}
+AUTHOR = "Редакція LaBro Biocore"
+MONTHS = ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"]
+
+
+def date_text(iso: str) -> str:
+    y, m, d = (int(x) for x in iso.split("-"))
+    return f"{d} {MONTHS[m - 1]} {y}"
+
+
 POSTS = [
-    ("ashwagandha", "Ашваганда: що відомо про адаптоген з аюрведи", "Інгредієнти", "6 хв", "ashwagandha",
+    ("ashwagandha", "Ашваганда: що відомо про адаптоген з аюрведи", "Інгредієнти", "10 хв", "ashwagandha",
      "Сушені корені ашваганди",
      'Фото: Piyush Kothari / <a href="https://commons.wikimedia.org/wiki/File:Ashwagandha_Roots.jpg" '
      'rel="noopener" target="_blank">Wikimedia Commons</a>, ліцензія '
      '<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.uk" rel="noopener" target="_blank">CC BY-SA 4.0</a>'),
-    ("l-theanine", "L-теанін і зелений чай: звідки береться спокійна зосередженість", "Інгредієнти", "5 хв",
+    ("l-theanine", "L-теанін і зелений чай: звідки береться спокійна зосередженість", "Інгредієнти", "8 хв",
      "green-tea", "Чашка зеленого чаю з листям",
      'Фото: Denise Cusack / <a href="https://www.pexels.com/photo/18946746/" rel="noopener" target="_blank">Pexels</a>'),
-    ("rhodiola-rosea", "Родіола рожева: рослина арктичних гір у сучасних добавках", "Інгредієнти", "5 хв", "rhodiola",
+    ("rhodiola-rosea", "Родіола рожева: рослина північних гір у сучасних добавках", "Інгредієнти", "9 хв", "rhodiola",
      "Суцвіття родіоли рожевої",
      'Фото: WildBoar / <a href="https://commons.wikimedia.org/wiki/File:Rhodiola_rosea_flowers.JPG" rel="noopener" '
      'target="_blank">Wikimedia Commons</a> (public domain)'),
-    ("evening-ritual", "Вечірній ритуал: звички, які допомагають підготуватися до сну", "Сон", "7 хв", "sleep",
+    ("evening-ritual", "Вечірній ритуал для сну: як підготувати себе до ночі", "Сон", "9 хв", "sleep",
      "Жінка спокійно спить у затишній спальні",
      'Фото: Ivan Oboleninov / <a href="https://www.pexels.com/photo/935777/" rel="noopener" target="_blank">Pexels</a>'),
-    ("overload-signals", "Як помітити перевантаження: сигнали, на які варто зважати", "Стрес", "6 хв", "overload",
+    ("overload-signals", "Ознаки перевтоми: як помітити перевантаження вчасно", "Стрес", "8 хв", "overload",
      "Втомлена жінка за ноутбуком",
      'Фото: Anna Shvets / <a href="https://www.pexels.com/photo/4226215/" rel="noopener" target="_blank">Pexels</a>'),
-    ("focus-techniques", "Фокус протягом робочого дня: прості техніки", "Фокус", "4 хв", "focus",
+    ("focus-techniques", "Як покращити концентрацію: техніки, що працюють у звичайному дні", "Фокус", "8 хв", "focus",
      "Зосереджена робота з нотатками",
      'Фото: Ivan S / <a href="https://www.pexels.com/photo/4240492/" rel="noopener" target="_blank">Pexels</a>'),
 ]
@@ -194,11 +206,17 @@ def head_ld(meta):
         graph.append({"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": i, "name": n, "item": f"{SITE}/{u}"} for i, (n, u) in enumerate(crumbs, 1)]})
     if kind == "article":
-        graph.append({"@type": "Article", "headline": meta["h1"], "image": [f"{SITE}/assets/img/blog/{meta['img']}-wide-1800.jpg"],
-                      "inLanguage": "uk", "publisher": {"@id": f"{SITE}/#org"}, "mainEntityOfPage": f"{SITE}/{meta['out']}"})
-    if kind == "faq":
+        post = POSTS[meta["post"]]
+        date = POST_DATES[post[0]]
+        graph.append({"@type": "Article", "headline": meta["h1"], "description": meta["description"],
+                      "image": [f"{SITE}/assets/img/blog/{post[4]}-wide-1800.jpg"], "inLanguage": "uk",
+                      "author": {"@type": "Organization", "name": AUTHOR, "url": f"{SITE}/about.html"},
+                      "datePublished": date, "dateModified": meta.get("modified", date),
+                      "publisher": {"@id": f"{SITE}/#org"}, "mainEntityOfPage": f"{SITE}/{meta['out']}"})
+    faq = FAQ if kind == "faq" else meta.get("faq")
+    if faq:
         graph.append({"@type": "FAQPage", "mainEntity": [
-            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ]})
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]})
     return ld({"@context": "https://schema.org", "@graph": graph})
 
 
@@ -282,6 +300,7 @@ def context(meta, base):
     if meta.get("post") is not None:
         p = POSTS[meta["post"]]
         ctx["post"] = {"title": p[1], "cat": p[2], "mins": p[3], "credit": p[6],
+                       "date": POST_DATES[p[0]], "date_text": date_text(POST_DATES[p[0]]),
                        "figure": picture(base, p[4] + "-wide", p[5], "ar-10", ["800", "1200", "1800"], "(min-width:1200px) 1100px, 94vw",
                                          lazy=False, w=1800, h=900),
                        "related": "\n".join(
@@ -291,8 +310,8 @@ def context(meta, base):
 
 
 def extra_files(base):
-    """sitemap.xml: indexable pages only (placeholder-only articles and the offer draft are noindex)."""
-    pages = ["", "product.html", "about.html", "blog.html", "blog/ashwagandha.html", "delivery.html", "contacts.html",
-             "faq.html", "privacy.html"]
+    """sitemap.xml: indexable pages only (the offer stays noindex until the seller's details are in)."""
+    pages = ["", "product.html", "about.html", "blog.html", *(f"blog/{p[0]}.html" for p in POSTS), "delivery.html",
+             "contacts.html", "faq.html", "privacy.html"]
     urls = "\n".join(f"  <url><loc>{SITE}/{p}</loc></url>" for p in pages)
     return {"sitemap.xml": f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n'}
