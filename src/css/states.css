@@ -191,3 +191,6 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
   .th-1{min-height:0;align-items:start}
   .th-2{order:1;height:30svh;min-height:220px}
 }
+/* the cookie banner (z 70) covered the lower fields of the open order form on phones: it steps aside while the form is
+   open and comes back when it closes (no choice = no advertising consent, the order itself does not depend on it) */
+html:has(#checkoutModal.open) .cc{display:none}
