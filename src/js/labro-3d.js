@@ -3,7 +3,8 @@
 // three is bundled from npm (three@0.160.0, tree-shaken by esbuild) — no CDN, CSP script-src 'self'.
 import * as THREE from 'three';
 
-const LW = 2560, LH = 896, CX = LW / 2, FW = 840; // FW = visible front width in px
+const LW = 2560, LH = 896, CX = LW / 2, FW = 840; // label layout units (FW = visible front width); drawn at LW·K px
+let K = 1;                                          // bake scale: K = 1.6 → a 4096 px wide label
 const fx = v => CX - FW / 2 + v * FW, fy = v => v * LH;
 const ls = (g, v) => { try { g.letterSpacing = v; } catch (e) {} };
 
@@ -11,7 +12,8 @@ function loadImg(src) {
   return new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 }
 function tint(img, w, h, fill) {
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const c = document.createElement('canvas'); c.width = Math.round(w * K); c.height = Math.round(h * K);   // logo at label resolution
+  w = c.width; h = c.height;
   const g = c.getContext('2d'); g.drawImage(img, 0, 0, w, h);
   g.globalCompositeOperation = 'source-in'; g.fillStyle = fill; g.fillRect(0, 0, w, h);
   return c;
@@ -39,9 +41,12 @@ function barcode(g, x, y, w, h, col) {
   while (cx < x + w) { s = (s * 9301 + 49297) % 233280; const bw = 2 + (s % 7); g.fillRect(cx, y, bw, h); cx += bw + 2 + (s % 4); }
 }
 
+function scaledCanvas() {
+  const c = document.createElement('canvas'); c.width = Math.round(LW * K); c.height = Math.round(LH * K);
+  const g = c.getContext('2d'); g.scale(K, K); return [c, g];
+}
 function labelCurrent(mark) {
-  const c = document.createElement('canvas'); c.width = LW; c.height = LH;
-  const g = c.getContext('2d');
+  const [c, g] = scaledCanvas();
   const grey = g.createLinearGradient(fx(0), 0, fx(0.9), LH);
   grey.addColorStop(0, '#F1F2F0'); grey.addColorStop(0.55, '#C9CDCA'); grey.addColorStop(1, '#A7ACA9');
   g.fillStyle = grey; g.fillRect(0, 0, LW, LH);
@@ -109,12 +114,10 @@ function brain(g, ox, oy, w, h, glow) {
   g.restore();
 }
 function labelNew(mark) {
-  const c = document.createElement('canvas'); c.width = LW; c.height = LH;
-  const g = c.getContext('2d');
+  const [c, g] = scaledCanvas();
   const bg = g.createLinearGradient(0, 0, 0, LH); bg.addColorStop(0, '#121413'); bg.addColorStop(1, '#070808');
   g.fillStyle = bg; g.fillRect(0, 0, LW, LH);
-  const e = document.createElement('canvas'); e.width = LW; e.height = LH;
-  const eg = e.getContext('2d'); eg.fillStyle = '#000'; eg.fillRect(0, 0, LW, LH);
+  const [e, eg] = scaledCanvas(); eg.fillStyle = '#000'; eg.fillRect(0, 0, LW, LH);
   brain(g, fx(0.6), fy(0.16), 480, 420, 'rgba(214,180,100,.8)');
   brain(eg, fx(0.6), fy(0.16), 480, 420, 'rgba(214,180,100,.8)');
   const gold = g.createLinearGradient(fx(0.05), 0, fx(0.5), 0); gold.addColorStop(0, '#E9CF8E'); gold.addColorStop(1, '#B8914A');
@@ -133,6 +136,27 @@ function labelNew(mark) {
   return { map: c, emissive: e };
 }
 
+// Build-time only: the label artwork as canvases (tools/bake saves them as WebP into assets/img/jar/).
+// At runtime the scene loads those images instead of drawing ~3 MB of canvas and waiting for the Oswald font.
+export function drawLabels(mark, k = 1) {
+  K = k; seed = 20261108;
+  const nl = labelNew(mark);
+  return { current: labelCurrent(mark), newMap: nl.map, newEmissive: nl.emissive };
+}
+
+// decoded off the main thread and flipped like a CanvasTexture would be (three's default flipY = true). Safari < 17
+// rejects createImageBitmap options: then a decoded <img> with flipY on upload ({ img, flip }) — same picture.
+async function loadBitmap(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('label ' + r.status);
+  const blob = await r.blob();
+  try { return { img: await createImageBitmap(blob, { imageOrientation: 'flipY' }), flip: false }; } catch (e) {
+    const img = new Image(); img.src = URL.createObjectURL(blob);
+    await img.decode(); URL.revokeObjectURL(img.src);
+    return { img, flip: true };
+  }
+}
+
 function radialTex(stops, size = 256, ring) {
   const c = document.createElement('canvas'); c.width = c.height = size;
   const g = c.getContext('2d'); const r = size / 2;
@@ -143,48 +167,36 @@ function radialTex(stops, size = 256, ring) {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 const lerpC = (a, b, t) => a.clone().lerp(b, t);
-const ease = x => 1 - Math.pow(1 - x, 3);
-const back = x => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const smooth = x => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 
-const PR_STEPS = [0.75, 1, 1.25, 1.5, 1.75, 2];
-// seeded: the static poster (rendered from this scene) and the live jar start from the same frame
+// seeded: the static posters (tools/bake renders them from this scene) and the live jar are the same frame
 let seed = 20261108;
 const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-export function detectTier() {
-  const coarse = matchMedia('(pointer: coarse)').matches;
-  const cores = navigator.hardwareConcurrency || 4, mem = navigator.deviceMemory || 4;
-  if (cores <= 4 || mem <= 2) return 0;
-  return coarse ? 1 : 2;
-}
-function downscale(c, k) {
-  if (k >= 1) return c;
-  const d = document.createElement('canvas'); d.width = Math.round(c.width * k); d.height = Math.round(c.height * k);
-  d.getContext('2d').drawImage(c, 0, 0, d.width, d.height); return d;
-}
 
-// Canvas is NOT attached here — the page moves scene.canvas into whichever [data-jar] anchor is on screen,
-// so the jar scrolls natively with its section and only that box is rendered.
-export async function createScene(markUrl) {
+// set-up is split into tasks (≤ ~50 ms each on a mid phone) so a tap during the jar's start is answered at once
+const pause = () => new Promise(r => setTimeout(r, 0));
+
+// One look on every device: the same geometry, 14 capsules, dust and materials everywhere, so the live jar is its
+// pre-rendered poster set in motion. Devices differ only in what the frame-time governor below has to give up.
+// The canvas is NOT attached here — the page moves scene.canvas into whichever [data-jar] anchor is on screen.
+// labels: name => URL of a baked label image. opts.bake: fixed size, no governor, readable drawing buffer (posters).
+export async function createScene(labels, opts = {}) {
   seed = 20261108;
-  try {
-    await Promise.race([Promise.all([
-      document.fonts.load('600 100px Oswald'), document.fonts.load('italic 400 40px Oswald'),
-      document.fonts.load('600 100px Geologica'), document.fonts.load('italic 500 50px "Cormorant Garamond"'),
-    ]), new Promise(r => setTimeout(r, 1500))]);
-  } catch (e) {}
-  const mark = await loadImg(markUrl);
-  const tier = detectTier();
-  const cap = Math.min(window.devicePixelRatio || 1, [1, 1.5, 2][tier]);
-  let prIdx = 0; PR_STEPS.forEach((p, i) => { if (p <= cap + 1e-3) prIdx = i; });
-  const maxIdx = prIdx;
-  const renderer = new THREE.WebGLRenderer({ antialias: tier === 2, alpha: true, powerPreference: tier === 2 ? 'high-performance' : 'default', preserveDrawingBuffer: false, stencil: false });
-  renderer.setPixelRatio(PR_STEPS[prIdx]);
+  const bake = !!opts.bake;
+  let dpr = opts.dpr || window.devicePixelRatio || 1;     // re-read on every resize: another monitor, page zoom
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: bake, stencil: false });
+  // texel density: the front of the label is ~¼ of its width; 4096 keeps ≥ 2 texels per device pixel on retina screens
+  const lw = (bake || dpr >= 1.5) && renderer.capabilities.maxTextureSize >= 4096 ? 4096 : 2560;
+  const labelAImg = loadBitmap(labels(`label-current-${lw}.webp`));
+  let labelBReq = null;                                 // the black pack label is fetched only when it is first shown
+  renderer.setPixelRatio(1);                            // setSize below works in device pixels: buffer = screen, 1:1
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
   const cv = renderer.domElement;
   cv.setAttribute('aria-hidden', 'true');
-  cv.className = 'jar-canvas';  // sized by CSS (no inline style: strict CSP)
+  cv.className = 'jar-canvas';
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 60);
@@ -196,15 +208,17 @@ export async function createScene(markUrl) {
   const panel = (w, h, hex, k, x, y, z) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(k), side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
   panel(3, 7, '#ffffff', 6, -5, 1, 3); panel(2, 6, '#fff6e6', 3, 5, 0.5, 2); panel(8, 2.5, '#ffffff', 2.5, 0, 5.5, 0);
   panel(5, 5, '#5CE08C', 1.8, 2, -1, -5.5); panel(4, 4, '#E2B76A', 1.2, -4, -2, -4);
+  await pause();
   const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(env, 0.04).texture; pm.dispose();
+  await pause();
   scene.add(new THREE.AmbientLight(0xffffff, 0.15));
   const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-3, 4, 5); scene.add(key);
   const rimG = new THREE.PointLight(0x5CE08C, 22, 10, 2); scene.add(rimG);
   const rimW = new THREE.PointLight(0xE2B76A, 10, 10, 2); scene.add(rimW);
 
   const V = (x, y) => new THREE.Vector2(x, y);
-  const bodyGeo = new THREE.LatheGeometry([V(0.001, -1.12), V(0.5, -1.12), V(0.6, -1.1), V(0.645, -1.05), V(0.655, -0.97), V(0.655, 0.6), V(0.645, 0.7), V(0.61, 0.8), V(0.56, 0.87), V(0.5, 0.92), V(0.47, 0.95), V(0.47, 1.02)], tier ? 128 : 80);
-  const capGeo = new THREE.LatheGeometry([V(0.001, 0.98), V(0.5, 0.98), V(0.535, 1.0), V(0.535, 1.04), V(0.535, 1.5), V(0.53, 1.535), V(0.505, 1.56), V(0.45, 1.57), V(0.001, 1.57)], tier ? 240 : 144);
+  const bodyGeo = new THREE.LatheGeometry([V(0.001, -1.12), V(0.5, -1.12), V(0.6, -1.1), V(0.645, -1.05), V(0.655, -0.97), V(0.655, 0.6), V(0.645, 0.7), V(0.61, 0.8), V(0.56, 0.87), V(0.5, 0.92), V(0.47, 0.95), V(0.47, 1.02)], 128);
+  const capGeo = new THREE.LatheGeometry([V(0.001, 0.98), V(0.5, 0.98), V(0.535, 1.0), V(0.535, 1.04), V(0.535, 1.5), V(0.53, 1.535), V(0.505, 1.56), V(0.45, 1.57), V(0.001, 1.57)], 240);
   const cp = capGeo.attributes.position;
   for (let i = 0; i < cp.count; i++) {
     const px = cp.getX(i), pz = cp.getZ(i), py = cp.getY(i);
@@ -212,16 +226,24 @@ export async function createScene(markUrl) {
   }
   capGeo.computeVertexNormals();
   const W0 = { body: new THREE.Color('#F4F4F0'), cap: new THREE.Color('#EEEEEA') }, B0 = { body: new THREE.Color('#0F1110'), cap: new THREE.Color('#121413') };
-  const bodyMat = new THREE.MeshPhysicalMaterial({ color: W0.body, roughness: 0.3, clearcoat: tier ? 1 : 0, clearcoatRoughness: 0.18, side: THREE.DoubleSide });
-  const capMat = new THREE.MeshPhysicalMaterial({ color: W0.cap, roughness: 0.48, clearcoat: tier ? 0.3 : 0, side: THREE.DoubleSide });
-  const aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-  const tex = c => { const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso; return t; };
-  const k = [0.5, 0.75, 1][tier];
-  const nl = labelNew(mark);
-  const labelGeo = r => new THREE.CylinderGeometry(r, r, 1.46, tier ? 160 : 96, 1, true, -Math.PI, Math.PI * 2);
-  const labelAMat = new THREE.MeshPhysicalMaterial({ map: tex(downscale(labelCurrent(mark), k)), roughness: 0.4, clearcoat: tier ? 0.7 : 0, clearcoatRoughness: 0.22 });
+  const bodyMat = new THREE.MeshPhysicalMaterial({ color: W0.body, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.18, side: THREE.DoubleSide });
+  const capMat = new THREE.MeshPhysicalMaterial({ color: W0.cap, roughness: 0.48, clearcoat: 0.3, side: THREE.DoubleSide });
+  const aniso = renderer.capabilities.getMaxAnisotropy();   // the label curves away from the camera: full anisotropy
+  const tex = ({ img, flip }) => { const t = new THREE.Texture(img); t.flipY = flip; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso; t.needsUpdate = true; return t; };
+  const blank = () => { const t = new THREE.Texture(); t.colorSpace = THREE.SRGBColorSpace; return t; };
+  const labelGeo = r => new THREE.CylinderGeometry(r, r, 1.46, 192, 1, true, -Math.PI, Math.PI * 2);
+  const labelAMat = new THREE.MeshPhysicalMaterial({ map: tex(await labelAImg), roughness: 0.4, clearcoat: 0.7, clearcoatRoughness: 0.22 });
+  await pause(); renderer.initTexture(labelAMat.map); await pause();   // the label upload to the GPU in a task of its own
   const labelA = new THREE.Mesh(labelGeo(0.66), labelAMat);
-  const labelBMat = new THREE.MeshPhysicalMaterial({ map: tex(downscale(nl.map, k)), emissiveMap: tex(downscale(nl.emissive, k)), emissive: new THREE.Color('#ffffff'), emissiveIntensity: 0.9, roughness: 0.55, clearcoat: tier ? 0.25 : 0, transparent: true, opacity: 0 });
+  const labelBMat = new THREE.MeshPhysicalMaterial({ map: blank(), emissiveMap: blank(), emissive: new THREE.Color('#ffffff'), emissiveIntensity: 0.9, roughness: 0.55, clearcoat: 0.25, transparent: true, opacity: 0 });
+  let labelBReady = false;
+  const ensureLabelB = () => {
+    if (labelBReq) return labelBReq;
+    labelBReq = Promise.all([loadBitmap(labels(`label-new-${lw}.webp`)), loadBitmap(labels(`label-new-emissive-${lw}.webp`))])
+      .then(([m, e]) => { labelBMat.map.dispose(); labelBMat.emissiveMap.dispose(); labelBMat.map = tex(m); labelBMat.emissiveMap = tex(e); labelBMat.needsUpdate = true; labelBReady = true; })
+      .catch(() => { labelBReady = true; });
+    return labelBReq;
+  };
   const labelB = new THREE.Mesh(labelGeo(0.662), labelBMat);
   labelA.position.y = labelB.position.y = -0.2;
   const inner = new THREE.Group();
@@ -231,122 +253,169 @@ export async function createScene(markUrl) {
 
   const aura = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: radialTex([[0, 'rgba(92,224,140,0.42)'], [0.42, 'rgba(60,199,190,0.12)'], [1, 'rgba(0,0,0,0)']]), transparent: true, depthWrite: false }));
   const auraGold = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: radialTex([[0, 'rgba(226,183,106,0.42)'], [0.45, 'rgba(226,183,106,0.1)'], [1, 'rgba(0,0,0,0)']]), transparent: true, depthWrite: false, opacity: 0 }));
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: radialTex([[0, 'rgba(92,224,140,0.55)'], [0.5, 'rgba(92,224,140,0.12)'], [1, 'rgba(0,0,0,0)']], 256, 'rgba(160,255,200,0.55)'), transparent: true, depthWrite: false }));
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: radialTex([[0, 'rgba(92,224,140,0.55)'], [0.5, 'rgba(92,224,140,0.12)'], [1, 'rgba(0,0,0,0)']], 512, 'rgba(160,255,200,0.55)'), transparent: true, depthWrite: false }));
   scene.add(aura, auraGold, floor);
 
   const r = 0.085, L = 0.21, r2 = r * 1.05, pts = [];
   for (let i = 0; i <= 8; i++) { const a = -Math.PI / 2 + (i / 8) * Math.PI / 2; pts.push(V(Math.max(0.001, r * Math.cos(a)), -L / 2 + r * Math.sin(a))); }
   pts.push(V(r, -0.003), V(r2, -0.001));
   for (let i = 0; i <= 8; i++) { const a = (i / 8) * Math.PI / 2; pts.push(V(Math.max(0.001, r2 * Math.cos(a)), L / 2 + r2 * Math.sin(a))); }
-  const capsGeo = new THREE.LatheGeometry(pts, tier ? 28 : 18);
+  const capsGeo = new THREE.LatheGeometry(pts, 32);
   const pc = capsGeo.attributes.position.count, col = new Float32Array(pc * 3);
   const cA = new THREE.Color('#E9DCBC'), cB = new THREE.Color('#F6F1E4');
   for (let i = 0; i < pc; i++) { const c = capsGeo.attributes.position.getY(i) > -0.002 ? cA : cB; col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b; }
   capsGeo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  const capsMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.28, clearcoat: tier ? 1 : 0, clearcoatRoughness: 0.12, side: THREE.DoubleSide });
-  const caps = [], N = [6, 10, 14][tier];
+  const capsMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.12, side: THREE.DoubleSide });
+  const caps = [], N = 14;
   for (let i = 0; i < N; i++) {
     const m = new THREE.Mesh(capsGeo, capsMat); m.rotation.set(rand() * 6, rand() * 6, rand() * 6); scene.add(m);
-    caps.push({ m, r: 1.25 + rand() * 0.85, a: (i / N) * Math.PI * 2, sp: 0.1 + rand() * 0.12, y: (rand() - 0.5) * 2.2, ph: rand() * 6.28, f: 0.5 + rand() * 0.6, rs: (rand() - 0.5) * 1.4, sx: (rand() - 0.5) * 2.6, sz: (rand() - 0.5) * 1.6 + 0.3, sc: 0.85 + rand() * 0.4 });
+    const a0 = (i / N) * Math.PI * 2;
+    caps.push({ m, r0: m.rotation.clone(), a0, a: a0, r: 1.25 + rand() * 0.85, sp: 0.1 + rand() * 0.12, y: (rand() - 0.5) * 2.2, ph: rand() * 6.28, f: 0.5 + rand() * 0.6, rs: (rand() - 0.5) * 1.4, sx: (rand() - 0.5) * 2.6, sz: (rand() - 0.5) * 1.6 + 0.3, sc: 0.85 + rand() * 0.4 });
   }
-  const DN = [60, 120, 220][tier], dp = new Float32Array(DN * 3);
+  const DN = 220, dp = new Float32Array(DN * 3);
   for (let i = 0; i < DN; i++) { const a = rand() * 6.28, rr = 0.9 + rand() * 2.2; dp[i * 3] = Math.cos(a) * rr; dp[i * 3 + 1] = (rand() - 0.5) * 3.2; dp[i * 3 + 2] = Math.sin(a) * rr - 0.6; }
   const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
-  const dustMat = new THREE.PointsMaterial({ size: 0.04, map: radialTex([[0, 'rgba(255,255,255,1)'], [1, 'rgba(255,255,255,0)']], 64), color: 0xb8f5cc, transparent: true, opacity: 0.6, depthWrite: false });
-  const dust = new THREE.Points(dg, dustMat); dust.visible = tier > 0; scene.add(dust);
+  const DUST = 0.6;
+  const dustMat = new THREE.PointsMaterial({ size: 0.04, map: radialTex([[0, 'rgba(255,255,255,1)'], [1, 'rgba(255,255,255,0)']], 64), color: 0xb8f5cc, transparent: true, opacity: DUST, depthWrite: false });
+  const dust = new THREE.Points(dg, dustMat); scene.add(dust);
 
-  // ── adaptive quality governor: holds ≥55 fps by trading resolution → dust → capsules → clearcoat ──
-  let W = 0, H = 0;
-  const base = { body: bodyMat.clearcoat, caps: capsMat.clearcoat, label: labelAMat.clearcoat };
-  const gov = { acc: 0, n: 0, t: 0, start: -1, good: 0, level: 0, lastUp: -99, locked: false, fps: 0 };
-  const setPr = i => { prIdx = i; renderer.setPixelRatio(PR_STEPS[i]); if (W) renderer.setSize(W, H, false); };
-  const applyLevel = () => {
-    dust.visible = tier > 0 && gov.level < 1;
-    const n = gov.level >= 2 ? Math.ceil(caps.length / 2) : caps.length;
-    caps.forEach((c, i) => { c.m.visible = i < n; });
-    const cc = gov.level >= 3 ? 0 : 1;
-    bodyMat.clearcoat = base.body * cc; capsMat.clearcoat = base.caps * cc; labelAMat.clearcoat = base.label * cc;
+  // ── size: the drawing buffer is the canvas's own device pixels (CSS size × DPR, rounded once) ──
+  // The canvas CSS size is set to exactly buffer / DPR, so the browser never resamples the frame (a fractional ratio
+  // between the two blurs the whole jar). Only the governor may render below 1:1, and never below 1.5 px per CSS px
+  // on phones (1 on desktop).
+  let cssW = 0, cssH = 0, q = 1;
+  const qMin = () => Math.min(1, (coarse ? 1.5 : 1) / dpr);
+  const applySize = () => {
+    const w = Math.max(1, Math.round(cssW * dpr)), h = Math.max(1, Math.round(cssH * dpr));
+    renderer.setSize(Math.max(1, Math.round(w * q)), Math.max(1, Math.round(h * q)), false);
+    cv.style.width = w / dpr + 'px'; cv.style.height = h / dpr + 'px';     // CSSOM, not a style attribute: CSP-safe
+  };
+
+  // ── frame-time governor: normal devices are never touched ──
+  // Only a sustained slowdown (3 windows of ~1 s at ≥ 25 % below the display's own rate, not while scrolling) costs
+  // something: first the dust fades out, then resolution in 10 % steps down to qMin. Every step is a probe — undone if
+  // frames did not get faster (a 30 fps cap in iOS Low Power Mode, a busy main thread). Recovers after ~8 s of headroom.
+  // Materials are never switched (a clearcoat on/off recompiles shaders — a visible hitch).
+  const gov = { acc: 0, n: 0, start: -1, bad: 0, good: 0, dust: 1, locked: false, fps: 0, best: 1 / 60, probe: null, quiet: 0 };
+  const onScroll = () => { gov.quiet = performance.now() + 500; };
+  if (!bake) addEventListener('scroll', onScroll, { passive: true });
+  const down = () => {                                   // one step cheaper; returns the undo, or null at the floor
+    if (gov.dust) { gov.dust = 0; return () => { gov.dust = 1; }; }
+    if (q > qMin() + 1e-3) { const prev = q; q = Math.max(qMin(), Math.round((q - 0.1) * 100) / 100); applySize(); return () => { q = prev; applySize(); }; }
+    return null;
+  };
+  const up = () => {
+    if (q < 1) { q = Math.min(1, Math.round((q + 0.1) * 100) / 100); applySize(); return true; }
+    if (!gov.dust) { gov.dust = 1; return true; }
+    return false;
   };
   const govern = (dt, t) => {
     if (gov.start < 0) gov.start = t;
-    if (dt <= 0 || dt > 0.1 || t - gov.start < 2.5) return;
+    if (dt <= 0 || dt > 0.1 || t - gov.start < 3 || performance.now() < gov.quiet) { gov.acc = 0; gov.n = 0; return; }
     gov.acc += dt; gov.n++;
-    if (gov.n < 24) return;
+    if (gov.n < 60) return;
     const avg = gov.acc / gov.n; gov.acc = 0; gov.n = 0; gov.fps = Math.round(1 / avg);
-    if (t - gov.t < 1) return;
-    if (avg > 1 / 55) {
-      gov.good = 0; gov.t = t;
-      if (t - gov.lastUp < 4) gov.locked = true;
-      if (prIdx > 0 && PR_STEPS[prIdx] > 1) setPr(prIdx - 1);
-      else if (gov.level < 3) { gov.level++; applyLevel(); }
-      else if (prIdx > 0) setPr(prIdx - 1);
-    } else if (avg < 1 / 58 && !gov.locked && (prIdx < maxIdx || gov.level > 0)) {
-      if (++gov.good >= 6) { gov.good = 0; gov.t = t; gov.lastUp = t; if (gov.level > 0) { gov.level--; applyLevel(); } else setPr(prIdx + 1); }
-    } else gov.good = 0;
+    gov.best = Math.min(gov.best, avg);                   // the display's refresh interval (60, 90, 120 Hz …)
+    if (gov.probe) {                                      // did the last step help?
+      const p = gov.probe; gov.probe = null;
+      if (avg > p.avg * 0.92) { p.undo(); gov.locked = true; }
+      return;
+    }
+    if (gov.locked) return;
+    if (avg > gov.best * 1.25) {
+      gov.good = 0;
+      if (++gov.bad >= 3) { gov.bad = 0; const undo = down(); if (undo) gov.probe = { avg, undo }; else gov.locked = true; }
+    } else {
+      gov.bad = 0;
+      if (avg < gov.best * 1.08 && ++gov.good >= 8) { gov.good = 0; up(); }
+    }
   };
 
-  const st = { ry: 0, rz: 0, spill: 0, mix: 0, appear: 0, key: -1, drag: 0, spin: 0, spinT: 0, packT: -1 };
+  const st = { ry: 0, rz: 0, spill: 0, mix: 0, key: -1, drag: 0, spin: 0, spinT: 0, packT: 0, t0: 0, dustRot: 0 };
   let lastSig = '';
+  await pause();
+  if (renderer.compileAsync) { try { await renderer.compileAsync(scene, camera); } catch (e) { /* first render compiles */ } }
   return {
-    canvas: cv, tier,
-    setSize(w, h) {
-      if (!w || !h || (w === W && h === H)) return;
-      W = w; H = h; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); lastSig = '';
+    canvas: cv,
+    setSize(w, h) {                                       // CSS pixels of the anchor
+      const d = opts.dpr || window.devicePixelRatio || 1;
+      if (!w || !h || (w === cssW && h === cssH && d === dpr)) return;
+      cssW = w; cssH = h; dpr = d; applySize(); camera.aspect = w / h; camera.updateProjectionMatrix(); lastSig = '';
     },
-    stats() { return { fps: gov.fps, pr: PR_STEPS[prIdx], level: gov.level, tier }; },
+    stats() { return { fps: gov.fps, dpr, q, buffer: [cv.width, cv.height], label: lw, dust: gov.dust, locked: gov.locked }; },
+    // the black pack label (posters of the new pack wait for it)
+    loadNewPack: () => ensureLabelB(),
     // I: { key, sf, ry, rz, spill, pack(0|1), reduced, nx, ny, drag, dragging }
+    // Returns false while the frame cannot match the anchor's poster yet (black pack label still loading).
     tick(dtRaw, t, I) {
-      if (!W || !H) return;
-      govern(dtRaw, t);
-      const dt = Math.min(dtRaw, 0.05), R = I.reduced;
-      if (I.key !== st.key) { st.key = I.key; st.appear = R ? 1 : 0; st.ry = I.ry; st.rz = I.rz; st.spill = I.spill; gov.acc = 0; gov.n = 0; gov.t = t; }
-      if (st.packT === -1) { st.packT = I.pack; st.mix = I.pack; }
-      if (I.pack !== st.packT) { st.packT = I.pack; if (!R) st.spinT += Math.PI * 2; }
+      if (!cssW || !cssH) return false;
+      const R = I.reduced;
+      if (I.pack) ensureLabelB();
+      if (I.key !== st.key) {
+        // a new anchor: start from exactly its poster's frame — same pose, same capsules, same pack, no entrance
+        if (I.pack && !labelBReady) return false;
+        st.key = I.key; st.t0 = t; st.ry = I.ry; st.rz = I.rz; st.spill = I.spill; st.drag = 0; st.spin = st.spinT = 0;
+        st.packT = st.mix = I.pack ? 1 : 0; st.dustRot = 0; lastSig = '';
+        caps.forEach(c => { c.a = c.a0; c.m.rotation.copy(c.r0); });
+        gov.acc = 0; gov.n = 0;
+      }
+      if (!bake) govern(dtRaw, t);
+      const dt = Math.min(dtRaw, 0.05);
+      // motion fades in over 1.5 s from the still poster pose, so the poster → live hand-over (a cross-fade) is seamless
+      const k = R ? 0 : smooth((t - st.t0) / 1.5), tl = t - st.t0;
+      const pack = I.pack && labelBReady ? 1 : 0;        // stay on the current pack until the black label has loaded
+      if (pack !== st.packT) { st.packT = pack; if (!R) st.spinT += Math.PI * 2; }
       const kk = R ? 1 : 1 - Math.exp(-dt * 3);
-      st.appear = Math.min(1, st.appear + dt / 1.2);
       st.ry += (I.ry - st.ry) * kk; st.rz += (I.rz - st.rz) * kk; st.spill += (I.spill - st.spill) * kk;
       st.spin += (st.spinT - st.spin) * (R ? 1 : 1 - Math.exp(-dt * 2.2));
       const spinP = st.spinT ? 1 - Math.abs(st.spinT - st.spin) / (Math.PI * 2) : 1;
       st.mix += ((R || spinP > 0.45 ? st.packT : st.mix) - st.mix) * (R ? 1 : 1 - Math.exp(-dt * 6));
       if (I.dragging) st.drag += I.drag; else st.drag *= R ? 0 : Math.pow(0.12, dt);
       if (R) {
-        const sig = [W, H, I.sf, st.ry, st.rz, st.spin, st.drag, st.mix, st.spill].map(v => (+v).toFixed(3)).join('|');
-        if (sig === lastSig) return; lastSig = sig;
+        const sig = [cssW, cssH, I.sf, st.ry, st.rz, st.spin, st.drag, st.mix, st.spill].map(v => (+v).toFixed(3)).join('|');
+        if (sig === lastSig) return true; lastSig = sig;
       }
-      const halfW = halfH * camera.aspect;
+      // composition is computed for a square frame (the posters are square, centred, as tall as the anchor):
+      // a wider or narrower canvas only shows more or less of the same picture
+      const half = halfH;
       const s = (I.sf || 0.62) * 2 * halfH / 2.7;
-      const ap = R ? 1 : back(st.appear), apE = R ? 1 : ease(st.appear);
       const free = 1 - st.spill;
-      bottle.position.set(0, R ? 0 : Math.sin(t * 0.9) * 0.05 * free * s, 0);
-      bottle.scale.setScalar(Math.max(0.0001, s * (0.6 + 0.4 * ap)));
-      const idle = R ? 0 : Math.sin(t * 0.45) * 0.32 * free;
-      bottle.rotation.set(0.04 + (R ? 0 : I.ny * 0.1 * free), st.ry + idle + st.spin + st.drag - (1 - apE) * 2.4, st.rz - (R ? 0 : I.nx * 0.06 * free));
+      bottle.position.set(0, Math.sin(tl * 0.9) * 0.05 * free * s * k, 0);
+      bottle.scale.setScalar(s);
+      const idle = Math.sin(tl * 0.45) * 0.32 * free * k;
+      bottle.rotation.set(0.04 + I.ny * 0.1 * free * k, st.ry + idle + st.spin + st.drag, st.rz - I.nx * 0.06 * free * k);
       const m = st.mix;
       bodyMat.color.copy(lerpC(W0.body, B0.body, m)); bodyMat.roughness = 0.3 + m * 0.22;
       capMat.color.copy(lerpC(W0.cap, B0.cap, m)); capMat.roughness = 0.48 + m * 0.1;
       labelBMat.opacity = m; labelB.visible = m > 0.002; labelA.visible = m < 0.998;
-      const auraS = Math.min(s * 4.6, halfW * 2, halfH * 2) * apE;
-      aura.position.set(0, 0, -1.6); aura.scale.setScalar(auraS * (1 + (R ? 0 : Math.sin(t * 1.2) * 0.03))); aura.material.opacity = 1 - m * 0.7;
+      const auraS = Math.min(s * 4.6, half * 2);
+      aura.position.set(0, 0, -1.6); aura.scale.setScalar(auraS * (1 + Math.sin(tl * 1.2) * 0.03 * k)); aura.material.opacity = 1 - m * 0.7;
       auraGold.position.set(0, 0, -1.55); auraGold.scale.setScalar(auraS * 0.95); auraGold.material.opacity = m;
-      floor.position.set(0, -1.16 * s, -0.2); floor.scale.set(Math.min(s * 3, halfW * 1.9) * apE, s * 0.55 * apE, 1); floor.material.opacity = free * (0.9 - m * 0.4);
+      floor.position.set(0, -1.16 * s, -0.2); floor.scale.set(Math.min(s * 3, half * 1.9), s * 0.55, 1); floor.material.opacity = free * (0.9 - m * 0.4);
       rimG.position.set(2.2 * s, 1.2 * s, -2); rimG.intensity = 22 * (1 - m * 0.6);
       rimW.position.set(-2.4 * s, -0.6 * s, -1.4); rimW.intensity = 6 + m * 18;
-      const spread = Math.min(1, (halfW * 0.92) / (2.15 * s));
+      const spread = Math.min(1, (half * 0.92) / (2.15 * s));
+      const step = dt * free * k;
       for (const c of caps) {
-        if (!c.m.visible) continue;
-        if (!R) { c.a += c.sp * dt * free; c.m.rotation.x += c.rs * dt * free; c.m.rotation.y += c.rs * 0.7 * dt * free; }
-        const rr = c.r * s * spread * apE;
-        const ox = Math.cos(c.a) * rr, oy = c.y * s * 0.85 + (R ? 0 : Math.sin(t * c.f + c.ph) * 0.08 * s), oz = Math.sin(c.a) * rr * 0.8;
+        c.a += c.sp * step; c.m.rotation.x += c.rs * step; c.m.rotation.y += c.rs * 0.7 * step;
+        const rr = c.r * s * spread;
+        const ox = Math.cos(c.a) * rr, oy = c.y * s * 0.85 + Math.sin(tl * c.f + c.ph) * 0.08 * s * k, oz = Math.sin(c.a) * rr * 0.8;
         const px = c.sx * s * 1.2, py = -0.55 * s, pz = c.sz * s, sp = st.spill;
         c.m.position.set(ox + (px - ox) * sp, oy + (py - oy) * sp, oz + (pz - oz) * sp);
-        c.m.scale.setScalar(Math.max(0.0001, apE * c.sc * s * 0.85));
+        c.m.scale.setScalar(c.sc * s * 0.85);
       }
-      if (dust.visible) { dust.scale.setScalar(s * apE); dust.rotation.y = t * 0.03; dustMat.color.set(m > 0.5 ? 0xf0d9a0 : 0xb8f5cc); }
+      // the dust fades (never pops) when the governor gives it up
+      dustMat.opacity += (DUST * gov.dust - dustMat.opacity) * (R || bake ? 1 : 1 - Math.exp(-dt * 2));
+      dust.visible = dustMat.opacity > 0.01;
+      st.dustRot += 0.03 * dt * k;
+      if (dust.visible) { dust.scale.setScalar(s); dust.rotation.y = st.dustRot; dustMat.color.set(m > 0.5 ? 0xf0d9a0 : 0xb8f5cc); }
       renderer.render(scene, camera);
+      return true;
     },
     resize() { lastSig = ''; },
     // frees every GPU resource (geometries, materials, textures) — no leaks when the controller tears the scene down
     dispose() {
+      removeEventListener('scroll', onScroll);
       scene.traverse(o => {
         if (o.geometry) o.geometry.dispose();
         const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : [];

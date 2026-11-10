@@ -124,7 +124,8 @@
     p.append('Ми використовуємо рекламні cookie Meta (Facebook, Instagram), щоб вимірювати ефективність реклами. '
       + 'Вони вмикаються лише з Вашої згоди; дані передаються Meta Platforms у США. ');
     const a = document.createElement('a');
-    a.href = 'privacy.html#cookies';
+    // resolved from this script's own URL (assets/js/) — a bare relative link broke on /blog/ pages
+    a.href = script ? new URL('../../privacy.html#cookies', script.src).href : '/privacy.html#cookies';
     a.textContent = 'Детальніше';
     p.append(a);
     const btns = document.createElement('div');

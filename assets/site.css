@@ -2,16 +2,11 @@
    design.css = the Claude Design export v3 with every inline style turned into a class (same declarations, pixel for pixel);
    states.css = what the export computed in JS (breakpoints, open/selected states). No inline styles anywhere (strict CSP). */
 
-/* ── fonts: self-hosted, Cyrillic + Latin subsets only (OFL: assets/fonts/OFL-*.txt) ── */
-@font-face{font-family:Geologica;font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/geologica-normal-cyrillic.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
-@font-face{font-family:Geologica;font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/geologica-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD,U+20B4,U+2192,U+2190,U+2197,U+2713,U+2726}
-@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400 600;font-display:swap;src:url(fonts/cormorant-garamond-italic-cyrillic.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
-@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400 600;font-display:swap;src:url(fonts/cormorant-garamond-italic-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD,U+2726}
-@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(fonts/jetbrains-mono-normal-cyrillic.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
-@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(fonts/jetbrains-mono-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD,U+20B4,U+2192,U+2190,U+2197}
-/* Oswald draws only the 3D jar label (canvas); declared here, downloaded only when the 3D scene asks for it */
-@font-face{font-family:Oswald;font-style:normal;font-weight:400 600;font-display:swap;src:url(fonts/oswald-normal-cyrillic.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
-@font-face{font-family:Oswald;font-style:normal;font-weight:400 600;font-display:swap;src:url(fonts/oswald-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+/* ── fonts: self-hosted, one file per family — subset to Basic Latin + Ukrainian Cyrillic + the symbols the site uses
+   (₴ № « » – — … ← → ↗ ✓ ✦), variable weight kept (OFL: assets/fonts/OFL-*.txt) ── */
+@font-face{font-family:Geologica;font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/geologica.woff2?v=b235489fea) format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400 600;font-display:swap;src:url(fonts/cormorant-garamond-italic.woff2?v=0eee842e31) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400 500;font-display:swap;src:url(fonts/jetbrains-mono.woff2?v=a78ce4fe1e) format('woff2')}
 
 /* ── global (the export's <helmet><style>) ── */
 html,body{margin:0;background:#060A08;color:#EEF1EA;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:transparent}
@@ -37,9 +32,11 @@ img,svg{max-width:100%}
 .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* ── 3D jar: static poster first, live canvas fades over it once it has drawn a frame ── */
-.jar-poster{position:absolute;left:50%;top:0;height:100%;width:auto;max-width:none;aspect-ratio:1;transform:translateX(-50%);pointer-events:none;user-select:none;transition:opacity .6s ease}
+.jar-poster{position:absolute;left:50%;top:0;height:100%;width:auto;max-width:none;aspect-ratio:1;transform:translateX(-50%);pointer-events:none;user-select:none}
 .jar-poster img{display:block;height:100%;width:auto}
-.has-3d>.jar-poster{opacity:0}
+/* the live canvas (same frame as the poster) fades in on top; the poster goes only after that — never two
+   half-transparent jars at once. Back to the poster at once when the canvas leaves the anchor. */
+.has-3d>.jar-poster{opacity:0;transition:opacity 0s .6s}
 .jar-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;animation:jar-in .6s ease forwards}
 @keyframes jar-in{to{opacity:1}}
 [data-jar]{overflow:hidden}
@@ -82,6 +79,16 @@ img,svg{max-width:100%}
 .ar-11 a{text-decoration:underline;text-underline-offset:3px}
 .footer-cc{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
 
+/* phones: legal tables as stacked cards (no sideways scrolling, nothing cut off); the column name is shown per cell */
+@media (max-width:599.98px){
+  .prose .table-wrap{overflow:visible}
+  .prose .table-wrap table{min-width:0}
+  .prose .table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .prose .table-wrap tr{display:block;padding:12px 0;border-bottom:1px solid rgba(238,241,234,.1)}
+  .prose .table-wrap td{display:block;padding:4px 0;border:0}
+  .prose .table-wrap td::before{content:attr(data-label);display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7E8B83;margin-bottom:2px}
+}
+
 .g-1{position:relative;min-height:100vh;font-family:Geologica,system-ui,sans-serif;color:#EEF1EA;overflow-x:clip}
 .g-2{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(55% 50% at 75% 30%,rgba(46,196,120,.10),transparent 70%),radial-gradient(45% 45% at 5% 95%,rgba(226,183,106,.05),transparent 70%),#060A08}
 .g-3{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(90deg,rgba(238,241,234,.03) 1px,transparent 1px);background-size:calc(100% / 6) 100%}
@@ -105,8 +112,9 @@ img,svg{max-width:100%}
 .s01-2{position:relative;height:44svh;min-height:300px;max-height:420px}
 .s01-3{position:absolute;left:50%;top:50%;translate:-50% -50%;font-size:34vw;font-weight:700;letter-spacing:-.06em;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(238,241,234,.09);white-space:nowrap}
 .s01-4{position:absolute;inset:0}
-.s01-5{position:absolute;right:0;top:6%;width:92px;height:92px}
-.s01-6{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;fill:#C9D3CC}
+.s01-5{position:absolute;right:0;top:6%;width:104px;height:104px}
+/* 50 monospace characters (advance .6em) + letter-spacing = the whole circle 2π·46 ≈ 289: the loop closes on the trailing nbsp */
+.s01-6{font-family:'JetBrains Mono',monospace;font-size:8.6px;letter-spacing:.62px;fill:#C9D3CC}
 .s01-7{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .s01-8{width:44px;height:44px;border-radius:50%;background:#5CE08C;color:#04130A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
 .s01-9{position:relative;z-index:1;display:flex;flex-direction:column;gap:clamp(18px,2.6vh,28px);min-width:0}
@@ -803,6 +811,49 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
   .pr-5,.ar-3{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
   .ar-15{min-height:44px}
   .skip-link{min-height:44px;display:inline-flex;align-items:center}
+}
+
+/* phones / tablets */
+@media (max-width:899.98px){
+  .pr-4,.ar-2{align-items:center}                  /* crumbs: the 44px tap-target links and the "/" separators on one line */
+  .ft-10{word-break:normal;overflow-wrap:break-word}   /* e-mail breaks only before "@" (<wbr>), not mid-word */
+  .ft-22{font-size:10px}
+  .s11-8{font-size:11px}
+}
+@media (max-width:599.98px){
+  .ct-3{align-self:stretch}                        /* phone card as wide as the messenger cards below it */
+  .ab-6{min-height:0}.ab-7{margin-top:22px}         /* about cards: no empty band between the number and the title */
+}
+/* single-column article: the table of contents is a normal block (sticky, it covered the text while scrolling) */
+@media (max-width:639.98px){
+  .ar-13{position:static;max-width:none}
+}
+/* phones: the jar box (.s01-4, overflow hidden) is narrower than the square poster / 3D canvas, so capsules flying
+   past its sides were cut into thin slivers 20px from the screen edge — fade the sides of the box instead */
+@media (max-width:899.98px){
+  .s01-4{-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+}
+/* the narrowest phones: the hero price badge shrinks and lifts so it never covers the jar cap */
+@media (max-width:359px){
+  .s01-5{width:94px;height:94px;top:0}
+}
+/* phones: the longest Ukrainian words («конфіденційності», «перевантаження:», «Накопичувальний») are wider than a
+   320–360 px line at the desktop minimum sizes and ran into the screen / card edge — scale them with the viewport */
+@media (max-width:599.98px){
+  .lg-2{font-size:min(40px,10.2vw)}
+  .ar-4{font-size:min(36px,10.2vw)}
+}
+@media (max-width:379.98px){
+  .s04-14{font-size:22px}
+  .s05-14{padding:20px}
+  .s04-36{font-size:12.5px}
+  .s04-34,.s04-37{padding:18px 12px}
+}
+/* thanks on phones: the payment status comes first (that is why the buyer is here), the jar below it —
+   the poster stays preloaded (it is still on the first screen) */
+@media (max-width:899.98px){
+  .th-1{min-height:0;align-items:start}
+  .th-2{order:1;height:30svh;min-height:220px}
 }
 /* the cookie banner (z 70) covered the lower fields of the open order form on phones: it steps aside while the form is
    open and comes back when it closes (no choice = no advertising consent, the order itself does not depend on it) */

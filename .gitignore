@@ -8,3 +8,6 @@ env
 labro-bot/
 LABRO_PROD_PLAN.md
 .DS_Store
+.lighthouseci/
+tools/bake/scene.js
+tools/bake/node_modules

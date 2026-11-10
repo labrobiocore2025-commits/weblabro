@@ -27,7 +27,14 @@ import site_data  # noqa: E402
 
 TAG = re.compile(r"\{\{\{\s*([\w.]+)\s*\}\}\}|\{\{>\s*([\w/-]+)(?:\s+if\s+([\w.]+))?\s*\}\}|\{\{\s*([\w.]+)\s*\}\}")
 FRONT = re.compile(r"\A<!--page\s+(\{.*?\})\s*-->\s*", re.S)
-ASSET = re.compile(r'((?:/|\.\./)?assets/[\w./-]+\.(?:css|js))(?:\?v=[0-9a-f]+)?')
+# every asset URL gets ?v=<content hash>: Cloudflare caches /assets/ with ?v= for a year (immutable), so a changed file
+# must change its URL — images, fonts and the lazy 3D bundle included, not only css/js
+ASSET = re.compile(r'((?:/|\.\./)?assets/[\w./-]+\.(?:css|js|avif|webp|jpe?g|png|svg|woff2))(?:\?v=[0-9a-f]+)?')
+CSS_URL = re.compile(r'url\(((?:fonts|img)/[\w./-]+)(?:\?v=[0-9a-f]+)?\)')
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:10]
 CSS_PARTS = ["base.css", "design.css", "states.css"]
 
 
@@ -64,7 +71,7 @@ def stamp(text, out_root):
     def rep(m):
         rel = m.group(1)
         path = out_root / re.sub(r"^(?:/|\.\./)", "", rel)
-        return f"{rel}?v={hashlib.sha256(path.read_bytes()).hexdigest()[:10]}"
+        return f"{rel}?v={digest(path)}"
     return ASSET.sub(rep, text)
 
 
@@ -72,7 +79,9 @@ def build(base="/", out=ROOT):
     out = pathlib.Path(out)
     files = {}
     css = "\n".join((SRC / "css" / p).read_text(encoding="utf-8") for p in CSS_PARTS)
-    files["assets/site.css"] = css
+    files["assets/site.css"] = CSS_URL.sub(lambda m: f"url({m.group(1)}?v={digest(ROOT / 'assets' / m.group(1))})", css)
+    # the 3D jar fetches its label images by name at runtime: one version for the whole baked set
+    labels_v = hashlib.sha256(b"".join(p.read_bytes() for p in sorted((ROOT / "assets/img/jar").glob("label-*")))).hexdigest()[:10]
     layout = (SRC / "layout.html").read_text(encoding="utf-8")
     for page in sorted((SRC / "pages").glob("*.html")):
         text = page.read_text(encoding="utf-8")
@@ -82,6 +91,7 @@ def build(base="/", out=ROOT):
         meta = json.loads(m.group(1))
         body = text[m.end():]
         ctx = site_data.context(meta, base)
+        ctx["labels_v"] = labels_v
         ctx["content"] = render(body, ctx)
         files[meta["out"]] = render(layout, ctx)
     for name, content in site_data.extra_files(base).items():

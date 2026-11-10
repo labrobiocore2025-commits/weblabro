@@ -22,12 +22,14 @@
   if (FINE && !R) root.classList.add('has-cursor');
   const jarSignal = () => document.dispatchEvent(new Event('labro:jar'));
 
-  // ═══ curtains: intro on the first page of a visit, a short lift after an internal navigation ═══
+  // ═══ curtains: a ≤ 1 s intro on the very first visit only (remembered in localStorage), a short lift after an
+  //     internal navigation, nothing at all on a returning visit ═══
   const curA = document.querySelector('[data-cur-a]'), curB = document.querySelector('[data-cur-b]');
   const curNum = document.querySelector('[data-cur-num]'), curBar = document.querySelector('[data-cur-bar]');
   const curLabel = document.querySelector('[data-cur-label]');
   let navLabel = null, firstVisit = true;
-  try { navLabel = sessionStorage.getItem('labro_nav'); sessionStorage.removeItem('labro_nav'); firstVisit = !sessionStorage.getItem('labro_seen'); sessionStorage.setItem('labro_seen', '1'); } catch (_) { /* storage blocked */ }
+  try { navLabel = sessionStorage.getItem('labro_nav'); sessionStorage.removeItem('labro_nav'); } catch (_) { /* storage blocked */ }
+  try { firstVisit = !localStorage.getItem('labro_seen'); localStorage.setItem('labro_seen', '1'); } catch (_) { firstVisit = false; }
   const t0 = performance.now();
 
   function liftCurtains() {
@@ -36,29 +38,31 @@
     if (R || !curA || !curB) { done(); return; }
     [curA, curB].forEach(el => el.getAnimations().forEach(a => a.cancel()));
     const up = [{ transform: 'translateY(0)' }, { transform: 'translateY(-100%)' }];
-    curB.animate(up, { duration: 1000, easing: EIO, fill: 'forwards' });
-    const a = curA.animate(up, { duration: 1000, delay: 120, easing: EIO, fill: 'forwards' });
-    setTimeout(startReveals, 250);                              // content animates in while the curtains rise
+    curB.animate(up, { duration: 480, easing: EIO, fill: 'forwards' });
+    const a = curA.animate(up, { duration: 480, delay: 60, easing: EIO, fill: 'forwards' });
+    setTimeout(startReveals, 120);                              // content animates in while the curtains rise
     a.finished.then(() => { [curA, curB].forEach(el => el.getAnimations().forEach(x => x.cancel())); done(); }, done);
   }
   if (curLabel) curLabel.textContent = navLabel || '';
-  const touch = innerWidth < 900 || !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (R || touch) { root.classList.add('is-ready'); }   // phones/tablets: page shown at once (curtain only on leaving)
-  else if (navLabel !== null || !firstVisit) {
+  // matchMedia, not innerWidth: reading innerWidth here forced a full layout inside this script before the first paint
+  const touch = matchMedia('(max-width: 899.98px)').matches || !matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // phones/tablets and returning visitors: the page is shown at once (curtain only on leaving)
+  if (R || touch || (!firstVisit && navLabel === null)) { root.classList.add('is-ready'); }
+  else if (navLabel !== null) {
     if (curNum) curNum.textContent = '→';
     if (curBar) curBar.style.transform = 'scaleX(1)';
-    requestAnimationFrame(() => setTimeout(liftCurtains, 180));
+    requestAnimationFrame(() => setTimeout(liftCurtains, 40));
   } else {
-    // first page of the visit: counter 0 → 100, curtains lift after ≥ 1.3 s (never waits for the 3D)
+    // the very first visit: counter 0 → 100 in 0.45 s, then the curtains lift (0.54 s) — under 1 s in all, never waits for the 3D
     const step = now => {
-      const p = Math.min(1, (now - t0) / 1600), v = 1 - Math.pow(1 - p, 3);
+      const p = Math.min(1, (now - t0) / 450), v = 1 - Math.pow(1 - p, 3);
       if (curNum) curNum.textContent = String(Math.round(99 * v));
       if (curBar) curBar.style.transform = `scaleX(${v * 0.99})`;
       if (p < 1 && !root.classList.contains('is-ready')) requestAnimationFrame(step);
       else if (curNum) curNum.textContent = '100';
     };
     requestAnimationFrame(step);
-    setTimeout(liftCurtains, Math.max(0, 1300 - (performance.now() - t0)));
+    setTimeout(liftCurtains, Math.max(0, 450 - (performance.now() - t0)));
   }
 
   // internal links: curtains fall, then the browser navigates (the next page lifts them)
@@ -184,16 +188,42 @@
   }
 
   const REVEAL = '[data-reveal],[data-chars],[data-words],[data-count],[data-mark],[data-odo],[data-rule],[data-scramble]';
-  $$('[data-chars]').forEach(el => split(el, LITE ? 'w' : 'ch'));
-  $$('[data-words],[data-fill]').forEach(el => split(el, 'w'));
-  $$('[data-odo]').forEach(buildOdo);
-  const pending = $$(REVEAL);
-  if (R) pending.forEach(showNow);
-  else pending.forEach(el => { prep(el); el.__base = el.getBoundingClientRect().top < innerHeight ? (root.classList.contains('is-ready') ? 0 : 450) : 0; });
+  // Entrance animations are prepared off the critical path: after the first frame, in small chunks (no long task).
+  // All reads first, then writes (no layout thrashing). Without a curtain (phones, back/forward) whatever is on the
+  // first screen is left as painted — hiding it again would delay LCP and flash the content; only what is below the
+  // first screen (or under the desktop intro curtain) gets its entrance animation.
+  const covered = !root.classList.contains('is-ready');
+  const pending = [];
+  let fills = [], prepared = false, wantReveals = false;
+  const nextTask = () => new Promise(r => setTimeout(r, 0));
+  async function prepareReveals() {
+    $$('[data-fill]').forEach(el => split(el, 'w'));
+    fills = $$('[data-fill]').map(el => ({ el, ws: $$('.w', el), p: -1 }));
+    const all = $$(REVEAL);
+    const tops = all.map(el => el.getBoundingClientRect().top);   // one layout for all reads
+    const vh = innerHeight;
+    for (let i = 0; i < all.length; i += 40) {
+      all.slice(i, i + 40).forEach((el, j) => {
+        const above = tops[i + j] < vh;
+        if (R || (above && !covered)) { el.__done = true; showNow(el); return; }
+        if (el.hasAttribute('data-chars')) split(el, LITE ? 'w' : 'ch');
+        if (el.hasAttribute('data-words')) split(el, 'w');
+        if (el.hasAttribute('data-odo')) buildOdo(el);
+        prep(el); el.__base = covered && above ? 300 : 0;
+        pending.push(el);
+      });
+      await nextTask();
+    }
+    prepared = true;
+    if (wantReveals) { revealsStarted = false; startReveals(); }
+    onScroll();
+  }
+  requestAnimationFrame(() => setTimeout(prepareReveals, 0));
 
   let io = null, revealsStarted = false;
   function startReveals() {
     if (revealsStarted || R) return; revealsStarted = true;
+    if (!prepared) { wantReveals = true; return; }   // prepareReveals() calls back when done
     io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target); play(en.target); } }), { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
     pending.forEach(el => { if (!el.__done) io.observe(el); });
     $$('[data-marquee]').forEach(el => { const d = +el.getAttribute('data-dir') || 1; el.animate(d > 0 ? [{ translate: '0 0' }, { translate: '-50% 0' }] : [{ translate: '-50% 0' }, { translate: '0 0' }], { duration: d > 0 ? 34000 : 42000, iterations: Infinity }); });
@@ -203,13 +233,12 @@
     // infinite loops pause off-screen (no work for invisible marquees)
     const loopIo = new IntersectionObserver(es => es.forEach(en => en.target.getAnimations().forEach(a => (en.isIntersecting ? a.play() : a.pause()))));
     $$('[data-marquee],[data-rotate],[data-sweep]').forEach(el => loopIo.observe(el));
-    scrollFx();
+    onScroll();
   }
 
   // ═══ scroll-driven effects: one passive listener, work only in an animation frame ═══
   // words not yet "filled" stay readable: 0.45 keeps ≥ 3:1 contrast for this large text (the design used 0.14)
   const FILL_MIN = 0.45;
-  const fills = $$('[data-fill]').map(el => ({ el, ws: $$('.w', el), p: -1 }));
   const stacks = $$('[data-stack]').map(el => [...el.children]);
   const progs = $$('[data-progress]');
   const pars = $$('[data-parallax]');
@@ -217,37 +246,44 @@
   const header = document.querySelector('[data-header]');
   const barPage = !!document.querySelector('[data-bar]');
   let ticking = false;
+  // Runs only in an animation frame (onScroll), never straight from script or a click handler: all layout reads
+  // come first, then all writes — one layout per frame instead of a forced synchronous one.
   function scrollFx() {
     ticking = false;
     const vh = innerHeight, sy = scrollY;
+    const fillRects = fills.map(f => f.el.getBoundingClientRect());
+    const stackRects = R ? [] : stacks.map(cards => cards.map(c => c.getBoundingClientRect()));
+    const progRects = progs.map(el => el.parentElement.getBoundingClientRect());
+    const docH = readBar ? document.documentElement.scrollHeight - vh : 0;
+    const skipped = io ? pending.filter(el => !el.__done && el.getBoundingClientRect().bottom < 0) : [];
     if (PAGE === 'home') root.classList.toggle('is-solid', sy > 40 || root.classList.contains('menu-open'));
     if (barPage) root.classList.toggle('bar-on', sy > vh * 0.7 && !root.classList.contains('is-locked'));
-    fills.forEach(f => {
-      const r = f.el.getBoundingClientRect();
+    fills.forEach((f, k) => {
+      const r = fillRects[k];
       const p = R ? 1 : Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.25)));
       if (Math.abs(p - f.p) < 0.002) return; f.p = p;
       const lit = p * (f.ws.length + 3);
       f.ws.forEach((w, j) => { const o = (FILL_MIN + (1 - FILL_MIN) * Math.min(1, Math.max(0, lit - j))).toFixed(2); if (w.__o !== o) { w.__o = o; w.style.opacity = o; } });
     });
-    if (!R) stacks.forEach(cards => {
-      const rs = cards.map(c => c.getBoundingClientRect());
+    if (!R) stacks.forEach((cards, k) => {
+      const rs = stackRects[k];
       for (let i = 0; i < cards.length - 1; i++) {
         const p = Math.min(1, Math.max(0, (rs[i].bottom - rs[i + 1].top) / rs[i].height));
         cards[i].style.transform = 'scale(' + (1 - p * 0.07).toFixed(4) + ')';
         const dim = cards[i].querySelector('[data-dim]'); if (dim) dim.style.opacity = (p * 0.6).toFixed(3);
       }
     });
-    progs.forEach(el => { const r = el.parentElement.getBoundingClientRect(); el.style.transform = 'scaleY(' + Math.min(1, Math.max(0, (vh * 0.6 - r.top) / r.height)).toFixed(4) + ')'; });
-    if (readBar) { const docH = document.documentElement.scrollHeight - vh; readBar.style.transform = 'scaleX(' + (docH > 0 ? Math.min(1, sy / docH) : 0).toFixed(4) + ')'; }
+    progs.forEach((el, k) => { const r = progRects[k]; el.style.transform = 'scaleY(' + Math.min(1, Math.max(0, (vh * 0.6 - r.top) / r.height)).toFixed(4) + ')'; });
+    if (readBar) { readBar.style.transform = 'scaleX(' + (docH > 0 ? Math.min(1, sy / docH) : 0).toFixed(4) + ')'; }
     if (!R) pars.forEach(el => { el.style.translate = '0 ' + (sy * (+el.getAttribute('data-parallax'))).toFixed(1) + 'px'; });
     // reveal anything that was skipped by a fast scroll past it
-    if (io) pending.forEach(el => { if (!el.__done && el.getBoundingClientRect().bottom < 0) { io.unobserve(el); showNow(el); } });
+    skipped.forEach(el => { io.unobserve(el); showNow(el); });
   }
   const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(scrollFx); } };
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll, { passive: true });
   if (header && PAGE !== 'home') root.classList.add('is-solid');
-  scrollFx();
+  onScroll();
   // a page shown at once (phones, reduced motion, back/forward) starts its reveals now — after everything
   // scrollFx() uses is defined (startReveals calls it)
   if (root.classList.contains('is-ready')) startReveals();
@@ -307,7 +343,7 @@
       $$('[data-mi]', menu).forEach((c, i) => anim(c, [{ opacity: 0, translate: '0 40px' }, { opacity: 1, translate: '0 0' }], { duration: 800, delay: 200 + i * 55, easing: E, fill: 'backwards' }));
       const first = menu.querySelector('a'); if (first) first.focus({ preventScroll: true });
     }
-    scrollFx(); jarSignal();
+    onScroll(); jarSignal();
   }
   if (toggle) toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
   if (menu) menu.addEventListener('click', e => { if (e.target.closest('[data-checkout]')) setMenu(false); });
@@ -390,9 +426,10 @@
     if (!weak) {
       const go = () => {
         ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(t => removeEventListener(t, go, { passive: true }));
-        const base = document.querySelector('link[rel="stylesheet"]').getAttribute('href').replace(/assets\/site\.css.*$/, '');
-        import(new URL(base + 'assets/js/jar3d.js', location.href).href)
-          .then(m => m.start({ markUrl: new URL(base + 'assets/img/brand/labro-mark-texture.png', location.href).href }))
+        // versioned URLs from the build (<body data-jar3d data-jar-labels>): the CDN caches them for a year
+        const b = document.body.dataset, src = new URL(b.jar3d, location.href);
+        import(src.href)
+          .then(m => m.start({ labelBase: new URL('../img/jar/', src).href, labelQuery: '?v=' + b.jarLabels }))
           .catch(() => { /* posters stay */ });
       };
       // first sign of a person (mouse move, touch, scroll, key): never during the initial load, never for a bot

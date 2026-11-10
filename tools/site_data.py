@@ -24,7 +24,7 @@ CSP = ("default-src 'none'; script-src 'self' https://connect.facebook.net; styl
 # (question, answer) — production FAQ, word for word (incl. items still waiting for the customer's decision)
 FAQ = [
     ("Як правильно приймати Нейро-Баланс?",
-     "По 2 капсули на день — вранці або вдень під час їди. Запивати водою. Рекомендований курс — 30 днів. "
+     "По 2 капсули вранці під час їди. Запивати водою. Рекомендований курс — 30 днів. "
      "Після можна повторювати з тижневою перервою."),
     ("Коли відчується перший ефект?",
      "Відчуття індивідуальні. Компоненти Нейро-Баланс розраховані на регулярний прийом, тому рекомендуємо пройти "
@@ -87,8 +87,9 @@ def faq_items(prefix="faq", h="h3"):
     out = []
     for i, (q, a) in enumerate(FAQ, 1):
         out.append(
-            f'<div class="s08-7" data-faq>'
-            f'<{h} class="faq-h"><button type="button" class="s08-8" aria-expanded="false" id="{prefix}-q{i}" aria-controls="{prefix}-a{i}">'
+            # the first answer is open in the HTML (as in the design) — opening it from JS after paint shifted the list (CLS)
+            f'<div class="s08-7{" is-open" if i == 1 else ""}" data-faq>'
+            f'<{h} class="faq-h"><button type="button" class="s08-8" aria-expanded="{"true" if i == 1 else "false"}" id="{prefix}-q{i}" aria-controls="{prefix}-a{i}">'
             f'<span class="s08-9">{i:02d}</span><span class="s08-10">{E(q)}</span><span class="s08-11">{PLUS}</span></button></{h}>'
             f'<section class="s08-12" id="{prefix}-a{i}" aria-labelledby="{prefix}-q{i}">'
             f'<div class="s08-13"><p class="s08-14">{E(a)}</p></div></section></div>')
@@ -105,13 +106,42 @@ def picture(base, name, alt, cls, widths, sizes, lazy=True, w=900, h=563):
             f'width="{w}" height="{h}" decoding="async"{load} class="{cls}"></picture>')
 
 
-def post_card(base, i, post, cls="s11-4", h="h3"):
+def post_card(base, i, post, cls="s11-4", h="h3", lcp=False):
     slug, title, cat, mins, img, alt, _ = post
     return (f'<a href="{base}blog/{slug}.html" data-reveal data-cat="{E(cat)}" class="{cls}">'
-            f'<div class="s11-5">{picture(base, img, alt, "s11-6", ["480", "900"], "(min-width:900px) 440px, 82vw")}'
+            f'<div class="s11-5">{picture(base, img, alt, "s11-6", ["480", "640", "900"], "(min-width:900px) 440px, 82vw", lazy=not lcp)}'
             f'<div class="s11-7"></div><span class="s11-8">{E(cat)}</span><span class="s11-9">{i:02d}</span></div>'
             f'<div class="s11-10"><div class="s11-11"><span class="g-10">{E(cat)}</span><span>·</span><span>{E(mins)}</span></div>'
             f'<{h} class="s11-12">{E(title)}</{h}></div></a>')
+
+
+POSTER_SIZES = "(min-width:900px) 800px, 440px"
+# displayed poster height on phones = the anchor's height (svh-based, capped in design.css): exact sizes → smaller files
+MOBILE_SIZE = {"hero-m": "min(44svh, 420px)", "pack-m": "min(56svh, 520px)", "product-m": "min(52svh, 480px)",
+               "thanks-m": "max(36svh, 260px)", "nf": "max(36svh, 240px)"}
+
+
+def poster_sizes(key):
+    base_key = key[:-4] if key.endswith("-new") else key
+    if base_key.endswith("-d") or base_key == "order":
+        return "(min-width:900px) min(84svh, 800px), 92vw"
+    return f"(min-width:900px) 800px, {MOBILE_SIZE.get(base_key, '440px')}"
+
+
+def poster_srcset(base, key, ext):
+    # up to 1600: the desktop poster is ≤ 800 CSS px (2× = 1600), the phone one ≤ 520 CSS px (iPhone 3× ≈ 1560)
+    return ", ".join(f"{base}assets/img/jar/{key}-{w}.{ext} {w}w" for w in (560, 800, 1100, 1400, 1600))
+
+
+def lcp_preloads(meta, base):
+    """The page's LCP poster (above the fold) is requested from <head>, together with the CSS — not after layout."""
+    out = []
+    for key in meta.get("lcp", []):
+        media = NOT_DESKTOP if key.endswith("-m") else (NOT_MOBILE if key.endswith("-d") else "")
+        out.append(f'<link rel="preload" as="image" type="image/avif" fetchpriority="high" '
+                   f'imagesrcset="{poster_srcset(base, key, "avif")}" imagesizes="{poster_sizes(key)}"'
+                   + (f' media="{media}"' if media else "") + ">")
+    return "\n".join(out)
 
 
 GIF1 = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
@@ -119,19 +149,20 @@ NOT_MOBILE, NOT_DESKTOP = "(min-width: 900px)", "(max-width: 899.98px)"
 
 
 def jar(base, key, cls="s01-4", ry=0.0, s=0.62, rz=None, spill=False, eager=False, only=None):
-    """[data-jar] anchor with its static poster (same scene, pre-rendered: assets/img/jar/<key>-{560,1100}.*)."""
+    """[data-jar] anchor with its static poster (the live scene's first frame, tools/bake: assets/img/jar/<key>-{560…1600}.*)."""
     attrs = f' data-ry="{ry}" data-s="{s}"' + (f' data-rz="{rz}"' if rz is not None else "") + (" data-spill" if spill else "")
     pack = key.startswith(("pack", "product"))
     # the anchor is hidden at the other breakpoint: an empty 1×1 source there, so its poster is never downloaded
     skip = f'<source media="{NOT_MOBILE if only == "m" else NOT_DESKTOP}" srcset="{GIF1}">' if only else ""
 
-    def pic(k, extra_cls=""):
-        src = lambda ext: f"{base}assets/img/jar/{k}-560.{ext} 560w, {base}assets/img/jar/{k}-1100.{ext} 1100w"  # noqa: E731
-        load = ' fetchpriority="high"' if eager else ' loading="lazy"'
-        return (f'<picture class="jar-poster{extra_cls}">{skip}<source type="image/avif" srcset="{src("avif")}" sizes="(min-width:900px) 800px, 440px">'
-                f'<img src="{base}assets/img/jar/{k}-1100.webp" srcset="{src("webp")}" sizes="(min-width:900px) 800px, 440px" '
+    def pic(k, extra_cls="", lazy=False):
+        src = lambda ext: poster_srcset(base, k, ext)  # noqa: E731
+        load = ' fetchpriority="high"' if eager and not lazy else ' loading="lazy"'
+        return (f'<picture class="jar-poster{extra_cls}">{skip}<source type="image/avif" srcset="{src("avif")}" sizes="{poster_sizes(k)}">'
+                f'<img src="{base}assets/img/jar/{k}-1100.webp" srcset="{src("webp")}" sizes="{poster_sizes(k)}" '
                 f'alt="" width="1100" height="1100" decoding="async"{load}></picture>')
-    posters = pic(key, " pack-current") + pic(key + "-new", " pack-new") if pack else pic(key)
+    # the black pack poster is hidden until the switch: lazy, so it is not downloaded with the page
+    posters = pic(key, " pack-current") + pic(key + "-new", " pack-new", lazy=True) if pack else pic(key)
     return f'<div data-jar{attrs} class="{cls}">{posters}</div>'
 
 
@@ -171,10 +202,15 @@ def head_ld(meta):
     return ld({"@context": "https://schema.org", "@graph": graph})
 
 
-def head_meta(meta, url, base):
+def head_meta(meta, url, base):  # noqa: C901
     title, desc = meta["title"], meta["description"]
     index = meta.get("robots", "index") == "index"
     out = [f"<title>{E(title)}</title>", f'<meta name="description" content="{E(desc)}">']
+    if meta.get("lcp"):
+        out.append(lcp_preloads(meta, base))
+    # pages that call the API (price / checkout / order status): open the connection while the page parses
+    if meta.get("modal", True) or meta.get("pixel") == "purchase":
+        out.append(f'<link rel="preconnect" href="{API}" crossorigin>')
     if meta.get("keywords"):
         out.append(f'<meta name="keywords" content="{E(meta["keywords"])}">')
     if index:
@@ -213,7 +249,7 @@ def context(meta, base):
     url = f"{SITE}/" + ("" if path == "index.html" else path)
     rel = lambda p: f"{base}{p}"  # noqa: E731
     ctx.update({
-        "base": base, "api": API, "csp": CSP, "price": PRICE, "phone": PHONE, "phone_tel": PHONE_TEL, "email": EMAIL,
+        "base": base, "api": API, "csp": CSP, "price": PRICE, "phone": PHONE, "phone_tel": PHONE_TEL, "email": EMAIL, "email_html": EMAIL.replace("@", "<wbr>@"),
         "manager": MANAGER, "channel": CHANNEL, "instagram": INSTAGRAM, "whatsapp": WHATSAPP, "viber": VIBER,
         "disclaimer": DISCLAIMER, "arrow": ARROW, "url": url,
         "canonical": url if meta.get("robots", "index") == "index" else "",
@@ -222,7 +258,8 @@ def context(meta, base):
         "html_class": "js-pending" + (" is-solid" if current != "home" else ""),
         "faq_items": faq_items(), "faq_items_page": faq_items("faqp", "h2"),
         "home_posts": "\n".join(post_card(base, i, p) for i, p in enumerate(POSTS[:3], 1)),
-        "all_posts": "\n".join(post_card(base, i, p, "bl-5", "h2") for i, p in enumerate(POSTS, 1)),
+        # the first card is the blog page's first screen (its LCP): loaded at once, the rest lazily
+        "all_posts": "\n".join(post_card(base, i, p, "bl-5", "h2", lcp=i == 1) for i, p in enumerate(POSTS, 1)),
         "cat_tabs": "\n".join(f'<button type="button" role="tab" class="pd-4" aria-selected="{"true" if i == 0 else "false"}" '
                               f'data-cat="{E(c)}">{E(c)}</button>' for i, c in enumerate(CATS)),
         "nav_links": "\n".join(f'<a href="{rel(u)}" class="g-12"{CUR if k == current or (k == "blog" and current == "article") else ""}>{E(l)}</a>'

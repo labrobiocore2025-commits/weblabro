@@ -62,3 +62,17 @@ jobs:
         run: |
           n=$(grep -o "data-ph" *.html blog/*.html | wc -l)
           if [ "$n" -gt 0 ]; then echo "::warning::$n customer-content placeholders ([… — від замовника]) are still on the site"; fi
+
+  # Performance budget (mobile emulation, Slow 4G + 4x CPU, median of 3): below the thresholds = red CI.
+  # Thresholds and pages: lighthouserc.json. The API is not reachable from the runner's localhost origin (CORS),
+  # which is why Best Practices (console errors) is not asserted here — it is checked on the preview / production.
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Lighthouse CI (budgets in lighthouserc.json)
+        run: npx --yes @lhci/cli@0.14.0 autorun
