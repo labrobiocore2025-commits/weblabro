@@ -144,11 +144,17 @@ export function drawLabels(mark, k = 1) {
   return { current: labelCurrent(mark), newMap: nl.map, newEmissive: nl.emissive };
 }
 
-// decoded off the main thread; flipped like a CanvasTexture would be (three's default flipY = true)
+// decoded off the main thread and flipped like a CanvasTexture would be (three's default flipY = true). Safari < 17
+// rejects createImageBitmap options: then a decoded <img> with flipY on upload ({ img, flip }) — same picture.
 async function loadBitmap(url) {
   const r = await fetch(url);
   if (!r.ok) throw new Error('label ' + r.status);
-  return createImageBitmap(await r.blob(), { imageOrientation: 'flipY' });
+  const blob = await r.blob();
+  try { return { img: await createImageBitmap(blob, { imageOrientation: 'flipY' }), flip: false }; } catch (e) {
+    const img = new Image(); img.src = URL.createObjectURL(blob);
+    await img.decode(); URL.revokeObjectURL(img.src);
+    return { img, flip: true };
+  }
 }
 
 function radialTex(stops, size = 256, ring) {
@@ -177,7 +183,7 @@ const pause = () => new Promise(r => setTimeout(r, 0));
 export async function createScene(labels, opts = {}) {
   seed = 20261108;
   const bake = !!opts.bake;
-  const dpr = opts.dpr || window.devicePixelRatio || 1;
+  let dpr = opts.dpr || window.devicePixelRatio || 1;     // re-read on every resize: another monitor, page zoom
   const coarse = matchMedia('(pointer: coarse)').matches;
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: bake, stencil: false });
   // texel density: the front of the label is ~¼ of its width; 4096 keeps ≥ 2 texels per device pixel on retina screens
@@ -223,7 +229,7 @@ export async function createScene(labels, opts = {}) {
   const bodyMat = new THREE.MeshPhysicalMaterial({ color: W0.body, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.18, side: THREE.DoubleSide });
   const capMat = new THREE.MeshPhysicalMaterial({ color: W0.cap, roughness: 0.48, clearcoat: 0.3, side: THREE.DoubleSide });
   const aniso = renderer.capabilities.getMaxAnisotropy();   // the label curves away from the camera: full anisotropy
-  const tex = img => { const t = new THREE.Texture(img); t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso; t.needsUpdate = true; return t; };
+  const tex = ({ img, flip }) => { const t = new THREE.Texture(img); t.flipY = flip; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso; t.needsUpdate = true; return t; };
   const blank = () => { const t = new THREE.Texture(); t.colorSpace = THREE.SRGBColorSpace; return t; };
   const labelGeo = r => new THREE.CylinderGeometry(r, r, 1.46, 192, 1, true, -Math.PI, Math.PI * 2);
   const labelAMat = new THREE.MeshPhysicalMaterial({ map: tex(await labelAImg), roughness: 0.4, clearcoat: 0.7, clearcoatRoughness: 0.22 });
@@ -278,7 +284,7 @@ export async function createScene(labels, opts = {}) {
   // between the two blurs the whole jar). Only the governor may render below 1:1, and never below 1.5 px per CSS px
   // on phones (1 on desktop).
   let cssW = 0, cssH = 0, q = 1;
-  const qMin = Math.min(1, (coarse ? 1.5 : 1) / dpr);
+  const qMin = () => Math.min(1, (coarse ? 1.5 : 1) / dpr);
   const applySize = () => {
     const w = Math.max(1, Math.round(cssW * dpr)), h = Math.max(1, Math.round(cssH * dpr));
     renderer.setSize(Math.max(1, Math.round(w * q)), Math.max(1, Math.round(h * q)), false);
@@ -295,7 +301,7 @@ export async function createScene(labels, opts = {}) {
   if (!bake) addEventListener('scroll', onScroll, { passive: true });
   const down = () => {                                   // one step cheaper; returns the undo, or null at the floor
     if (gov.dust) { gov.dust = 0; return () => { gov.dust = 1; }; }
-    if (q > qMin + 1e-3) { const prev = q; q = Math.max(qMin, Math.round((q - 0.1) * 100) / 100); applySize(); return () => { q = prev; applySize(); }; }
+    if (q > qMin() + 1e-3) { const prev = q; q = Math.max(qMin(), Math.round((q - 0.1) * 100) / 100); applySize(); return () => { q = prev; applySize(); }; }
     return null;
   };
   const up = () => {
@@ -332,8 +338,9 @@ export async function createScene(labels, opts = {}) {
   return {
     canvas: cv,
     setSize(w, h) {                                       // CSS pixels of the anchor
-      if (!w || !h || (w === cssW && h === cssH)) return;
-      cssW = w; cssH = h; applySize(); camera.aspect = w / h; camera.updateProjectionMatrix(); lastSig = '';
+      const d = opts.dpr || window.devicePixelRatio || 1;
+      if (!w || !h || (w === cssW && h === cssH && d === dpr)) return;
+      cssW = w; cssH = h; dpr = d; applySize(); camera.aspect = w / h; camera.updateProjectionMatrix(); lastSig = '';
     },
     stats() { return { fps: gov.fps, dpr, q, buffer: [cv.width, cv.height], label: lw, dust: gov.dust, locked: gov.locked }; },
     // the black pack label (posters of the new pack wait for it)
