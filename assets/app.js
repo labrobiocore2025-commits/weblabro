@@ -71,7 +71,7 @@ const moSubmit = $('moSubmit');
 const panel = moModal.querySelector('[data-mo-panel]');
 const backdrop = moModal.querySelector('[data-mo-backdrop]');
 const payRadios = [...moModal.querySelectorAll('input[name="moPay"]')];
-const fields = { name: $('moName'), phone: $('moPhone'), city: $('moCity'), comment: $('moComment') };
+const fields = { last: $('moLastName'), first: $('moFirstName'), middle: $('moMiddleName'), phone: $('moPhone'), city: $('moCity'), comment: $('moComment') };
 const consent = $('moConsent');
 let moQty = 1;
 let payType = 'online';
@@ -122,7 +122,7 @@ function moOpen(trigger, qty) {
       { duration: 650, delay: 140 + i * 45, easing: EASE, fill: 'backwards' }));
   }
   // desktop: straight into the first field; phones: focus the dialog (no keyboard popping over the form)
-  setTimeout(() => (isMobile() ? panel : fields.name).focus({ preventScroll: true }), isMobile() ? 50 : 320);
+  setTimeout(() => (isMobile() ? panel : fields.last).focus({ preventScroll: true }), isMobile() ? 50 : 320);
 }
 function moClose() {
   if (!moModal.classList.contains('open') || closing) return;
@@ -267,8 +267,16 @@ fields.phone.addEventListener('keydown', e => {
 });
 
 // ── validation with messages under each field ──
+// recipient name for Nova Poshta — the same rules as the server: letters (UA/RU/Latin), an apostrophe or a hyphen
+// between letters, 2–50 characters; every apostrophe variant becomes ' and the first letter a capital
+const NAME_RE = /^[A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+(?:['-][A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+)*$/;
+const cleanName = v => { const s = v.replace(/[’ʼ`´‘ʹ]/g, "'").trim(); return s ? s[0].toUpperCase() + s.slice(1) : s; };
+const nameOk = v => { const s = cleanName(v); return s.length >= 2 && s.length <= 50 && NAME_RE.test(s); };
+const NAME_HINT = 'лише літери, апостроф або дефіс, від 2 символів';
 const RULES = {
-  name: v => v.trim().length >= 3 || "Вкажіть ім'я та прізвище (щонайменше 3 символи)",
+  last: v => nameOk(v) || `Вкажіть прізвище — ${NAME_HINT}`,
+  first: v => nameOk(v) || `Вкажіть ім'я — ${NAME_HINT}`,
+  middle: v => !v.trim() || nameOk(v) || `По батькові — ${NAME_HINT} (або залиште порожнім)`,
   phone: v => localDigits(v).length === 9 || 'Вкажіть номер повністю: +380 XX XXX XX XX',
   city: v => v.trim().length >= 5 || 'Вкажіть місто та номер відділення Нової Пошти',
 };
@@ -283,20 +291,25 @@ function validate(key) {
   $(el.id + 'Err').textContent = res;
   return false;
 }
-['name', 'phone', 'city'].forEach(k => fields[k].addEventListener('blur', () => { if (fields[k].value) validate(k); }));
-['name', 'city'].forEach(k => fields[k].addEventListener('input', () => {
+['last', 'first', 'middle'].forEach(k => fields[k].addEventListener('blur', () => {
+  const s = cleanName(fields[k].value); if (s !== fields[k].value) fields[k].value = s;
+}));
+['last', 'first', 'middle', 'phone', 'city'].forEach(k => fields[k].addEventListener('blur', () => { if (fields[k].value) validate(k); }));
+['last', 'first', 'middle', 'city'].forEach(k => fields[k].addEventListener('input', () => {
   if (fields[k].getAttribute('aria-invalid') === 'true') validate(k);
 }));
 consent.addEventListener('change', () => { if (consent.checked) consent.closest('.mo-consent').classList.remove('err'); });
 
 function readForm() {
-  const bad = ['name', 'phone', 'city'].filter(k => !validate(k));
+  const bad = ['last', 'first', 'middle', 'phone', 'city'].filter(k => !validate(k));
   const consentBox = consent.closest('.mo-consent');
   consentBox.classList.toggle('err', !consent.checked);
   if (bad.length) { fields[bad[0]].focus(); shake(); return null; }
   if (!consent.checked) { consent.focus(); shake(); return null; }
   return {
-    name: fields.name.value.trim(),
+    last_name: cleanName(fields.last.value),
+    first_name: cleanName(fields.first.value),
+    middle_name: cleanName(fields.middle.value),
     phone: '+380' + localDigits(fields.phone.value),
     city: fields.city.value.trim(),
     comment: fields.comment.value.trim(),
@@ -318,7 +331,7 @@ const ERRORS = {
   too_fast: 'Будь ласка, заповніть форму ще раз.',
 };
 function orderText(f, payLabel) {
-  return `Нейро-Баланс × ${f.qty} = ${fmtUah(priceKop * f.qty)} ₴\nІм'я: ${f.name}\nТел: ${f.phone}\nДоставка: ${f.city}\nОплата: ${payLabel}` +
+  return `Нейро-Баланс × ${f.qty} = ${fmtUah(priceKop * f.qty)} ₴\nОтримувач: ${[f.last_name, f.first_name, f.middle_name].filter(Boolean).join(' ')}\nТел: ${f.phone}\nДоставка: ${f.city}\nОплата: ${payLabel}` +
     (f.comment ? `\nКоментар: ${f.comment}` : '');
 }
 function showFailure(f, title, payLabel, code) {
