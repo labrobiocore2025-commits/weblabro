@@ -473,6 +473,13 @@ img,svg{max-width:100%}
 .ar-36:hover{border-color:#5CE08C;color:#EEF1EA}
 .ar-37{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5CE08C}
 .ar-38{font-size:20px;font-weight:500;line-height:1.25;letter-spacing:-.02em}
+/* article body (blog texts): subheadings, lists, links, the doctor note, sources */
+.ar-39{margin:8px 0 0;font-size:22px;font-weight:600;letter-spacing:-.02em;color:#EEF1EA;line-height:1.25}
+.ar-40{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.ar-41{color:#5CE08C;text-decoration:underline;text-decoration-color:rgba(92,224,140,.4);text-underline-offset:3px;overflow-wrap:anywhere}
+.ar-42{margin:4px 0;padding:18px 20px;border-radius:16px;border:1px solid rgba(232,196,106,.35);background:rgba(232,196,106,.06)}
+.ar-43{margin:0;padding-left:22px;font-size:15px;line-height:1.7;color:#A3B0A7;display:flex;flex-direction:column;gap:6px}
+.ar-44{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(92,224,140,.12);border:1px solid rgba(92,224,140,.35);color:#5CE08C;font-weight:700;font-size:15px}
 .dl-1{max-width:1440px;margin:0 auto;padding:150px clamp(16px,5vw,72px) clamp(80px,10vw,140px);display:flex;flex-direction:column;gap:clamp(40px,5vw,72px)}
 .dl-2{margin:0;font-weight:600;font-size:clamp(52px,9.5vw,150px);line-height:.88;letter-spacing:-.055em}
 .dl-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}

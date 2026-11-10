@@ -3,7 +3,7 @@
   <nav aria-label="Хлібні крихти" data-reveal class="ar-2"><a href="{{ base }}" class="ar-3">Головна</a><span aria-hidden="true">/</span><a href="{{ base }}blog.html" class="ar-3">Блог</a><span aria-hidden="true">/</span><span class="g-10">{{ post.cat }}</span></nav>
   <h1 data-reveal class="ar-4">{{ post.title }}</h1>
   <div data-reveal data-delay="150" class="ar-5">
-    <span class="ar-6"><span class="ar-7"></span><span class="pd-13" data-ph>[Автор, фах — від замовника]</span></span>
-    <span class="pd-13" data-ph>[Дата публікації]</span><span>{{ post.mins }} читання</span>
+    <span class="ar-6"><span class="ar-44" aria-hidden="true">LB</span><span>Редакція LaBro Biocore</span></span>
+    <time datetime="{{ post.date }}">{{ post.date_text }}</time><span>{{ post.mins }} читання</span>
   </div>
   <figure class="ar-8"><div class="ar-9">{{{ post.figure }}}</div><figcaption class="ar-11">{{{ post.credit }}}</figcaption></figure>
