@@ -602,6 +602,7 @@ img,svg{max-width:100%}
 .ft-50{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
 .ft-51{display:flex;flex-direction:column;gap:8px}
 .ft-52{font-size:13px;color:#C9D3CC}
+.ft-52-opt{color:#8A988F}
 .ft-53{height:56px;padding:0 18px;border-radius:14px;background:rgba(238,241,234,.04);color:#EEF1EA;font-size:16px;outline:none;transition:border-color .25s,background .25s,box-shadow .25s}
 .ft-53:focus{border-color:#5CE08C;background:rgba(92,224,140,.06);box-shadow:0 0 0 4px rgba(92,224,140,.15)}
 .ft-54{margin:0;font-size:13px;color:#FF8A7A}
