@@ -5,7 +5,7 @@
 // with two radio cards and one submit button instead of two submit buttons).
 
 const API = document.querySelector('meta[name="labro-api"]').content.replace(/\/$/, '');
-const CONSENT_VERSION = '1.2';
+const CONSENT_VERSION = '1.3';   // 1.3: consent covers the offer and the contraindications
 const MANAGER_TG = 'https://t.me/LaBroudi';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 // site root (production "/", a preview copy lives under a sub-path): taken from the stylesheet URL

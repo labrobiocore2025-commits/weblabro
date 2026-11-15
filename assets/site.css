@@ -865,3 +865,14 @@ html:not(.is-ready):not(.is-leaving) .ft-88,html:not(.is-ready):not(.is-leaving)
 /* the cookie banner (z 70) covered the lower fields of the open order form on phones: it steps aside while the form is
    open and comes back when it closes (no choice = no advertising consent, the order itself does not depend on it) */
 html:has(#checkoutModal.open) .cc{display:none}
+/* legal notes (owner's texts, 2026-11-13): «Дієтична добавка…» next to every order button, the product's
+   «Важлива інформація» / «Протипоказання» blocks (anchors from the consent checkbox — clear of the fixed header) */
+.disc-note{margin:10px 0 0;font-size:12.5px;line-height:1.45;color:#8A988F}
+.disc-center{text-align:center}
+.disc-modal{margin:4px 0 0}
+.disc-bar{display:block;font-size:10.5px;line-height:1.3;color:#8A988F}
+.legal-block{scroll-margin-top:96px;display:flex;flex-direction:column;gap:10px}
+.legal-p{margin:0;font-size:16px;line-height:1.65;color:#C9D3CC}
+/* the footer note is the owner's long legal text (Текст 4): under the logo, a readable line length, not squeezed to the right */
+.ft-4{flex-direction:column;align-items:flex-start;gap:16px}
+.ft-6{max-width:760px;font-size:13.5px}
