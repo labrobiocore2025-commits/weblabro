@@ -14,7 +14,27 @@ CHANNEL = "https://t.me/LaBroBioCore"
 INSTAGRAM = "https://instagram.com/labro.biocore"
 WHATSAPP = "https://wa.me/380932808111"
 VIBER = "viber://chat?number=380932808111"
-DISCLAIMER = "Дієтична добавка. Не є лікарським засобом."
+DISCLAIMER = "Дієтична добавка. Не є лікарським засобом."   # Текст 1
+# Legal texts from the owner (2026-11-13), word for word — do not paraphrase. Paragraphs as lists.
+IMPORTANT_INFO = [   # Текст 2 «Важлива інформація»
+    "Нейро-Баланс — дієтична добавка. Не є лікарським засобом і не призначена для діагностики, лікування чи профілактики будь-яких захворювань.",
+    "Рекомендації щодо вживання: дорослим по 2 капсули на день вранці під час їжі, запиваючи водою. Курс — 30 днів.",
+    "Не перевищуйте рекомендовану добову дозу.",
+    "Не є заміною повноцінного та різноманітного раціону харчування і здорового способу життя.",
+    "Перед вживанням рекомендуємо проконсультуватися з лікарем.",
+    "Зберігати в недоступному для дітей місці.",
+]
+CONTRAINDICATIONS = [   # Текст 3 «Протипоказання»
+    "Протипоказання: індивідуальна непереносимість компонентів, вагітність і період годування груддю, вік до 18 років.",
+    "Якщо ви приймаєте лікарські засоби (зокрема заспокійливі, антидепресанти, препарати для щитоподібної залози, для зниження тиску чи рівня цукру в крові, імуносупресори) або маєте хронічні захворювання (щитоподібної залози, печінки, аутоімунні) — обов'язково проконсультуйтеся з лікарем перед вживанням.",
+    "У разі появи небажаних реакцій припиніть вживання та зверніться до лікаря.",
+]
+FOOTER_NOTE = ("Нейро-Баланс — дієтична добавка, не є лікарським засобом. Інформація на сайті має ознайомчий характер і не є "   # Текст 4
+               "медичною порадою, діагнозом чи призначенням. Перед вживанням проконсультуйтеся з лікарем. Результати можуть "
+               "відрізнятися залежно від індивідуальних особливостей організму.")
+ARTICLE_NOTE = ("Матеріал має виключно інформаційний характер і не є медичною порадою. Не займайтеся самолікуванням: з питань "   # Текст 6
+                "здоров'я звертайтеся до лікаря. Згадані дослідження стосуються окремих компонентів і не є доказом дії продукту. "
+                "Нейро-Баланс — дієтична добавка, не є лікарським засобом.")
 
 CSP = ("default-src 'none'; script-src 'self' https://connect.facebook.net; style-src 'self'; font-src 'self'; "
        "img-src 'self' data: https://www.facebook.com https://connect.facebook.net; "
@@ -23,16 +43,11 @@ CSP = ("default-src 'none'; script-src 'self' https://connect.facebook.net; styl
 
 # (question, answer) — production FAQ, word for word (incl. items still waiting for the customer's decision)
 FAQ = [
-    ("Як правильно приймати Нейро-Баланс?",
-     "По 2 капсули вранці під час їди. Запивати водою. Рекомендований курс — 30 днів. "
-     "Після можна повторювати з тижневою перервою."),
+    ("Як правильно приймати Нейро-Баланс?", IMPORTANT_INFO),
     ("Коли відчується перший ефект?",
      "Відчуття індивідуальні. Компоненти Нейро-Баланс розраховані на регулярний прийом, тому рекомендуємо пройти "
      "повний курс — 30 днів."),
-    ("Чи є протипоказання?",
-     "Не рекомендується при вагітності та лактації, індивідуальній непереносимості компонентів. При наявності "
-     "хронічних захворювань — проконсультуйтеся з лікарем до початку прийому. Нейро-Баланс — дієтична добавка, "
-     "не є лікарським засобом і не замінює лікування."),
+    ("Чи є протипоказання?", CONTRAINDICATIONS),
     ("Як зробити замовлення?",
      "Натисніть «Купити зараз» на цьому сайті, заповніть форму та оберіть оплату: онлайн через monobank або "
      "накладеним платежем. Також можна написати в Telegram (@LaBroudi), WhatsApp (+380 93 280 81 11) або "
@@ -41,8 +56,8 @@ FAQ = [
      "Доставка по всій Україні — Нова Пошта або Укрпошта. Оплата онлайн банківською карткою через monobank або "
      "накладеним платежем при отриманні. Відправка протягом 1–2 робочих днів."),
     ("Чи можна поєднувати з іншими добавками?",
-     "Нейро-Баланс добре поєднується з більшістю добавок — вітамінами, магнієм, омега-3. Якщо ви приймаєте "
-     "медикаменти, проконсультуйтеся з лікарем щодо сумісності."),
+     "Якщо ви приймаєте інші дієтичні добавки чи лікарські засоби, перед вживанням проконсультуйтеся з лікарем щодо "
+     "сумісності."),
 ]
 
 # blog: (slug, title, category, minutes, image, alt, credit html)
@@ -95,16 +110,21 @@ E = html.escape
 CUR = ' aria-current="page"'
 
 
+def paras(a) -> list[str]:
+    return list(a) if isinstance(a, (list, tuple)) else [a]
+
+
 def faq_items(prefix="faq", h="h3"):
     out = []
     for i, (q, a) in enumerate(FAQ, 1):
+        answer = "".join(f'<p class="s08-14">{E(x)}</p>' for x in paras(a))
         out.append(
             # the first answer is open in the HTML (as in the design) — opening it from JS after paint shifted the list (CLS)
             f'<div class="s08-7{" is-open" if i == 1 else ""}" data-faq>'
             f'<{h} class="faq-h"><button type="button" class="s08-8" aria-expanded="{"true" if i == 1 else "false"}" id="{prefix}-q{i}" aria-controls="{prefix}-a{i}">'
             f'<span class="s08-9">{i:02d}</span><span class="s08-10">{E(q)}</span><span class="s08-11">{PLUS}</span></button></{h}>'
             f'<section class="s08-12" id="{prefix}-a{i}" aria-labelledby="{prefix}-q{i}">'
-            f'<div class="s08-13"><p class="s08-14">{E(a)}</p></div></section></div>')
+            f'<div class="s08-13">{answer}</div></section></div>')
     return "\n".join(out)
 
 
@@ -216,7 +236,7 @@ def head_ld(meta):
     faq = FAQ if kind == "faq" else meta.get("faq")
     if faq:
         graph.append({"@type": "FAQPage", "mainEntity": [
-            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]})
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": "\n".join(paras(a))}} for q, a in faq]})
     return ld({"@context": "https://schema.org", "@graph": graph})
 
 
@@ -270,6 +290,9 @@ def context(meta, base):
         "base": base, "api": API, "csp": CSP, "price": PRICE, "phone": PHONE, "phone_tel": PHONE_TEL, "email": EMAIL, "email_html": EMAIL.replace("@", "<wbr>@"),
         "manager": MANAGER, "channel": CHANNEL, "instagram": INSTAGRAM, "whatsapp": WHATSAPP, "viber": VIBER,
         "disclaimer": DISCLAIMER, "arrow": ARROW, "url": url,
+        "footer_note": FOOTER_NOTE, "article_note": ARTICLE_NOTE,
+        "important_html": "\n".join(f'<p class="pd-26">{E(x)}</p>' for x in IMPORTANT_INFO),
+        "contra_html": "\n".join(f'<p class="pd-26">{E(x)}</p>' for x in CONTRAINDICATIONS),
         "canonical": url if meta.get("robots", "index") == "index" else "",
         "has_modal": meta.get("modal", True), "has_bar": meta.get("bar", False),
         "pixel_mode": meta.get("pixel", "full"),

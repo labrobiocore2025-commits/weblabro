@@ -38,12 +38,13 @@
         <div data-mf class="ft-51 mo-consent">
           <div class="ft-66">
             <input type="checkbox" id="moConsent" name="consent" aria-describedby="moConsentErr" class="ft-67">
-            <label for="moConsent" class="ft-68">Я погоджуюсь з <a href="{{ base }}privacy.html" target="_blank" rel="noopener" class="ft-69">Політикою конфіденційності</a> і даю згоду на обробку моїх персональних даних, зокрема на їх передачу за кордон (США, ОАЕ), для оформлення та доставки замовлення.</label>
+            <label for="moConsent" class="ft-68">Я погоджуюсь з умовами <a href="{{ base }}offer.html" target="_blank" rel="noopener" class="ft-69">Публічної оферти</a> та <a href="{{ base }}privacy.html" target="_blank" rel="noopener" class="ft-69">Політикою конфіденційності</a>, ознайомлений(-а) з <a href="{{ base }}product.html#protypokazannia" target="_blank" rel="noopener" class="ft-69">протипоказаннями</a> і даю згоду на обробку персональних даних, зокрема їх передачу за кордон (США, ОАЕ), для оформлення та доставки замовлення.</label>
           </div>
           <p id="moConsentErr" class="ft-54 consent-err">Щоб оформити замовлення, потрібна Ваша згода.</p>
         </div>
+        <p data-mf class="disc-note disc-modal">{{ disclaimer }}</p>
         <button data-mf type="submit" id="moSubmit" class="ft-70">Сплатити <span data-total-label>{{ price }}</span> ₴ через monobank</button>
-        <p data-mf class="ft-71">Дані картки вводяться лише на захищеній сторінці monobank — ми їх не отримуємо. {{ disclaimer }}</p>
+        <p data-mf class="ft-71">Дані картки вводяться лише на захищеній сторінці monobank — ми їх не отримуємо.</p>
         <a data-mf href="{{ manager }}" target="_blank" rel="noopener" class="ft-72">або написати менеджеру → @LaBroudi</a>
       </form>
 
