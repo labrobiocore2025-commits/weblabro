@@ -873,3 +873,6 @@ html:has(#checkoutModal.open) .cc{display:none}
 .disc-bar{display:block;font-size:10.5px;line-height:1.3;color:#8A988F}
 .legal-block{scroll-margin-top:96px;display:flex;flex-direction:column;gap:10px}
 .legal-p{margin:0;font-size:16px;line-height:1.65;color:#C9D3CC}
+/* the footer note is the owner's long legal text (Текст 4): under the logo, a readable line length, not squeezed to the right */
+.ft-4{flex-direction:column;align-items:flex-start;gap:16px}
+.ft-6{max-width:760px;font-size:13.5px}
